@@ -4,27 +4,24 @@ using System.Text;
 
 namespace RunData
 {
-    class NoRunRecord
+    class NonBreakRunRecord
     {
-        public Member Member { get; }
-        public string Reason { get; }
+        public Member Member { get; }        
         private SortedDictionary<string, bool> times = new SortedDictionary<string, bool>();
 
-        public NoRunRecord(Member member, string reason, DateRange dateRange) : this(member, reason, dateRange.ToString())
+        public NonBreakRunRecord(Member member, DateRange dateRange) : this(member, dateRange.ToString())
         {
         }
 
-        public NoRunRecord(Member member, string reason, string time)
+        public NonBreakRunRecord(Member member, string time)
         {
             this.Member = member;
-            this.Reason = reason;
             this.times[time] = true; //Dictionary[Key] => Add Or Update
         }
 
-        public NoRunRecord(Member member, string reason, string[] times)
+        public NonBreakRunRecord(Member member, string[] times)
         {
             this.Member = member;
-            this.Reason = reason;
 
             this.AddTime(times);
         }

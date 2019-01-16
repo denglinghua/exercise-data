@@ -188,7 +188,7 @@ namespace RunData
 
         private List<object[]> ConvertNoRunDataToShow()
         {
-            Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunData();
+            Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunDataByGroup();
             List<object[]> showData = new List<object[]>();
 
             foreach (string group in noRunData.Keys)
@@ -196,7 +196,7 @@ namespace RunData
                 List<NoRunRecord> recs = noRunData[group];
                 foreach (NoRunRecord rec in recs)
                 {
-                    showData.Add(new object[] { group, rec.Member.Name, rec.Count, rec.Reason});
+                    showData.Add(new object[] { group, rec.Member.Name, rec.GetTimes().Length, rec.Reason});
                 }
             }
 

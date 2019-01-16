@@ -7,107 +7,81 @@ namespace RunData
 {
     class NoRunData
     {
-        private Dictionary<Member, List<DateRange>> previousNoRunData = new Dictionary<Member, List<DateRange>>();
-        private List<NoRunRecord> currentNoRunData = new List<NoRunRecord>();
+        private Dictionary<Member, NoRunRecord> previousNoRunList = new Dictionary<Member, NoRunRecord>();
+        private List<NoRunRecord> noRunList = new List<NoRunRecord>();
 
-        public void AddPreviousNoRunRecord(Member member, DateRange dateRange)
+        public void AddPreviousNoRunRecord(Member member, string[] times)
         {
-            if (DataSource.Instance.DateRange.Equals(dateRange))
-            {
-                return;
-            }
-
-            List<DateRange> drList;
-            if (this.previousNoRunData.ContainsKey(member))
-            {
-                drList = this.previousNoRunData[member];
-            }
-            else
-            {
-                drList = new List<DateRange>();
-                this.previousNoRunData.Add(member, drList);
-            }
-
-            if (!drList.Contains(dateRange))
-            {
-                drList.Add(dateRange);
-            }
+            this.previousNoRunList.Add(member, new NoRunRecord(member, string.Empty, times));
         }
 
-        public void AddCurrentNoRunRecord(Member member, string reason)
+        public void AddCurrentNoRunRecord(Member member, string reason, DateRange dateRange)
         {
-            this.currentNoRunData.Add(new NoRunRecord(member, reason, 1));
+            this.noRunList.Add(new NoRunRecord(member, reason, dateRange));
         }
 
-        public void MarkLeave(List<long> leaveMemberIds)
+        public void HandleData(List<long> leaveMemberIds)
         {
-            foreach (NoRunRecord rec in this.currentNoRunData.ToArray())
+            this.MarkLeave(leaveMemberIds);
+
+            this.Merge();
+        }
+
+        private void MarkLeave(List<long> leaveMemberIds)
+        {
+            foreach (NoRunRecord rec in this.noRunList.ToArray())
             {
                 if (leaveMemberIds.Contains(rec.Member.JoyRunId))
                 {
-                    this.currentNoRunData.Remove(rec);
+                    this.noRunList.Remove(rec);
                 }
             }
         }
 
-        public Dictionary<string, List<NoRunRecord>> SumNoRunData()
+        private void Merge()
+        {
+            foreach (NoRunRecord rec in this.noRunList)
+            {
+                if (previousNoRunList.ContainsKey(rec.Member))
+                {
+                    rec.AddTime(previousNoRunList[rec.Member].GetTimes());
+                }
+            }
+        }
+
+        public Dictionary<string, List<NoRunRecord>> SumNoRunDataByGroup()
         {
             Dictionary<string, List<NoRunRecord>> sumData = new Dictionary<string, List<NoRunRecord>>();
 
-            foreach (NoRunRecord rec in currentNoRunData)
+            foreach (NoRunRecord rec in noRunList)
             {
-                if (!sumData.ContainsKey(rec.Member.GroupShortName))
+                List<NoRunRecord> groupNoRunList;
+                string group = rec.Member.GroupShortName;
+                if (!sumData.ContainsKey(group))
                 {
-                    sumData.Add(rec.Member.GroupShortName, new List<NoRunRecord>());
+                    groupNoRunList = new List<NoRunRecord>();
+                    sumData.Add(group, groupNoRunList);
                 }
-            }
-
-            foreach (NoRunRecord rec in currentNoRunData)
-            {
-                Member m = rec.Member;
-                List<NoRunRecord> list = sumData[rec.Member.GroupShortName];
-                int count = this.previousNoRunData.ContainsKey(m) ? this.previousNoRunData[m].Count : 0;
-                count = count + 1;
-                list.Add(new NoRunRecord(m, rec.Reason, count));
+                else
+                {
+                    groupNoRunList = sumData[group];
+                }
+                groupNoRunList.Add(rec);
             }
 
             return sumData;
         }
 
-        private Dictionary<Member, List<DateRange>> GenNewPreviousNoRunData()
-        {
-            Dictionary<Member, List<DateRange>> newData = new Dictionary<Member, List<DateRange>>();
-
-            foreach (NoRunRecord rec in currentNoRunData)
-            {
-                List<DateRange> l = new List<DateRange>();
-                l.Add(DataSource.Instance.DateRange);
-                Member m = rec.Member;
-                if (this.previousNoRunData.ContainsKey(m))
-                {
-                    l.AddRange(this.previousNoRunData[m]);
-                }
-
-                newData.Add(m, l);
-            }
-
-            return newData;
-        }
-
         public void SavePreviousNoRunData()
         {
             List<string> lines = new List<string>();
-            Dictionary<Member, List<DateRange>> preNoRun = this.GenNewPreviousNoRunData();
-            foreach (Member m in preNoRun.Keys)
+            foreach (NoRunRecord nr in this.noRunList)
             {
-                foreach (DateRange dr in preNoRun[m])
-                {
-                    lines.Add(String.Format("{0}\t{1}", m, dr));
-                }
+                lines.Add(String.Format("{0}\t{1}", nr.Member, string.Join(",", nr.GetTimes())));
             }
 
 
             File.WriteAllText(DataSource.NO_RUN_DATA_FILE, string.Join(Environment.NewLine, lines.ToArray()));
         }
-    }  
+    }
 }

@@ -15,11 +15,13 @@ namespace RunData
         public string Group;
         public List<RunRecord> RunRecoreds;
         public NoRunData NoRunData;
-        private List<long> LeaveMemberIdList;
+        public NonBreakRunData NonBreakRunData;
+        private List<long> LeaveMemberIdList;        
 
         public static readonly DataSource Instance = new DataSource();
 
         public static readonly string NO_RUN_DATA_FILE = "no_run_data.txt";
+        public static readonly string NON_BREAK_RUN_DATA_FILE = "no_break_run_data.txt";        
 
         public static void Init(string runRecordFile, string[] noRunFiles, string leaveFile)
         {
@@ -36,8 +38,8 @@ namespace RunData
         {
             this.PickNoUnQualifiedRunData();
 
-            this.NoRunData.MarkLeave(this.LeaveMemberIdList);           
-        }
+            this.NoRunData.HandleData(this.LeaveMemberIdList);
+        }        
 
         private void PickNoUnQualifiedRunData()
         {
@@ -58,7 +60,7 @@ namespace RunData
 
                 if (reason != null)
                 {
-                    this.NoRunData.AddCurrentNoRunRecord(r.Member, reason);
+                    this.NoRunData.AddCurrentNoRunRecord(r.Member, reason, DateRange);
                 }
             }
         }        
@@ -123,7 +125,7 @@ namespace RunData
                     //悦跑ID 昵称 性别 总跑量（公里） 最后跑步时间
                     string[] values = ReadRowToArray(row, 3);
 
-                    this.NoRunData.AddCurrentNoRunRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步");
+                    this.NoRunData.AddCurrentNoRunRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步", DateRange);
                 }
             }
         }
@@ -164,7 +166,26 @@ namespace RunData
                 //88474417	Samryi	男	广·马帮_神马分队	20190107-20190113
                 string[] a = s.Split('\t');
                 this.NoRunData.AddPreviousNoRunRecord(new Member(long.Parse(a[0]), a[1], a[2], a[3]),
-                    DateRange.Create(a[4].Split('-'), "yyyyMMdd"));
+                    a[4].Split(','));
+            }
+        }
+
+        private void LoadPreviousNonBreakRunData(string fileName)
+        {
+            this.NonBreakRunData = new NonBreakRunData();
+
+            if (!File.Exists(fileName))
+            {
+                return;
+            }
+
+            string[] lines = File.ReadAllLines(fileName);
+            foreach (string s in lines)
+            {
+                //88474417	Samryi	男	广·马帮_神马分队	20190107-20190113
+                string[] a = s.Split('\t');
+                this.NonBreakRunData.AddPreviousRunRecord(new Member(long.Parse(a[0]), a[1], a[2], a[3]),
+                    a[4].Split(','));
             }
         }
 

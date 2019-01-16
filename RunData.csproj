@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logger.cs" />
+    <Compile Include="NonBreakRunData.cs" />
     <Compile Include="NoRunData.cs" />
     <Compile Include="DataSource.cs" />
     <Compile Include="DateRange.cs" />
@@ -71,6 +72,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Member.cs" />
+    <Compile Include="NonBreakRunRecord.cs" />
     <Compile Include="NoRunRecord.cs" />
     <Compile Include="Reporter.cs" />
     <Compile Include="RunRecord.cs" />
