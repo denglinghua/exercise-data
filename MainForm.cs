@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace RunData
 {
@@ -25,6 +26,8 @@ namespace RunData
             CheckDoButtonState();
 
             this.textBoxLog.Clear();
+
+            Logger.Init(this.AppendNewLineResult);
         }
 
         private void buttonRunRecordFileSelect_Click(object sender, EventArgs e)
@@ -53,6 +56,7 @@ namespace RunData
             }
         }
 
+
         private void buttonDo_Click(object sender, EventArgs e)
         {
             if (!CheckDataSourceFileOpen())
@@ -60,10 +64,32 @@ namespace RunData
                 return;
             }
 
+            Logger.Info("开始运行...");
+
+            try
+            {
+                this.Do();
+
+                Logger.Info("运行结束。");
+
+                if (MessageBox.Show("报表已经生成，要打开看看吗？", "打开", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    this.OpenReport(this.saveFileDialogReport.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Info("运行错误:");
+                Logger.Info(ex.StackTrace);
+            }
+        }
+
+        private void Do()
+        {
             DataSource.Init(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
             DataSource.Instance.HandleData();
 
-            this.saveFileDialogReport.FileName = string.Format("{0}-{1}-跑量统计.xlsx", DataSource.Instance.DateRange, DataSource.Instance.Group);
+            this.saveFileDialogReport.FileName = string.Format("{0}-{1}-跑量统计.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Group);
             if (this.saveFileDialogReport.ShowDialog() == DialogResult.OK)
             {
                 bool fileExists = File.Exists(this.saveFileDialogReport.FileName);
@@ -76,8 +102,14 @@ namespace RunData
             new Reporter().ToExcel(DataSource.Instance, this.saveFileDialogReport.FileName);
 
             DataSource.Instance.NoRunData.SavePreviousNoRunData();
+
+            DataSource.Instance.NonBreakRunData.SavePreviousNoBreakRunData();
         }
-        
+
+        private void OpenReport(string file)
+        {
+            Process.Start(file);
+        }
 
         private void CheckDoButtonState()
         {
@@ -132,6 +164,12 @@ namespace RunData
         private void AppendNewLineResult(String text)
         {
             this.textBoxLog.Text += (Environment.NewLine + text);
+        }
+
+        private void textBoxLog_TextChanged(object sender, EventArgs e)
+        {
+            this.textBoxLog.SelectionStart = this.textBoxLog.Text.Length;
+            this.textBoxLog.ScrollToCaret();
         }
     }
 }

@@ -164,21 +164,22 @@
             this.groupBoxOutput.Controls.Add(this.textBoxLog);
             this.groupBoxOutput.Location = new System.Drawing.Point(12, 329);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(1034, 390);
+            this.groupBoxOutput.Size = new System.Drawing.Size(1034, 404);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "运行日志";
             // 
             // textBoxLog
             // 
-            this.textBoxLog.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBoxLog.Font = new System.Drawing.Font("NSimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBoxLog.Location = new System.Drawing.Point(15, 27);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(1007, 344);
+            this.textBoxLog.Size = new System.Drawing.Size(1007, 360);
             this.textBoxLog.TabIndex = 7;
+            this.textBoxLog.TextChanged += new System.EventHandler(this.textBoxLog_TextChanged);
             // 
             // openFileDialogRunFile
             // 

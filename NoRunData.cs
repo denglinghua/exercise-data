@@ -29,6 +29,8 @@ namespace RunData
 
         private void MarkLeave(List<long> leaveMemberIds)
         {
+            Logger.Info("开始在本次不达标人员中标注请假...");
+
             foreach (NoRunRecord rec in this.noRunList.ToArray())
             {
                 if (leaveMemberIds.Contains(rec.Member.JoyRunId))
@@ -40,6 +42,8 @@ namespace RunData
 
         private void Merge()
         {
+            Logger.Info("开始合并过往连续不达标数据...");
+
             foreach (NoRunRecord rec in this.noRunList)
             {
                 if (previousNoRunList.ContainsKey(rec.Member))
@@ -74,6 +78,8 @@ namespace RunData
 
         public void SavePreviousNoRunData()
         {
+            Logger.Info("开始保存连续不达标数据...");
+
             List<string> lines = new List<string>();
             foreach (NoRunRecord nr in this.noRunList)
             {

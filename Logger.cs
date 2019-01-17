@@ -6,20 +6,20 @@ namespace RunData
 {
     class Logger
     {
-        public delegate void Log(string msg);
-        private Log log;
+        public delegate void LogAppender(string msg);
+        private LogAppender appender;
 
         public static Logger Instance;
 
-        public static void Init(Log log)
+        public static void Init(LogAppender appender)
         {
             Instance = new Logger();
-            Instance.log = log;
+            Instance.appender = appender;
         }
 
-        public static void info(string msg)
+        public static void Info(string msg)
         {
-            Instance.log(msg);
+            Instance.appender(msg);
         }
     }
 }

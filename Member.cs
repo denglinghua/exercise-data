@@ -10,7 +10,7 @@ namespace RunData
         public string Name { get; }
         public string Gender { get; }
 
-        private static string[] GroupShortNames = new string[] { "神骏分队", "天马分队", "神马分队" };
+        private static string[] GroupShortNames = new string[] { "神骏分队", "天马分队", "神马分队", "未分组"};
         private string group;
         private string groupShortName;
         public string Group

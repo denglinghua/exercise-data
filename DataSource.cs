@@ -11,7 +11,7 @@ namespace RunData
 {
     class DataSource
     {
-        public DateRange DateRange;
+        public DateRange CurrentDateRange;
         public string Group;
         public List<RunRecord> RunRecoreds;
         public NoRunData NoRunData;
@@ -32,17 +32,23 @@ namespace RunData
             Instance.LoadLeaveData(leaveFile);
 
             Instance.LoadPreviousNoRunData(NO_RUN_DATA_FILE);
+
+            Instance.LoadPreviousNonBreakRunData(NON_BREAK_RUN_DATA_FILE);
         }
 
         public void HandleData()
         {
-            this.PickNoUnQualifiedRunData();
+            this.ClassifyRunData();
 
             this.NoRunData.HandleData(this.LeaveMemberIdList);
-        }        
 
-        private void PickNoUnQualifiedRunData()
+            this.NonBreakRunData.HandleData();
+        }
+
+        private void ClassifyRunData()
         {
+            Logger.Info("开始分离跑步达标和不达标的数据...");
+
             foreach (RunRecord r in this.RunRecoreds)
             {
                 string reason = null;
@@ -60,13 +66,19 @@ namespace RunData
 
                 if (reason != null)
                 {
-                    this.NoRunData.AddCurrentNoRunRecord(r.Member, reason, DateRange);
+                    this.NoRunData.AddCurrentNoRunRecord(r.Member, reason, CurrentDateRange);
+                }
+                else
+                {
+                    this.NonBreakRunData.AddCurrentNoRunRecord(r.Member, CurrentDateRange);
                 }
             }
-        }        
+        }
 
         private void LoadRunRecord(string fileName)
         {
+            Logger.Info("开始加载跑步统计数据...");
+
             IWorkbook book = null;
             ISheet sheet = null;
 
@@ -79,7 +91,7 @@ namespace RunData
 
                 ICell dataRangeCell = GetCellByReference(sheet, "B3");
                 String dataRangeStr = dataRangeCell.StringCellValue;
-                this.DateRange = DateRange.Create(dataRangeStr.Split(new String[] { "--" }, StringSplitOptions.None), "yyyy-MM-dd HH:mm:ss");
+                this.CurrentDateRange = DateRange.Create(dataRangeStr.Split(new String[] { "--" }, StringSplitOptions.None), "yyyy-MM-dd HH:mm:ss");
 
                 this.RunRecoreds = new List<RunRecord>();
                 for (int rowIndex = 10; rowIndex <= sheet.LastRowNum; rowIndex++)
@@ -98,6 +110,8 @@ namespace RunData
 
         private void LoadNoRunData(string[] noRunFiles)
         {
+            Logger.Info("开始加载无跑步成员数据...");
+
             this.NoRunData = new NoRunData();
             foreach (string fileName in noRunFiles)
             {
@@ -125,13 +139,15 @@ namespace RunData
                     //悦跑ID 昵称 性别 总跑量（公里） 最后跑步时间
                     string[] values = ReadRowToArray(row, 3);
 
-                    this.NoRunData.AddCurrentNoRunRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步", DateRange);
+                    this.NoRunData.AddCurrentNoRunRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步", CurrentDateRange);
                 }
             }
         }
 
         private void LoadLeaveData(string fileName)
         {
+            Logger.Info("开始加载请假数据...");
+
             IWorkbook book = null;
             ISheet sheet = null;
 
@@ -160,6 +176,8 @@ namespace RunData
                 return;
             }
 
+            Logger.Info("开始加载过往连续不达标数据...");
+
             string[] lines = File.ReadAllLines(fileName);
             foreach (string s in lines)
             {
@@ -172,12 +190,14 @@ namespace RunData
 
         private void LoadPreviousNonBreakRunData(string fileName)
         {
-            this.NonBreakRunData = new NonBreakRunData();
-
             if (!File.Exists(fileName))
             {
                 return;
             }
+
+            Logger.Info("开始加载过去连续达标数据...");
+
+            this.NonBreakRunData = new NonBreakRunData();
 
             string[] lines = File.ReadAllLines(fileName);
             foreach (string s in lines)

@@ -27,6 +27,8 @@ namespace RunData
 
         private void Merge()
         {
+            Logger.Info("开始合并过往连续达标数据...");
+
             foreach (NonBreakRunRecord rec in this.runList)
             {
                 if (previousRunList.ContainsKey(rec.Member))
@@ -36,8 +38,33 @@ namespace RunData
             }
         }
 
+        public Dictionary<string, List<NonBreakRunRecord>> SumNonBreakRunDataByGroup()
+        {
+            Dictionary<string, List<NonBreakRunRecord>> sumData = new Dictionary<string, List<NonBreakRunRecord>>();
+
+            foreach (NonBreakRunRecord rec in runList)
+            {
+                List<NonBreakRunRecord> groupNoBreakRunList;
+                string group = rec.Member.GroupShortName;
+                if (!sumData.ContainsKey(group))
+                {
+                    groupNoBreakRunList = new List<NonBreakRunRecord>();
+                    sumData.Add(group, groupNoBreakRunList);
+                }
+                else
+                {
+                    groupNoBreakRunList = sumData[group];
+                }
+                groupNoBreakRunList.Add(rec);
+            }
+
+            return sumData;
+        }
+
         public void SavePreviousNoBreakRunData()
         {
+            Logger.Info("开始保存连续达标数据...");
+
             List<string> lines = new List<string>();
 
             foreach (NonBreakRunRecord nr in this.runList)
@@ -49,7 +76,7 @@ namespace RunData
             File.WriteAllText(DataSource.NON_BREAK_RUN_DATA_FILE, string.Join(Environment.NewLine, lines.ToArray()));
         }
 
-        public static string[] Keep3Times(string[] times)
+        private static string[] Keep3Times(string[] times)
         {
             List<string> tl = new List<string>(times);
             tl.Sort();
