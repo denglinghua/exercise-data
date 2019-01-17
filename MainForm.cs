@@ -90,6 +90,7 @@ namespace RunData
             DataSource.Init(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
             DataSource.Instance.HandleData();
 
+            MessageBox.Show("报表已经生成，请选择保存文件夹。");
 
             this.saveFileDialogReport.FileName = string.Format("{0}-{1}-报表.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Group);
             if (this.saveFileDialogReport.ShowDialog() == DialogResult.OK)
