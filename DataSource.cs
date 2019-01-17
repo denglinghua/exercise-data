@@ -146,6 +146,13 @@ namespace RunData
 
         private void LoadLeaveData(string fileName)
         {
+            this.LeaveMemberIdList = new List<long>();
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
             Logger.Info("加载请假数据");
 
             IWorkbook book = null;
@@ -155,8 +162,7 @@ namespace RunData
             {
                 book = WorkbookFactory.Create(FS);
                 sheet = book.GetSheetAt(0);
-
-                this.LeaveMemberIdList = new List<long>();
+                                
                 for (int rowIndex = 3; rowIndex <= sheet.LastRowNum; rowIndex++)
                 {
                     IRow row = sheet.GetRow(rowIndex);

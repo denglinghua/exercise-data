@@ -24,9 +24,7 @@ namespace RunData
             this.openFileDialogNoRunFile.Filter = fileFilter;
             this.openFileDialogLeaveFile.Filter = fileFilter;
 
-            CheckDoButtonState();
-
-            this.textBoxLog.Clear();
+            CheckDoButtonState();            
 
             Logger.Init(this.AppendNewLineResult);
         }
@@ -60,6 +58,8 @@ namespace RunData
 
         private void buttonDo_Click(object sender, EventArgs e)
         {
+            this.textBoxLog.Clear();
+
             if (!CheckDataSourceFileOpen())
             {
                 return;
@@ -73,7 +73,7 @@ namespace RunData
 
                 Logger.Info("运行结束。");
 
-                if (MessageBox.Show("报表已经生成，要打开看看吗？", "打开", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("报表已经保存，要打开看看吗？", "打开", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     this.OpenReport(this.saveFileDialogReport.FileName);
                 }
@@ -90,6 +90,7 @@ namespace RunData
             DataSource.Init(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
             DataSource.Instance.HandleData();
 
+
             this.saveFileDialogReport.FileName = string.Format("{0}-{1}-报表.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Group);
             if (this.saveFileDialogReport.ShowDialog() == DialogResult.OK)
             {
@@ -98,7 +99,7 @@ namespace RunData
                 {
                     return;
                 }
-            }
+            }          
 
             new Reporter().ToExcel(DataSource.Instance, this.saveFileDialogReport.FileName);
 

@@ -30,6 +30,8 @@ namespace RunData
         // 请假了相当于跑了，所以要从无跑步人员中移除，避免不达标上榜
         private void MarkLeave(List<long> leaveMemberIds)
         {
+            if (leaveMemberIds.Count == 0) return;
+
             Logger.Info("在当周不达标人员中标注请假");
 
             foreach (NoRunRecord rec in this.noRunList.ToArray())
