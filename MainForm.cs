@@ -19,10 +19,6 @@ namespace RunData
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.textBoxNoRunFiles.Text = @"C:\Users\denglinghua\Desktop\run\data\_201901_广·马帮_天马分队_无跑步成员_0107-0113_14p7.xlsx";
-            this.textBoxRunRecordFile.Text = @"C:\Users\denglinghua\Desktop\run\data\_201901_广·马帮跑步数据统计_0107-0113_gbv3.xlsx";
-            this.textBoxLeaveFile.Text = @"C:\Users\denglinghua\Desktop\run\data\天马分队请假条报名清单.xls";
-
             CheckDoButtonState();
 
             this.textBoxLog.Clear();
@@ -163,13 +159,20 @@ namespace RunData
 
         private void AppendNewLineResult(String text)
         {
-            this.textBoxLog.Text += (Environment.NewLine + text);
+            this.textBoxLog.Text += (text + Environment.NewLine);
         }
 
         private void textBoxLog_TextChanged(object sender, EventArgs e)
         {
             this.textBoxLog.SelectionStart = this.textBoxLog.Text.Length;
             this.textBoxLog.ScrollToCaret();
+        }
+
+        private void InitTestData()
+        {
+            this.textBoxNoRunFiles.Text = @"C:\Users\denglinghua\Desktop\run\data\_201901_广·马帮_天马分队_无跑步成员_0107-0113_14p7.xlsx";
+            this.textBoxRunRecordFile.Text = @"C:\Users\denglinghua\Desktop\run\data\_201901_广·马帮跑步数据统计_0107-0113_gbv3.xlsx";
+            this.textBoxLeaveFile.Text = @"C:\Users\denglinghua\Desktop\run\data\天马分队请假条报名清单.xls";
         }
     }
 }
