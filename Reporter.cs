@@ -27,7 +27,7 @@ namespace RunData
             Logger.Info("开始导出统计结果到Excel...");
 
             this.CreateRunSheet();
-            this.CreateNoRunSheet();
+            this.CreateNoRunSheets();
             this.CreateNonBreakRunSheets();
 
             Logger.Info("保存Excel文件...");
@@ -48,8 +48,8 @@ namespace RunData
         {
             Logger.Info("导出跑量统计...");
 
-            ISheet sheet = book.CreateSheet("跑量统计");
-            //sheet.TabColorIndex = IndexedColors.Green.Index;
+            ISheet sheet = book.CreateSheet(this.data.Group + " 跑量");
+            //sheet.TabColorIndex = IndexedColors.Green.Index;           
 
             string[] columnNames = new string[] { "周排名", "用户昵称", "悦跑圈ID", "所属跑团", "性别", "周跑量(KM)", "总用时", "周跑步次数", "平均配速" };
             int[] columnWidth = new int[] { 5, 15, 9, 11, 5, 9, 8, 8, 8 };
@@ -94,17 +94,27 @@ namespace RunData
             }
         }
 
-        private void CreateNoRunSheet()
+
+        private void CreateNoRunSheets()
         {
             Logger.Info("导出连续不达标统计...");
 
-            ISheet sheet = book.CreateSheet("不达标统计");
+            Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunDataByGroup();
+            foreach (string group in noRunData.Keys)
+            {
+                CreateOneGroupNoRunSheet(group, noRunData[group]);
+            }
+        }
+
+        private void CreateOneGroupNoRunSheet(string group, List<NoRunRecord> noRunList)
+        {
+            ISheet sheet = book.CreateSheet(group + " 不达标");
             //sheet.TabColorIndex = IndexedColors.Red.Index;
 
-            string[] columnNames = new string[] { "跑团", "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
-            int[] columnWidth = new int[] { 9, 17, 10, 13, 13 };
+            string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
+            int[] columnWidth = new int[] { 17, 10, 13, 13 };
             int CELL_COUNT = columnNames.Length;
-            int rowIndex = 0;            
+            int rowIndex = 0;
 
             for (int i = 0; i < CELL_COUNT; i++)
             {
@@ -114,8 +124,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            sheet.GetRow(0).GetCell(1).SetCellValue(this.data.Group + " 不达标统计");
-            sheet.GetRow(1).GetCell(1).SetCellValue(this.data.CurrentDateRange.ToString());            
+            sheet.GetRow(0).GetCell(0).SetCellValue(group + " 不达标统计");
+            sheet.GetRow(1).GetCell(0).SetCellValue(this.data.CurrentDateRange.ToString());
 
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
             row.Height = (short)(sheet.DefaultRowHeight * 1.2);
@@ -125,49 +135,35 @@ namespace RunData
                 cell.SetCellValue(columnNames[i]);
             }
 
-            List<object[]> showData = this.ConvertNoRunDataToShow();
+            List<object[]> showData = this.ConvertNoRunDataToShow(noRunList);
 
-            string preGroup = string.Empty;
             foreach (object[] o in showData)
             {
                 row = CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
                 int c = 0;
-                string g = (string)o[0];
-                row.GetCell(c++).SetCellValue(g.Equals(preGroup) ? string.Empty : g);
-                preGroup = g;
-                row.GetCell(c++).SetCellValue((string)o[1]);
-                row.GetCell(c++).SetCellValue((long)o[2]);
-                row.GetCell(c++).SetCellValue((int)o[3]);
-                row.GetCell(c++).SetCellValue((string)o[4]);
+                row.GetCell(c++).SetCellValue((string)o[0]);
+                row.GetCell(c++).SetCellValue((long)o[1]);
+                row.GetCell(c++).SetCellValue((int)o[2]);
+                row.GetCell(c++).SetCellValue((string)o[3]);
             }
         }
 
-        private List<object[]> ConvertNoRunDataToShow()
+        private List<object[]> ConvertNoRunDataToShow(List<NoRunRecord> noRunList)
         {
-            Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunDataByGroup();
             List<object[]> showData = new List<object[]>();
 
-            foreach (string group in noRunData.Keys)
+            foreach (NoRunRecord rec in noRunList)
             {
-                List<NoRunRecord> recs = noRunData[group];
-                foreach (NoRunRecord rec in recs)
-                {
-                    showData.Add(new object[] { group, rec.Member.Name, rec.Member.JoyRunId, rec.GetTimes().Length, rec.Reason });
-                }
+                showData.Add(new object[] { rec.Member.Name, rec.Member.JoyRunId, rec.GetTimes().Length, rec.Reason });
             }
 
             showData.Sort(delegate (object[] a, object[] b)
             {
-                string g1 = a[0] as string;
-                string g2 = b[0] as string;
-                int c1 = (int)a[3];
-                int c2 = (int)b[3];
+                int c1 = (int)a[2];
+                int c2 = (int)b[2];
 
-                int cg = g1.CompareTo(g2);
-                int cc = c1.CompareTo(c2);
-
-                return cg != 0 ? -cg : -cc;
+                return -c1.CompareTo(c2);
             });
 
             return showData;
@@ -186,7 +182,7 @@ namespace RunData
 
         private void CreateOneGroupNonBreakRunSheets(string group, List<NonBreakRunRecord> runList)
         {
-            ISheet sheet = book.CreateSheet(group + "达标统计");
+            ISheet sheet = book.CreateSheet(group + "达标");
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
 
             string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续达标次数" };
@@ -223,7 +219,7 @@ namespace RunData
                 row.GetCell(c++).SetCellValue((string)o[0]);
                 row.GetCell(c++).SetCellValue((long)o[1]);
                 int count = (int)o[2];
-                row.GetCell(c++).SetCellValue(count < 3 ? count.ToString() : ">=3");
+                if (count < 3) row.GetCell(c++).SetCellValue(count); else row.GetCell(c++).SetCellValue(">=3");
             }
         }
 
@@ -265,7 +261,7 @@ namespace RunData
             style.BorderBottom = BorderStyle.Thin;
             style.BorderLeft = BorderStyle.Thin;
             style.BorderRight = BorderStyle.Thin;
-            style.BorderTop = BorderStyle.Thin;                 
+            style.BorderTop = BorderStyle.Thin;                         
 
             style.SetFont(CreateBasicFont(book));
 
@@ -295,7 +291,7 @@ namespace RunData
             style.FillForegroundColor = IndexedColors.LightCornflowerBlue.Index;
 
             return style;
-        }        
+        }
 
         private static IFont CreateBasicFont(IWorkbook book)
         {
@@ -304,7 +300,7 @@ namespace RunData
             font.FontName = "Calibri";
 
             return font;
-        }        
+        }       
     }
 }
 

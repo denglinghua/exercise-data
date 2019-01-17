@@ -89,7 +89,7 @@ namespace RunData
             DataSource.Init(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
             DataSource.Instance.HandleData();
 
-            this.saveFileDialogReport.FileName = string.Format("{0}-{1}-跑量统计.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Group);
+            this.saveFileDialogReport.FileName = string.Format("{0}-{1}-报表.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Group);
             if (this.saveFileDialogReport.ShowDialog() == DialogResult.OK)
             {
                 bool fileExists = File.Exists(this.saveFileDialogReport.FileName);
