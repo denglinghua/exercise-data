@@ -19,6 +19,11 @@ namespace RunData
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            string fileFilter = "Excel文件|*.xls;*.xlsx";
+            this.openFileDialogRunFile.Filter = fileFilter;
+            this.openFileDialogNoRunFile.Filter = fileFilter;
+            this.openFileDialogLeaveFile.Filter = fileFilter;
+
             CheckDoButtonState();
 
             this.textBoxLog.Clear();
@@ -75,7 +80,7 @@ namespace RunData
             }
             catch (Exception ex)
             {
-                Logger.Info("运行错误:");
+                Logger.Info("运行出现错误:");
                 Logger.Info(ex.ToString());
             }
         }

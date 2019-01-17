@@ -7,7 +7,7 @@ namespace RunData
     class NonBreakRunRecord
     {
         public Member Member { get; }        
-        private SortedDictionary<string, bool> times = new SortedDictionary<string, bool>();
+        private SortedDictionary<string, bool> times = new SortedDictionary<string, bool>(); // use dict as a set
 
         public NonBreakRunRecord(Member member, DateRange dateRange) : this(member, dateRange.ToString())
         {

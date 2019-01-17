@@ -8,7 +8,7 @@ namespace RunData
     {
         public Member Member { get; }
         public string Reason { get; }
-        private SortedDictionary<string, bool> times = new SortedDictionary<string, bool>();
+        private SortedDictionary<string, bool> times = new SortedDictionary<string, bool>(); // use dict as a set
 
         public NoRunRecord(Member member, string reason, DateRange dateRange) : this(member, reason, dateRange.ToString())
         {

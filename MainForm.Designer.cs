@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxDataSource = new System.Windows.Forms.GroupBox();
             this.buttonLeaveFileSelect = new System.Windows.Forms.Button();
             this.textBoxLeaveFile = new System.Windows.Forms.TextBox();
@@ -62,7 +63,7 @@
             this.groupBoxDataSource.Controls.Add(this.labelNoRun);
             this.groupBoxDataSource.Location = new System.Drawing.Point(12, 13);
             this.groupBoxDataSource.Name = "groupBoxDataSource";
-            this.groupBoxDataSource.Size = new System.Drawing.Size(1034, 264);
+            this.groupBoxDataSource.Size = new System.Drawing.Size(1063, 273);
             this.groupBoxDataSource.TabIndex = 0;
             this.groupBoxDataSource.TabStop = false;
             this.groupBoxDataSource.Text = "数据源";
@@ -70,7 +71,7 @@
             // buttonLeaveFileSelect
             // 
             this.buttonLeaveFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonLeaveFileSelect.Location = new System.Drawing.Point(907, 207);
+            this.buttonLeaveFileSelect.Location = new System.Drawing.Point(932, 207);
             this.buttonLeaveFileSelect.Name = "buttonLeaveFileSelect";
             this.buttonLeaveFileSelect.Size = new System.Drawing.Size(116, 38);
             this.buttonLeaveFileSelect.TabIndex = 5;
@@ -81,7 +82,7 @@
             // textBoxLeaveFile
             // 
             this.textBoxLeaveFile.Font = new System.Drawing.Font("Calibri", 9F);
-            this.textBoxLeaveFile.Location = new System.Drawing.Point(170, 211);
+            this.textBoxLeaveFile.Location = new System.Drawing.Point(186, 211);
             this.textBoxLeaveFile.Name = "textBoxLeaveFile";
             this.textBoxLeaveFile.ReadOnly = true;
             this.textBoxLeaveFile.Size = new System.Drawing.Size(724, 29);
@@ -93,14 +94,14 @@
             this.labelLeavelFile.Font = new System.Drawing.Font("Calibri", 9F);
             this.labelLeavelFile.Location = new System.Drawing.Point(12, 217);
             this.labelLeavelFile.Name = "labelLeavelFile";
-            this.labelLeavelFile.Size = new System.Drawing.Size(136, 22);
+            this.labelLeavelFile.Size = new System.Drawing.Size(118, 22);
             this.labelLeavelFile.TabIndex = 6;
-            this.labelLeavelFile.Text = "请假名单文件：";
+            this.labelLeavelFile.Text = "请假名单文件";
             // 
             // buttonNoRunFilesSelect
             // 
             this.buttonNoRunFilesSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonNoRunFilesSelect.Location = new System.Drawing.Point(907, 91);
+            this.buttonNoRunFilesSelect.Location = new System.Drawing.Point(932, 91);
             this.buttonNoRunFilesSelect.Name = "buttonNoRunFilesSelect";
             this.buttonNoRunFilesSelect.Size = new System.Drawing.Size(116, 37);
             this.buttonNoRunFilesSelect.TabIndex = 3;
@@ -111,7 +112,7 @@
             // buttonRunRecordFileSelect
             // 
             this.buttonRunRecordFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonRunRecordFileSelect.Location = new System.Drawing.Point(907, 35);
+            this.buttonRunRecordFileSelect.Location = new System.Drawing.Point(932, 35);
             this.buttonRunRecordFileSelect.Name = "buttonRunRecordFileSelect";
             this.buttonRunRecordFileSelect.Size = new System.Drawing.Size(116, 38);
             this.buttonRunRecordFileSelect.TabIndex = 1;
@@ -122,7 +123,7 @@
             // textBoxRunRecordFile
             // 
             this.textBoxRunRecordFile.Font = new System.Drawing.Font("Calibri", 9F);
-            this.textBoxRunRecordFile.Location = new System.Drawing.Point(170, 39);
+            this.textBoxRunRecordFile.Location = new System.Drawing.Point(189, 39);
             this.textBoxRunRecordFile.Name = "textBoxRunRecordFile";
             this.textBoxRunRecordFile.ReadOnly = true;
             this.textBoxRunRecordFile.Size = new System.Drawing.Size(724, 29);
@@ -134,14 +135,14 @@
             this.labelRunRecord.Font = new System.Drawing.Font("Calibri", 9F);
             this.labelRunRecord.Location = new System.Drawing.Point(12, 45);
             this.labelRunRecord.Name = "labelRunRecord";
-            this.labelRunRecord.Size = new System.Drawing.Size(172, 22);
+            this.labelRunRecord.Size = new System.Drawing.Size(167, 22);
             this.labelRunRecord.TabIndex = 2;
-            this.labelRunRecord.Text = "跑步数据统计文件：";
+            this.labelRunRecord.Text = "跑步数据统计文件 *";
             // 
             // textBoxNoRunFiles
             // 
             this.textBoxNoRunFiles.Font = new System.Drawing.Font("Calibri", 9F);
-            this.textBoxNoRunFiles.Location = new System.Drawing.Point(170, 91);
+            this.textBoxNoRunFiles.Location = new System.Drawing.Point(188, 91);
             this.textBoxNoRunFiles.Multiline = true;
             this.textBoxNoRunFiles.Name = "textBoxNoRunFiles";
             this.textBoxNoRunFiles.ReadOnly = true;
@@ -155,16 +156,16 @@
             this.labelNoRun.Font = new System.Drawing.Font("Calibri", 9F);
             this.labelNoRun.Location = new System.Drawing.Point(12, 91);
             this.labelNoRun.Name = "labelNoRun";
-            this.labelNoRun.Size = new System.Drawing.Size(154, 22);
+            this.labelNoRun.Size = new System.Drawing.Size(149, 22);
             this.labelNoRun.TabIndex = 0;
-            this.labelNoRun.Text = "无跑步成员文件：";
+            this.labelNoRun.Text = "无跑步成员文件 *";
             // 
             // groupBoxOutput
             // 
             this.groupBoxOutput.Controls.Add(this.textBoxLog);
             this.groupBoxOutput.Location = new System.Drawing.Point(12, 329);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(1034, 404);
+            this.groupBoxOutput.Size = new System.Drawing.Size(1063, 407);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "运行日志";
@@ -177,7 +178,7 @@
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(1007, 360);
+            this.textBoxLog.Size = new System.Drawing.Size(1032, 374);
             this.textBoxLog.TabIndex = 7;
             this.textBoxLog.TextChanged += new System.EventHandler(this.textBoxLog_TextChanged);
             // 
@@ -193,9 +194,9 @@
             // buttonDo
             // 
             this.buttonDo.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonDo.Location = new System.Drawing.Point(905, 292);
+            this.buttonDo.Location = new System.Drawing.Point(923, 295);
             this.buttonDo.Name = "buttonDo";
-            this.buttonDo.Size = new System.Drawing.Size(130, 35);
+            this.buttonDo.Size = new System.Drawing.Size(140, 35);
             this.buttonDo.TabIndex = 2;
             this.buttonDo.Text = "Run > > >";
             this.buttonDo.UseVisualStyleBackColor = true;
@@ -209,11 +210,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1058, 740);
+            this.ClientSize = new System.Drawing.Size(1087, 748);
             this.Controls.Add(this.buttonDo);
             this.Controls.Add(this.groupBoxOutput);
             this.Controls.Add(this.groupBoxDataSource);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";

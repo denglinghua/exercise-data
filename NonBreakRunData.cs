@@ -61,6 +61,7 @@ namespace RunData
             return sumData;
         }
 
+        // 保持过往连续跑步累计，只保持最近3个，都显示>=3
         public void SavePreviousNoBreakRunData()
         {
             Logger.Info("保存连续达标数据");

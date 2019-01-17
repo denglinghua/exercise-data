@@ -51,6 +51,7 @@ namespace RunData
             ISheet sheet = book.CreateSheet(this.data.Group + " 跑量");
             //sheet.TabColorIndex = IndexedColors.Green.Index;           
 
+            // column
             string[] columnNames = new string[] { "周排名", "用户昵称", "悦跑圈ID", "所属跑团", "性别", "周跑量(KM)", "总用时", "周跑步次数", "平均配速" };
             int[] columnWidth = new int[] { 5, 15, 9, 11, 5, 9, 8, 8, 8 };
             short CELL_COUNT = (short)columnNames.Length;
@@ -61,6 +62,7 @@ namespace RunData
                 sheet.SetColumnWidth(i, columnWidth[i] * 256);
             }
 
+            // title
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
@@ -68,6 +70,7 @@ namespace RunData
             sheet.GetRow(0).GetCell(1).SetCellValue(this.data.Group);
             sheet.GetRow(1).GetCell(1).SetCellValue(this.data.CurrentDateRange.ToString());
 
+            // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
             row.Height = (short)(sheet.DefaultRowHeight * 1.2);
             for (int i = 0; i < CELL_COUNT; i++)
@@ -76,6 +79,7 @@ namespace RunData
                 cell.SetCellValue(columnNames[i]);
             }
 
+            // data rows
             for (int i = 0; i < this.data.RunRecoreds.Count; i++)
             {
                 RunRecord rr = this.data.RunRecoreds[i];
@@ -102,6 +106,7 @@ namespace RunData
             Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunDataByGroup();
             foreach (string group in noRunData.Keys)
             {
+                // 某个组没数据，创建空sheet吗？暂时创建吧
                 CreateOneGroupNoRunSheet(group, noRunData[group]);
             }
         }
@@ -111,6 +116,7 @@ namespace RunData
             ISheet sheet = book.CreateSheet(group + " 不达标");
             //sheet.TabColorIndex = IndexedColors.Red.Index;
 
+            // columns
             string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
             int[] columnWidth = new int[] { 17, 10, 13, 13 };
             int CELL_COUNT = columnNames.Length;
@@ -121,12 +127,14 @@ namespace RunData
                 sheet.SetColumnWidth(i, columnWidth[i] * 256);
             }
 
+            // title
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
             sheet.GetRow(0).GetCell(0).SetCellValue(group + " 不达标统计");
             sheet.GetRow(1).GetCell(0).SetCellValue(this.data.CurrentDateRange.ToString());
 
+            // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
             row.Height = (short)(sheet.DefaultRowHeight * 1.2);
             for (int i = 0; i < CELL_COUNT; i++)
@@ -135,6 +143,7 @@ namespace RunData
                 cell.SetCellValue(columnNames[i]);
             }
 
+            // data rows
             List<object[]> showData = this.ConvertNoRunDataToShow(noRunList);
 
             foreach (object[] o in showData)
@@ -158,6 +167,7 @@ namespace RunData
                 showData.Add(new object[] { rec.Member.Name, rec.Member.JoyRunId, rec.GetTimes().Length, rec.Reason });
             }
 
+            // sorted by no run times desc
             showData.Sort(delegate (object[] a, object[] b)
             {
                 int c1 = (int)a[2];
@@ -185,6 +195,7 @@ namespace RunData
             ISheet sheet = book.CreateSheet(group + "达标");
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
 
+            // columns
             string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续达标次数" };
             int[] columnWidth = new int[] { 17, 10, 12 };
             int CELL_COUNT = columnNames.Length;
@@ -195,12 +206,14 @@ namespace RunData
                 sheet.SetColumnWidth(i, columnWidth[i] * 256);
             }
 
+            // title
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
             sheet.GetRow(0).GetCell(0).SetCellValue(group + " 连续达标统计");
             sheet.GetRow(1).GetCell(0).SetCellValue(this.data.CurrentDateRange.ToString());
 
+            // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
             row.Height = (short)(sheet.DefaultRowHeight * 1.2);
             for (int i = 0; i < CELL_COUNT; i++)
@@ -209,6 +222,7 @@ namespace RunData
                 cell.SetCellValue(columnNames[i]);
             }
 
+            // data rows
             List<object[]> showData = this.ConvertNonBreakRunDataShow(runList);
 
             foreach (object[] o in showData)
@@ -232,6 +246,7 @@ namespace RunData
                 showData.Add(new object[] { rec.Member.Name, rec.Member.JoyRunId, rec.GetTimes().Length });
             }
 
+            // sorted by non-break run times desc
             showData.Sort(delegate (object[] a, object[] b)
             {
                 int c1 = (int)a[2];

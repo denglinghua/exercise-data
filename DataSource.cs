@@ -216,6 +216,7 @@ namespace RunData
             return row.GetCell(cr.Col);
         }
 
+        // 都以string读入是防止源头excel不按格式写数据，不管3721都先转string
         private static string[] ReadRowToArray(IRow row, int columnCount)
         {
             string[] values = new string[columnCount];

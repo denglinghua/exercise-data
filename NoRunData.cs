@@ -27,6 +27,7 @@ namespace RunData
             this.Merge();
         }
 
+        // 请假了相当于跑了，所以要从无跑步人员中移除，避免不达标上榜
         private void MarkLeave(List<long> leaveMemberIds)
         {
             Logger.Info("在当周不达标人员中标注请假");
@@ -40,6 +41,8 @@ namespace RunData
             }
         }
 
+        // 以当期未跑步去合并过往连续累计
+        // 因为如果当期跑步了，或请假了，过往连续累计显然自然失效
         private void Merge()
         {
             Logger.Info("合并过往连续不达标数据");
