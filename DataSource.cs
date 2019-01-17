@@ -47,7 +47,7 @@ namespace RunData
 
         private void ClassifyRunData()
         {
-            Logger.Info("开始分离跑步达标和不达标的数据...");
+            Logger.Info("分离跑步达标和不达标的数据");
 
             foreach (RunRecord r in this.RunRecoreds)
             {
@@ -77,7 +77,7 @@ namespace RunData
 
         private void LoadRunRecord(string fileName)
         {
-            Logger.Info("开始加载跑步统计数据...");
+            Logger.Info("加载跑步统计数据");
 
             IWorkbook book = null;
             ISheet sheet = null;
@@ -110,7 +110,7 @@ namespace RunData
 
         private void LoadNoRunData(string[] noRunFiles)
         {
-            Logger.Info("开始加载无跑步成员数据...");
+            Logger.Info("加载无跑步成员数据");
 
             this.NoRunData = new NoRunData();
             foreach (string fileName in noRunFiles)
@@ -146,7 +146,7 @@ namespace RunData
 
         private void LoadLeaveData(string fileName)
         {
-            Logger.Info("开始加载请假数据...");
+            Logger.Info("加载请假数据");
 
             IWorkbook book = null;
             ISheet sheet = null;
@@ -176,7 +176,7 @@ namespace RunData
                 return;
             }
 
-            Logger.Info("开始加载过往连续不达标数据...");
+            Logger.Info("加载过往连续不达标数据");
 
             string[] lines = File.ReadAllLines(fileName);
             foreach (string s in lines)
@@ -190,14 +190,14 @@ namespace RunData
 
         private void LoadPreviousNonBreakRunData(string fileName)
         {
+            this.NonBreakRunData = new NonBreakRunData();
+
             if (!File.Exists(fileName))
             {
                 return;
             }
 
-            Logger.Info("开始加载过去连续达标数据...");
-
-            this.NonBreakRunData = new NonBreakRunData();
+            Logger.Info("加载过去连续达标数据");           
 
             string[] lines = File.ReadAllLines(fileName);
             foreach (string s in lines)

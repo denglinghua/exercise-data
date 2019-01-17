@@ -69,8 +69,8 @@
             // 
             // buttonLeaveFileSelect
             // 
-            this.buttonLeaveFileSelect.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonLeaveFileSelect.Location = new System.Drawing.Point(906, 207);
+            this.buttonLeaveFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
+            this.buttonLeaveFileSelect.Location = new System.Drawing.Point(907, 207);
             this.buttonLeaveFileSelect.Name = "buttonLeaveFileSelect";
             this.buttonLeaveFileSelect.Size = new System.Drawing.Size(116, 38);
             this.buttonLeaveFileSelect.TabIndex = 5;
@@ -80,26 +80,26 @@
             // 
             // textBoxLeaveFile
             // 
-            this.textBoxLeaveFile.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBoxLeaveFile.Font = new System.Drawing.Font("Calibri", 9F);
             this.textBoxLeaveFile.Location = new System.Drawing.Point(170, 211);
             this.textBoxLeaveFile.Name = "textBoxLeaveFile";
             this.textBoxLeaveFile.ReadOnly = true;
-            this.textBoxLeaveFile.Size = new System.Drawing.Size(724, 28);
+            this.textBoxLeaveFile.Size = new System.Drawing.Size(724, 29);
             this.textBoxLeaveFile.TabIndex = 4;
             // 
             // labelLeavelFile
             // 
             this.labelLeavelFile.AutoSize = true;
-            this.labelLeavelFile.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelLeavelFile.Font = new System.Drawing.Font("Calibri", 9F);
             this.labelLeavelFile.Location = new System.Drawing.Point(12, 217);
             this.labelLeavelFile.Name = "labelLeavelFile";
-            this.labelLeavelFile.Size = new System.Drawing.Size(134, 18);
+            this.labelLeavelFile.Size = new System.Drawing.Size(136, 22);
             this.labelLeavelFile.TabIndex = 6;
             this.labelLeavelFile.Text = "请假名单文件：";
             // 
             // buttonNoRunFilesSelect
             // 
-            this.buttonNoRunFilesSelect.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonNoRunFilesSelect.Font = new System.Drawing.Font("Calibri", 9F);
             this.buttonNoRunFilesSelect.Location = new System.Drawing.Point(907, 91);
             this.buttonNoRunFilesSelect.Name = "buttonNoRunFilesSelect";
             this.buttonNoRunFilesSelect.Size = new System.Drawing.Size(116, 37);
@@ -110,7 +110,7 @@
             // 
             // buttonRunRecordFileSelect
             // 
-            this.buttonRunRecordFileSelect.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonRunRecordFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
             this.buttonRunRecordFileSelect.Location = new System.Drawing.Point(907, 35);
             this.buttonRunRecordFileSelect.Name = "buttonRunRecordFileSelect";
             this.buttonRunRecordFileSelect.Size = new System.Drawing.Size(116, 38);
@@ -121,27 +121,27 @@
             // 
             // textBoxRunRecordFile
             // 
-            this.textBoxRunRecordFile.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBoxRunRecordFile.Location = new System.Drawing.Point(171, 39);
+            this.textBoxRunRecordFile.Font = new System.Drawing.Font("Calibri", 9F);
+            this.textBoxRunRecordFile.Location = new System.Drawing.Point(170, 39);
             this.textBoxRunRecordFile.Name = "textBoxRunRecordFile";
             this.textBoxRunRecordFile.ReadOnly = true;
-            this.textBoxRunRecordFile.Size = new System.Drawing.Size(724, 28);
+            this.textBoxRunRecordFile.Size = new System.Drawing.Size(724, 29);
             this.textBoxRunRecordFile.TabIndex = 0;
             // 
             // labelRunRecord
             // 
             this.labelRunRecord.AutoSize = true;
-            this.labelRunRecord.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelRunRecord.Location = new System.Drawing.Point(13, 45);
+            this.labelRunRecord.Font = new System.Drawing.Font("Calibri", 9F);
+            this.labelRunRecord.Location = new System.Drawing.Point(12, 45);
             this.labelRunRecord.Name = "labelRunRecord";
-            this.labelRunRecord.Size = new System.Drawing.Size(170, 18);
+            this.labelRunRecord.Size = new System.Drawing.Size(172, 22);
             this.labelRunRecord.TabIndex = 2;
             this.labelRunRecord.Text = "跑步数据统计文件：";
             // 
             // textBoxNoRunFiles
             // 
-            this.textBoxNoRunFiles.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBoxNoRunFiles.Location = new System.Drawing.Point(171, 91);
+            this.textBoxNoRunFiles.Font = new System.Drawing.Font("Calibri", 9F);
+            this.textBoxNoRunFiles.Location = new System.Drawing.Point(170, 91);
             this.textBoxNoRunFiles.Multiline = true;
             this.textBoxNoRunFiles.Name = "textBoxNoRunFiles";
             this.textBoxNoRunFiles.ReadOnly = true;
@@ -152,10 +152,10 @@
             // labelNoRun
             // 
             this.labelNoRun.AutoSize = true;
-            this.labelNoRun.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelNoRun.Font = new System.Drawing.Font("Calibri", 9F);
             this.labelNoRun.Location = new System.Drawing.Point(12, 91);
             this.labelNoRun.Name = "labelNoRun";
-            this.labelNoRun.Size = new System.Drawing.Size(152, 18);
+            this.labelNoRun.Size = new System.Drawing.Size(154, 22);
             this.labelNoRun.TabIndex = 0;
             this.labelNoRun.Text = "无跑步成员文件：";
             // 
@@ -171,7 +171,7 @@
             // 
             // textBoxLog
             // 
-            this.textBoxLog.Font = new System.Drawing.Font("NSimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBoxLog.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxLog.Location = new System.Drawing.Point(15, 27);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -192,6 +192,7 @@
             // 
             // buttonDo
             // 
+            this.buttonDo.Font = new System.Drawing.Font("Calibri", 9F);
             this.buttonDo.Location = new System.Drawing.Point(905, 292);
             this.buttonDo.Name = "buttonDo";
             this.buttonDo.Size = new System.Drawing.Size(130, 35);

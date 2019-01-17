@@ -27,7 +27,7 @@ namespace RunData
 
         private void Merge()
         {
-            Logger.Info("开始合并过往连续达标数据...");
+            Logger.Info("合并过往连续达标数据");
 
             foreach (NonBreakRunRecord rec in this.runList)
             {
@@ -63,7 +63,7 @@ namespace RunData
 
         public void SavePreviousNoBreakRunData()
         {
-            Logger.Info("开始保存连续达标数据...");
+            Logger.Info("保存连续达标数据");
 
             List<string> lines = new List<string>();
 

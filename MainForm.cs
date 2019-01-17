@@ -80,7 +80,7 @@ namespace RunData
             catch (Exception ex)
             {
                 Logger.Info("运行错误:");
-                Logger.Info(ex.StackTrace);
+                Logger.Info(ex.ToString());
             }
         }
 

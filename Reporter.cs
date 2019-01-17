@@ -24,13 +24,13 @@ namespace RunData
 
             InitCellStyle();
 
-            Logger.Info("开始导出统计结果到Excel...");
+            Logger.Info("导出统计结果到Excel文件");
 
             this.CreateRunSheet();
             this.CreateNoRunSheets();
             this.CreateNonBreakRunSheets();
 
-            Logger.Info("保存Excel文件...");
+            Logger.Info("保存Excel文件");
 
             FileStream sw = File.Create(saveFile);
             book.Write(sw);
@@ -46,7 +46,7 @@ namespace RunData
 
         private void CreateRunSheet()
         {
-            Logger.Info("导出跑量统计...");
+            Logger.Info("导出跑量统计");
 
             ISheet sheet = book.CreateSheet(this.data.Group + " 跑量");
             //sheet.TabColorIndex = IndexedColors.Green.Index;           
@@ -97,7 +97,7 @@ namespace RunData
 
         private void CreateNoRunSheets()
         {
-            Logger.Info("导出连续不达标统计...");
+            Logger.Info("导出连续不达标统计");
 
             Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunDataByGroup();
             foreach (string group in noRunData.Keys)
@@ -171,7 +171,7 @@ namespace RunData
 
         private void CreateNonBreakRunSheets()
         {
-            Logger.Info("导出连续达标统计...");
+            Logger.Info("导出连续达标统计");
 
             Dictionary<string, List<NonBreakRunRecord>> sumData = this.data.NonBreakRunData.SumNonBreakRunDataByGroup();
             foreach (string group in sumData.Keys)
