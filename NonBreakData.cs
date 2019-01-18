@@ -11,6 +11,8 @@ namespace RunData
     {
         private readonly string description;
         private DateTime curDataTime, prevDataTime;
+        // 当期数据日期在往期数据之前（如果往期数据存在），就是非法当期数据了
+        private bool invalidCurData = false;
         private Dictionary<Member, NonBreakRecord> prevData = new Dictionary<Member, NonBreakRecord>();
         private List<NonBreakRecord> curData = new List<NonBreakRecord>();
 
@@ -46,6 +48,14 @@ namespace RunData
                 string[] a = lines[i].Split('\t');
                 this.AddPreviousRecord(new Member(long.Parse(a[0]), a[1], a[2], a[3]), int.Parse(a[4]));
             }
+
+            this.invalidCurData = this.prevDataTime > this.curDataTime;
+
+            if (this.invalidCurData)
+            {
+                throw new Exception(string.Format("*** 当期[{0}]数据在过往[{1}]累计{2}数据之前，请检查数据。",
+                    this.curDataTime.ToShortDateString(), this.prevDataTime.ToShortDateString(), this.description));
+            }
         }
 
         private void AddPreviousRecord(Member member, int count)
@@ -62,7 +72,8 @@ namespace RunData
         {
             Logger.Info(string.Format("合并过往连续{0}数据", this.description));
 
-            // 当前数据比过往数据新，连续累计次数才能更新，防止重复跑程序。
+            // 当前数据比过往数据新，连续累计次数才能更新。如果两个日期相同，是重复跑程序。
+            // 如果当期数据比过往数据旧，数据非法了，会停止运行程序。
             int increaseCount = this.curDataTime > this.prevDataTime ? 1 : 0;
 
             foreach (NonBreakRecord r in this.curData)

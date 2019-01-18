@@ -55,10 +55,14 @@ namespace RunData
             }
         }
 
+        private bool isReportSaved = false;
+
 
         private void buttonDo_Click(object sender, EventArgs e)
         {
             this.textBoxLog.Clear();
+
+            this.isReportSaved = false;
 
             if (!CheckDataSourceFileOpen())
             {
@@ -72,6 +76,8 @@ namespace RunData
                 this.Do();
 
                 Logger.Info("运行结束。");
+
+                if (!isReportSaved) return;
 
                 if (MessageBox.Show("报表已经保存，要打开看看吗？", "打开", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -103,6 +109,7 @@ namespace RunData
             }
 
             new Reporter().ToExcel(DataSource.Instance, this.saveFileDialogReport.FileName);
+            this.isReportSaved = true;
 
             DataSource.Instance.Save();
         }
