@@ -103,7 +103,7 @@ namespace RunData
         {
             Logger.Info("导出连续不达标统计");
 
-            Dictionary<string, List<NoRunRecord>> noRunData = this.data.NoRunData.SumNoRunDataByGroup();
+            IDictionary<string, List<NonBreakRecord>> noRunData = this.data.NoRunData.SumByGroup();
             foreach (string group in noRunData.Keys)
             {
                 // 某个组没数据，创建空sheet吗？暂时创建吧
@@ -111,7 +111,7 @@ namespace RunData
             }
         }
 
-        private void CreateOneGroupNoRunSheet(string group, List<NoRunRecord> noRunList)
+        private void CreateOneGroupNoRunSheet(string group, List<NonBreakRecord> noRunList)
         {
             ISheet sheet = book.CreateSheet(group + " 不达标");
             //sheet.TabColorIndex = IndexedColors.Red.Index;
@@ -158,13 +158,13 @@ namespace RunData
             }
         }
 
-        private List<object[]> ConvertNoRunDataToShow(List<NoRunRecord> noRunList)
+        private List<object[]> ConvertNoRunDataToShow(List<NonBreakRecord> noRunList)
         {
             List<object[]> showData = new List<object[]>();
 
-            foreach (NoRunRecord rec in noRunList)
+            foreach (NonBreakRecord r in noRunList)
             {
-                showData.Add(new object[] { rec.Member.Name, rec.Member.JoyRunId, rec.GetTimes().Length, rec.Reason });
+                showData.Add(new object[] { r.Member.Name, r.Member.JoyRunId, r.Count, r.Reason });
             }
 
             // sorted by no run times desc
@@ -183,14 +183,14 @@ namespace RunData
         {
             Logger.Info("导出连续达标统计");
 
-            Dictionary<string, List<NonBreakRunRecord>> sumData = this.data.NonBreakRunData.SumNonBreakRunDataByGroup();
+            IDictionary<string, List<NonBreakRecord>> sumData = this.data.NonBreakRunData.SumByGroup();
             foreach (string group in sumData.Keys)
             {
                 CreateOneGroupNonBreakRunSheets(group, sumData[group]);
             }
         }
 
-        private void CreateOneGroupNonBreakRunSheets(string group, List<NonBreakRunRecord> runList)
+        private void CreateOneGroupNonBreakRunSheets(string group, List<NonBreakRecord> runList)
         {
             ISheet sheet = book.CreateSheet(group + "达标");
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
@@ -232,18 +232,17 @@ namespace RunData
                 int c = 0;
                 row.GetCell(c++).SetCellValue((string)o[0]);
                 row.GetCell(c++).SetCellValue((long)o[1]);
-                int count = (int)o[2];
-                if (count < 3) row.GetCell(c++).SetCellValue(count); else row.GetCell(c++).SetCellValue(">=3");
+                row.GetCell(c++).SetCellValue((int)o[2]);
             }
         }
 
-        private List<object[]> ConvertNonBreakRunDataShow(List<NonBreakRunRecord> runList)
+        private List<object[]> ConvertNonBreakRunDataShow(List<NonBreakRecord> runList)
         {
             List<object[]> showData = new List<object[]>();
 
-            foreach (NonBreakRunRecord rec in runList)
+            foreach (NonBreakRecord r in runList)
             {
-                showData.Add(new object[] { rec.Member.Name, rec.Member.JoyRunId, rec.GetTimes().Length });
+                showData.Add(new object[] { r.Member.Name, r.Member.JoyRunId, r.Count });
             }
 
             // sorted by non-break run times desc

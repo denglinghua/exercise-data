@@ -100,13 +100,11 @@ namespace RunData
                 {
                     return;
                 }
-            }          
+            }
 
             new Reporter().ToExcel(DataSource.Instance, this.saveFileDialogReport.FileName);
 
-            DataSource.Instance.NoRunData.SavePreviousNoRunData();
-
-            DataSource.Instance.NonBreakRunData.SavePreviousNoBreakRunData();
+            DataSource.Instance.Save();
         }
 
         private void OpenReport(string file)
@@ -119,6 +117,7 @@ namespace RunData
             if (this.textBoxRunRecordFile.Text != String.Empty && this.textBoxNoRunFiles.Text != string.Empty)
             {
                 this.buttonDo.Enabled = true;
+                this.buttonDo.BackColor = Color.LawnGreen;
             }
             else
             {

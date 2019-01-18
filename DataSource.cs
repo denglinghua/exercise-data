@@ -14,14 +14,14 @@ namespace RunData
         public DateRange CurrentDateRange;
         public string Group;
         public List<RunRecord> RunRecoreds;
-        public NoRunData NoRunData;
-        public NonBreakRunData NonBreakRunData;
-        private List<long> LeaveMemberIdList;        
+        public NonBreakData NoRunData;
+        public NonBreakData NonBreakRunData;
+        private List<long> LeaveMemberIdList;
 
         public static readonly DataSource Instance = new DataSource();
 
-        public static readonly string NO_RUN_DATA_FILE = "no_run_data.txt";
-        public static readonly string NON_BREAK_RUN_DATA_FILE = "no_break_run_data.txt";        
+        private static readonly string NO_RUN_DATA_FILE = "no_run_data.txt";
+        private static readonly string NON_BREAK_RUN_DATA_FILE = "no_break_run_data.txt";
 
         public static void Init(string runRecordFile, string[] noRunFiles, string leaveFile)
         {
@@ -40,9 +40,28 @@ namespace RunData
         {
             this.ClassifyRunData();
 
-            this.NoRunData.HandleData(this.LeaveMemberIdList);
+            MarkLeaveForNoRunData();
 
-            this.NonBreakRunData.HandleData();
+            this.NoRunData.Merge();
+            this.NonBreakRunData.Merge();
+        }
+
+        // 请假了相当于跑了，所以要从无跑步人员中移除，避免不达标上榜
+        private void MarkLeaveForNoRunData()
+        {
+            if (this.LeaveMemberIdList.Count == 0) return;
+
+            Logger.Info("在当周不达标人员中标注请假");
+
+            List<NonBreakRecord> l = this.NoRunData.GetCurrentData();
+
+            foreach (NonBreakRecord r in l.ToArray())
+            {
+                if (this.LeaveMemberIdList.Contains(r.Member.JoyRunId))
+                {
+                    l.Remove(r);
+                }
+            }
         }
 
         private void ClassifyRunData()
@@ -66,11 +85,11 @@ namespace RunData
 
                 if (reason != null)
                 {
-                    this.NoRunData.AddCurrentNoRunRecord(r.Member, reason, CurrentDateRange);
+                    this.NoRunData.AddCurrentRecord(r.Member, reason);
                 }
                 else
                 {
-                    this.NonBreakRunData.AddCurrentNoRunRecord(r.Member, CurrentDateRange);
+                    this.NonBreakRunData.AddCurrentRecord(r.Member, string.Empty);
                 }
             }
         }
@@ -112,7 +131,7 @@ namespace RunData
         {
             Logger.Info("加载无跑步成员数据");
 
-            this.NoRunData = new NoRunData();
+            this.NoRunData = new NonBreakData("不达标", CurrentDateRange.Start);
             foreach (string fileName in noRunFiles)
             {
                 LoadOneFileNoRunMembers(fileName);
@@ -139,7 +158,7 @@ namespace RunData
                     //悦跑ID 昵称 性别 总跑量（公里） 最后跑步时间
                     string[] values = ReadRowToArray(row, 3);
 
-                    this.NoRunData.AddCurrentNoRunRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步", CurrentDateRange);
+                    this.NoRunData.AddCurrentRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步");
                 }
             }
         }
@@ -162,7 +181,7 @@ namespace RunData
             {
                 book = WorkbookFactory.Create(FS);
                 sheet = book.GetSheetAt(0);
-                                
+
                 for (int rowIndex = 3; rowIndex <= sheet.LastRowNum; rowIndex++)
                 {
                     IRow row = sheet.GetRow(rowIndex);
@@ -177,42 +196,13 @@ namespace RunData
 
         private void LoadPreviousNoRunData(string fileName)
         {
-            if (!File.Exists(fileName))
-            {
-                return;
-            }
-
-            Logger.Info("加载过往连续不达标数据");
-
-            string[] lines = File.ReadAllLines(fileName);
-            foreach (string s in lines)
-            {
-                //88474417	Samryi	男	广·马帮_神马分队	20190107-20190113
-                string[] a = s.Split('\t');
-                this.NoRunData.AddPreviousNoRunRecord(new Member(long.Parse(a[0]), a[1], a[2], a[3]),
-                    a[4].Split(','));
-            }
+            this.NoRunData.LoadPreviousData(fileName);
         }
 
         private void LoadPreviousNonBreakRunData(string fileName)
         {
-            this.NonBreakRunData = new NonBreakRunData();
-
-            if (!File.Exists(fileName))
-            {
-                return;
-            }
-
-            Logger.Info("加载过去连续达标数据");           
-
-            string[] lines = File.ReadAllLines(fileName);
-            foreach (string s in lines)
-            {
-                //88474417	Samryi	男	广·马帮_神马分队	20190107-20190113
-                string[] a = s.Split('\t');
-                this.NonBreakRunData.AddPreviousRunRecord(new Member(long.Parse(a[0]), a[1], a[2], a[3]),
-                    a[4].Split(','));
-            }
+            this.NonBreakRunData = new NonBreakData("达标", this.CurrentDateRange.Start);
+            this.NonBreakRunData.LoadPreviousData(fileName);
         }
 
         private static ICell GetCellByReference(ISheet sheet, string reference)
@@ -243,6 +233,12 @@ namespace RunData
             }
 
             return values;
+        }
+
+        public void Save()
+        {
+            this.NoRunData.Save(NO_RUN_DATA_FILE);
+            this.NonBreakRunData.Save(NON_BREAK_RUN_DATA_FILE);
         }
     }
 }

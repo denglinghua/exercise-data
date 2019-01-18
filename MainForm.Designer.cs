@@ -63,7 +63,7 @@
             this.groupBoxDataSource.Controls.Add(this.labelNoRun);
             this.groupBoxDataSource.Location = new System.Drawing.Point(12, 13);
             this.groupBoxDataSource.Name = "groupBoxDataSource";
-            this.groupBoxDataSource.Size = new System.Drawing.Size(1063, 273);
+            this.groupBoxDataSource.Size = new System.Drawing.Size(1260, 273);
             this.groupBoxDataSource.TabIndex = 0;
             this.groupBoxDataSource.TabStop = false;
             this.groupBoxDataSource.Text = "数据源";
@@ -71,10 +71,10 @@
             // buttonLeaveFileSelect
             // 
             this.buttonLeaveFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonLeaveFileSelect.Location = new System.Drawing.Point(932, 207);
+            this.buttonLeaveFileSelect.Location = new System.Drawing.Point(1128, 207);
             this.buttonLeaveFileSelect.Name = "buttonLeaveFileSelect";
             this.buttonLeaveFileSelect.Size = new System.Drawing.Size(116, 38);
-            this.buttonLeaveFileSelect.TabIndex = 5;
+            this.buttonLeaveFileSelect.TabIndex = 3;
             this.buttonLeaveFileSelect.Text = "选择...";
             this.buttonLeaveFileSelect.UseVisualStyleBackColor = true;
             this.buttonLeaveFileSelect.Click += new System.EventHandler(this.buttonLeaveFileSelect_Click);
@@ -85,7 +85,7 @@
             this.textBoxLeaveFile.Location = new System.Drawing.Point(186, 211);
             this.textBoxLeaveFile.Name = "textBoxLeaveFile";
             this.textBoxLeaveFile.ReadOnly = true;
-            this.textBoxLeaveFile.Size = new System.Drawing.Size(724, 29);
+            this.textBoxLeaveFile.Size = new System.Drawing.Size(931, 29);
             this.textBoxLeaveFile.TabIndex = 4;
             // 
             // labelLeavelFile
@@ -101,10 +101,10 @@
             // buttonNoRunFilesSelect
             // 
             this.buttonNoRunFilesSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonNoRunFilesSelect.Location = new System.Drawing.Point(932, 91);
+            this.buttonNoRunFilesSelect.Location = new System.Drawing.Point(1128, 91);
             this.buttonNoRunFilesSelect.Name = "buttonNoRunFilesSelect";
             this.buttonNoRunFilesSelect.Size = new System.Drawing.Size(116, 37);
-            this.buttonNoRunFilesSelect.TabIndex = 3;
+            this.buttonNoRunFilesSelect.TabIndex = 2;
             this.buttonNoRunFilesSelect.Text = "选择...";
             this.buttonNoRunFilesSelect.UseVisualStyleBackColor = true;
             this.buttonNoRunFilesSelect.Click += new System.EventHandler(this.buttonNoRunFilesSelect_Click);
@@ -112,7 +112,7 @@
             // buttonRunRecordFileSelect
             // 
             this.buttonRunRecordFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonRunRecordFileSelect.Location = new System.Drawing.Point(932, 35);
+            this.buttonRunRecordFileSelect.Location = new System.Drawing.Point(1128, 35);
             this.buttonRunRecordFileSelect.Name = "buttonRunRecordFileSelect";
             this.buttonRunRecordFileSelect.Size = new System.Drawing.Size(116, 38);
             this.buttonRunRecordFileSelect.TabIndex = 1;
@@ -126,7 +126,7 @@
             this.textBoxRunRecordFile.Location = new System.Drawing.Point(189, 39);
             this.textBoxRunRecordFile.Name = "textBoxRunRecordFile";
             this.textBoxRunRecordFile.ReadOnly = true;
-            this.textBoxRunRecordFile.Size = new System.Drawing.Size(724, 29);
+            this.textBoxRunRecordFile.Size = new System.Drawing.Size(928, 29);
             this.textBoxRunRecordFile.TabIndex = 0;
             // 
             // labelRunRecord
@@ -147,7 +147,7 @@
             this.textBoxNoRunFiles.Name = "textBoxNoRunFiles";
             this.textBoxNoRunFiles.ReadOnly = true;
             this.textBoxNoRunFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxNoRunFiles.Size = new System.Drawing.Size(724, 96);
+            this.textBoxNoRunFiles.Size = new System.Drawing.Size(929, 96);
             this.textBoxNoRunFiles.TabIndex = 2;
             // 
             // labelNoRun
@@ -165,7 +165,7 @@
             this.groupBoxOutput.Controls.Add(this.textBoxLog);
             this.groupBoxOutput.Location = new System.Drawing.Point(12, 329);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(1063, 407);
+            this.groupBoxOutput.Size = new System.Drawing.Size(1260, 428);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "运行日志";
@@ -178,7 +178,7 @@
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(1032, 374);
+            this.textBoxLog.Size = new System.Drawing.Size(1229, 385);
             this.textBoxLog.TabIndex = 7;
             this.textBoxLog.TextChanged += new System.EventHandler(this.textBoxLog_TextChanged);
             // 
@@ -193,13 +193,14 @@
             // 
             // buttonDo
             // 
+            this.buttonDo.BackColor = System.Drawing.SystemColors.Control;
             this.buttonDo.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonDo.Location = new System.Drawing.Point(923, 295);
+            this.buttonDo.Location = new System.Drawing.Point(1122, 295);
             this.buttonDo.Name = "buttonDo";
             this.buttonDo.Size = new System.Drawing.Size(140, 35);
-            this.buttonDo.TabIndex = 2;
+            this.buttonDo.TabIndex = 4;
             this.buttonDo.Text = "Run > > >";
-            this.buttonDo.UseVisualStyleBackColor = true;
+            this.buttonDo.UseVisualStyleBackColor = false;
             this.buttonDo.Click += new System.EventHandler(this.buttonDo_Click);
             // 
             // openFileDialogLeaveFile
@@ -210,7 +211,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1087, 748);
+            this.ClientSize = new System.Drawing.Size(1289, 769);
             this.Controls.Add(this.buttonDo);
             this.Controls.Add(this.groupBoxOutput);
             this.Controls.Add(this.groupBoxDataSource);
