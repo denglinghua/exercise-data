@@ -14,7 +14,8 @@ namespace RunData
     {
         private DataSource data;
         private IWorkbook book;
-        private ICellStyle basicStyle, headerStyle, altStyle;
+        private ICellStyle basicStyle, headerStyle, altStyle, basicHCenterStyle, altHCenterStyle, basicBoldStyle;
+        private ICellStyle b_s, a_s, b_hc_s, a_hc_s; // short names for cell style
 
         public void ToExcel(DataSource data, string saveFile)
         {
@@ -39,9 +40,12 @@ namespace RunData
 
         private void InitCellStyle()
         {
-            basicStyle = CreateBasicStyle(book);
+            basicStyle = b_s = CreateBasicStyle(book);
             headerStyle = CreateHeaderStyle(book);
-            altStyle = CreateAlternativeStyle(book);
+            altStyle = a_s = CreateAlternativeStyle(book);
+            basicBoldStyle = CreateBasicBoldStyle(book);
+            basicHCenterStyle = b_hc_s = CreateBasicHCenterStyle(book);
+            altHCenterStyle = a_hc_s = CreateAlternativeHCenterStyle(book);
         }
 
         private void CreateRunSheet()
@@ -53,9 +57,12 @@ namespace RunData
 
             // column
             string[] columnNames = new string[] { "周排名", "用户昵称", "悦跑圈ID", "所属跑团", "性别", "周跑量(KM)", "总用时", "周跑步次数", "平均配速" };
+            ICellStyle[] rowCellStyles = new ICellStyle[] {b_s, b_s, b_s, b_s, b_hc_s, b_s, b_hc_s, b_s, b_hc_s };
+            ICellStyle[] altRowCellStyles = new ICellStyle[] { a_s, a_s, a_s, a_s, a_hc_s, a_s, a_hc_s, a_s, a_hc_s };
             int[] columnWidth = new int[] { 5, 15, 9, 11, 5, 9, 8, 8, 8 };
             short CELL_COUNT = (short)columnNames.Length;
             int rowIndex = 0;
+            ICell cell;
 
             for (int i = 0; i < CELL_COUNT; i++)
             {
@@ -67,15 +74,15 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            sheet.GetRow(0).GetCell(1).SetCellValue(this.data.Group);
-            sheet.GetRow(1).GetCell(1).SetCellValue(this.data.CurrentDateRange.ToString());
+            SetCellValueWithStye(sheet.GetRow(0).GetCell(1), this.data.Group, basicBoldStyle);
+            SetCellValueWithStye(sheet.GetRow(1).GetCell(1), this.data.CurrentDateRange.ToString(), basicBoldStyle);          
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
             row.Height = (short)(sheet.DefaultRowHeight * 1.2);
             for (int i = 0; i < CELL_COUNT; i++)
             {
-                ICell cell = row.GetCell(i);
+                cell = row.GetCell(i);
                 cell.SetCellValue(columnNames[i]);
             }
 
@@ -83,7 +90,7 @@ namespace RunData
             for (int i = 0; i < this.data.RunRecoreds.Count; i++)
             {
                 RunRecord rr = this.data.RunRecoreds[i];
-                row = CreateRow(sheet, rowIndex++, CELL_COUNT, (i % 2 == 0) ? basicStyle : altStyle);
+                row = CreateRow(sheet, rowIndex++, CELL_COUNT, (i % 2 == 0) ? rowCellStyles : altRowCellStyles);
 
                 int c = 0;
                 row.GetCell(c++).SetCellValue(i + 1);
@@ -118,6 +125,7 @@ namespace RunData
 
             // columns
             string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
+            ICellStyle[] rowCellStyles = new ICellStyle[] { b_s, b_s, b_hc_s, b_s };
             int[] columnWidth = new int[] { 17, 10, 13, 13 };
             int CELL_COUNT = columnNames.Length;
             int rowIndex = 0;
@@ -131,8 +139,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            sheet.GetRow(0).GetCell(0).SetCellValue(group + " 不达标统计");
-            sheet.GetRow(1).GetCell(0).SetCellValue(this.data.CurrentDateRange.ToString());
+            SetCellValueWithStye(sheet.GetRow(0).GetCell(0), group + " 不达标统计", basicBoldStyle);            
+            SetCellValueWithStye(sheet.GetRow(1).GetCell(0), this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -148,7 +156,7 @@ namespace RunData
 
             foreach (object[] o in showData)
             {
-                row = CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
+                row = CreateRow(sheet, rowIndex++, CELL_COUNT, rowCellStyles);
 
                 int c = 0;
                 row.GetCell(c++).SetCellValue((string)o[0]);
@@ -197,6 +205,7 @@ namespace RunData
 
             // columns
             string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续达标次数" };
+            ICellStyle[] rowCellStyles = new ICellStyle[] { b_s, b_s, b_hc_s};
             int[] columnWidth = new int[] { 17, 10, 12 };
             int CELL_COUNT = columnNames.Length;
             int rowIndex = 0;
@@ -210,8 +219,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            sheet.GetRow(0).GetCell(0).SetCellValue(group + " 连续达标统计");
-            sheet.GetRow(1).GetCell(0).SetCellValue(this.data.CurrentDateRange.ToString());
+            SetCellValueWithStye(sheet.GetRow(0).GetCell(0), group + " 连续达标统计", basicBoldStyle);
+            SetCellValueWithStye(sheet.GetRow(1).GetCell(0), this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -227,7 +236,7 @@ namespace RunData
 
             foreach (object[] o in showData)
             {
-                row = CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
+                row = CreateRow(sheet, rowIndex++, CELL_COUNT, rowCellStyles);
 
                 int c = 0;
                 row.GetCell(c++).SetCellValue((string)o[0]);
@@ -268,6 +277,17 @@ namespace RunData
             return row;
         }
 
+        private static IRow CreateRow(ISheet sheet, int rowIndex, int cellCount, ICellStyle[] rowCellStyles)
+        {
+            IRow row = sheet.CreateRow(rowIndex);
+            for (int i = 0; i < cellCount; i++)
+            {
+                ICell cell = row.CreateCell(i);
+                cell.CellStyle = rowCellStyles[i];
+            }
+            return row;
+        }
+
         private static ICellStyle CreateBasicStyle(IWorkbook book)
         {
             ICellStyle style = book.CreateCellStyle();
@@ -292,6 +312,7 @@ namespace RunData
 
             IFont font = CreateBasicFont(book);
             font.Color = IndexedColors.White.Index;
+            font.IsBold = true;
 
             style.SetFont(font);
 
@@ -307,6 +328,27 @@ namespace RunData
             return style;
         }
 
+        private static ICellStyle CreateBasicHCenterStyle(IWorkbook book)
+        {
+            ICellStyle style = CreateBasicStyle(book);
+            style.Alignment = HorizontalAlignment.Center;
+            return style;
+        }
+
+        private static ICellStyle CreateBasicBoldStyle(IWorkbook book)
+        {
+            ICellStyle style = CreateBasicStyle(book);
+            style.GetFont(book).IsBold = true;
+            return style;
+        }
+
+        private static ICellStyle CreateAlternativeHCenterStyle(IWorkbook book)
+        {
+            ICellStyle style = CreateAlternativeStyle(book);
+            style.Alignment = HorizontalAlignment.Center;
+            return style;
+        }
+
         private static IFont CreateBasicFont(IWorkbook book)
         {
             IFont font = book.CreateFont();
@@ -314,7 +356,19 @@ namespace RunData
             font.FontName = "Calibri";
 
             return font;
-        }       
+        }   
+        
+        private static void SetCellValueWithStye(ICell cell, string val, ICellStyle style)
+        {
+            cell.CellStyle = style;
+            cell.SetCellValue(val);
+        }
+
+        private static void SetCellValueWithStye(ICell cell, double val, ICellStyle style)
+        {
+            cell.CellStyle = style;
+            cell.SetCellValue(val);
+        }
     }
 }
 
