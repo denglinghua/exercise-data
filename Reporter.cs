@@ -57,9 +57,9 @@ namespace RunData
 
             // column
             string[] columnNames = new string[] { "周排名", "用户昵称", "悦跑圈ID", "所属跑团", "性别", "周跑量(KM)", "总用时", "周跑步次数", "平均配速" };
-            ICellStyle[] rowCellStyles = new ICellStyle[] {b_s, b_s, b_s, b_s, b_hc_s, b_s, b_hc_s, b_s, b_hc_s };
-            ICellStyle[] altRowCellStyles = new ICellStyle[] { a_s, a_s, a_s, a_s, a_hc_s, a_s, a_hc_s, a_s, a_hc_s };
-            int[] columnWidth = new int[] { 5, 15, 9, 11, 5, 9, 8, 8, 8 };
+            ICellStyle[] rowCellStyles = new ICellStyle[] {b_hc_s, b_s, b_s, b_hc_s, b_hc_s, b_hc_s, b_hc_s, b_hc_s, b_hc_s };
+            ICellStyle[] altRowCellStyles = new ICellStyle[] { a_hc_s, a_s, a_s, a_hc_s, a_hc_s, a_hc_s, a_hc_s, a_hc_s, a_hc_s };
+            int[] columnWidth = new int[] { 6, 15, 9, 11, 5, 9, 8, 9, 8 };
             short CELL_COUNT = (short)columnNames.Length;
             int rowIndex = 0;
             ICell cell;
