@@ -19,6 +19,8 @@ namespace RunData
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            this.Text = this.Text + string.Format("({0})", Version.VER_NO);
+
             string fileFilter = "Excel文件|*.xls;*.xlsx";
             this.openFileDialogRunFile.Filter = fileFilter;
             this.openFileDialogNoRunFile.Filter = fileFilter;
@@ -69,7 +71,7 @@ namespace RunData
                 return;
             }
 
-            Logger.Info("开始运行...");
+            Logger.Info(string.Format("开始运行（版本号：{0}）...", Version.VER_NO));
 
             try
             {
