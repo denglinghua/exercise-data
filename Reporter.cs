@@ -124,9 +124,9 @@ namespace RunData
             //sheet.TabColorIndex = IndexedColors.Red.Index;
 
             // columns
-            string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
-            ICellStyle[] rowCellStyles = new ICellStyle[] { b_s, b_s, b_hc_s, b_s };
-            int[] columnWidth = new int[] { 17, 10, 13, 13 };
+            string[] columnNames = new string[] {"序号", "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
+            ICellStyle[] rowCellStyles = new ICellStyle[] {b_hc_s, b_s, b_s, b_hc_s, b_s };
+            int[] columnWidth = new int[] {5, 17, 10, 13, 13 };
             int CELL_COUNT = columnNames.Length;
             int rowIndex = 0;
 
@@ -139,8 +139,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            SetCellValueWithStye(sheet.GetRow(0).GetCell(0), group + " 不达标统计", basicBoldStyle);            
-            SetCellValueWithStye(sheet.GetRow(1).GetCell(0), this.data.CurrentDateRange.ToString(), basicBoldStyle);
+            SetCellValueWithStye(sheet.GetRow(0).GetCell(1), group + " 不达标统计", basicBoldStyle);            
+            SetCellValueWithStye(sheet.GetRow(1).GetCell(1), this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -154,11 +154,13 @@ namespace RunData
             // data rows
             List<object[]> showData = this.ConvertNoRunDataToShow(noRunList);
 
+            int seq = 1;
             foreach (object[] o in showData)
             {
                 row = CreateRow(sheet, rowIndex++, CELL_COUNT, rowCellStyles);
 
                 int c = 0;
+                row.GetCell(c++).SetCellValue(seq++);
                 row.GetCell(c++).SetCellValue((string)o[0]);
                 row.GetCell(c++).SetCellValue((long)o[1]);
                 row.GetCell(c++).SetCellValue((int)o[2]);
@@ -204,9 +206,9 @@ namespace RunData
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
 
             // columns
-            string[] columnNames = new string[] { "用户昵称", "悦跑圈ID", "连续达标次数" };
-            ICellStyle[] rowCellStyles = new ICellStyle[] { b_s, b_s, b_hc_s};
-            int[] columnWidth = new int[] { 17, 10, 12 };
+            string[] columnNames = new string[] {"序号", "用户昵称", "悦跑圈ID", "连续达标次数" };
+            ICellStyle[] rowCellStyles = new ICellStyle[] {b_hc_s, b_s, b_s, b_hc_s};
+            int[] columnWidth = new int[] {5, 17, 10, 12 };
             int CELL_COUNT = columnNames.Length;
             int rowIndex = 0;
 
@@ -219,8 +221,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            SetCellValueWithStye(sheet.GetRow(0).GetCell(0), group + " 连续达标统计", basicBoldStyle);
-            SetCellValueWithStye(sheet.GetRow(1).GetCell(0), this.data.CurrentDateRange.ToString(), basicBoldStyle);
+            SetCellValueWithStye(sheet.GetRow(0).GetCell(1), group + " 连续达标统计", basicBoldStyle);
+            SetCellValueWithStye(sheet.GetRow(1).GetCell(1), this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -234,11 +236,13 @@ namespace RunData
             // data rows
             List<object[]> showData = this.ConvertNonBreakRunDataShow(runList);
 
+            int seq = 1;
             foreach (object[] o in showData)
             {
                 row = CreateRow(sheet, rowIndex++, CELL_COUNT, rowCellStyles);
 
                 int c = 0;
+                row.GetCell(c++).SetCellValue(seq++);
                 row.GetCell(c++).SetCellValue((string)o[0]);
                 row.GetCell(c++).SetCellValue((long)o[1]);
                 row.GetCell(c++).SetCellValue((int)o[2]);
