@@ -55,7 +55,8 @@ namespace RunData
 
         private void AddPreviousRecord(Member member, int count)
         {
-            this.prevData.Add(member, new NonBreakRecord(member, count, string.Empty));
+            // 当用户转群之后，在不同时间点导出的数据，无跑步成员可能重复
+            this.prevData[member] = new NonBreakRecord(member, count, string.Empty);
         }
 
         public void AddCurrentRecord(Member member, string reason)
