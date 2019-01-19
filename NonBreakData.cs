@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
-
 using System.IO;
 
 namespace RunData
@@ -15,8 +12,6 @@ namespace RunData
         private bool invalidCurData = false;
         private Dictionary<Member, NonBreakRecord> prevData = new Dictionary<Member, NonBreakRecord>();
         private List<NonBreakRecord> curData = new List<NonBreakRecord>();
-
-        private static readonly string DATE_FORMAT = "yyyy-MM-dd";
 
         public NonBreakData(string description, DateTime curDataTime)
         {
@@ -40,21 +35,21 @@ namespace RunData
 
             string[] lines = File.ReadAllLines(fileName);
 
-            this.prevDataTime = DateTime.ParseExact(lines[0], DATE_FORMAT, CultureInfo.InvariantCulture);
+            this.prevDataTime = DateUtil.ParseDate(lines[0]);
 
             for (int i = 1; i < lines.Length; i++)
             {
                 //88474417	Samryi	男	广·马帮_神马分队	3
                 string[] a = lines[i].Split('\t');
-                this.AddPreviousRecord(new Member(long.Parse(a[0]), a[1], a[2], a[3]), int.Parse(a[4]));
+                this.AddPreviousRecord(Member.Create(a), int.Parse(a[4]));
             }
 
             this.invalidCurData = this.prevDataTime > this.curDataTime;
 
             if (this.invalidCurData)
             {
-                throw new Exception(string.Format("*** 当期[{0}]数据在过往[{1}]累计{2}数据之前，请检查数据。",
-                    this.curDataTime.ToShortDateString(), this.prevDataTime.ToShortDateString(), this.description));
+                throw new RunDataException(string.Format("*** 当期[{0}]数据在过往[{1}]累计{2}数据之前，请检查数据。",
+                    DateUtil.ToDateString(this.curDataTime), DateUtil.ToDateString(this.prevDataTime), this.description));
             }
         }
 
@@ -114,7 +109,7 @@ namespace RunData
 
             List<string> lines = new List<string>();
 
-            lines.Add(this.curDataTime.ToString(DATE_FORMAT));
+            lines.Add(DateUtil.ToDateString(this.curDataTime));
 
             foreach (NonBreakRecord r in this.curData)
             {

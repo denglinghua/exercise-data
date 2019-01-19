@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 
@@ -15,19 +13,25 @@ namespace RunData
         public string Group;
         public List<RunRecord> RunRecoreds;
         public NonBreakData NoRunData;
+        private MemberData memberData;
         public NonBreakData NonBreakRunData;
         private List<long> LeaveMemberIdList;
 
         public static readonly DataSource Instance = new DataSource();
 
-        private static readonly string NO_RUN_DATA_FILE = "no_run_data.txt";
-        private static readonly string NON_BREAK_RUN_DATA_FILE = "no_break_run_data.txt";
+        private static readonly string MEMBER_DATA_FILE = "members_data";
+        private static readonly string NO_RUN_DATA_FILE = "no_run_data";
+        private static readonly string NON_BREAK_RUN_DATA_FILE = "no_break_run_data";
 
         public static void Init(string runRecordFile, string[] noRunFiles, string leaveFile)
         {
+            // 所有的load数据方法，都是只加载原始数据，不做任何处理，千万不要边加载，边处理。
+            // 处理都在所有加载之后，这样比较好协调处理顺序。顺序！顺序！顺序！非常重要！
             Instance.LoadRunRecord(runRecordFile);
 
             Instance.LoadNoRunData(noRunFiles);
+
+            Instance.LoadMemberData(MEMBER_DATA_FILE);
 
             Instance.LoadLeaveData(leaveFile);
 
@@ -38,12 +42,29 @@ namespace RunData
 
         public void HandleData()
         {
+            this.AddNewMembers();
+
             this.ClassifyRunData();
 
-            MarkLeaveForNoRunData();
+            this.MarkLeaveForNoRunData();
+
+            this.MarkNewMemberForNoRunData();
 
             this.NoRunData.Merge();
             this.NonBreakRunData.Merge();
+        }
+
+        private void AddNewMembers()
+        {
+            foreach (RunRecord r in this.RunRecoreds)
+            {
+                this.memberData.TryAdd(r.Member);
+            }
+
+            foreach (NonBreakRecord r in this.NoRunData.GetCurrentData())
+            {
+                this.memberData.TryAdd(r.Member);
+            }
         }
 
         // 请假了相当于跑了，所以要从无跑步人员中移除，避免不达标上榜
@@ -58,6 +79,23 @@ namespace RunData
             foreach (NonBreakRecord r in l.ToArray())
             {
                 if (this.LeaveMemberIdList.Contains(r.Member.JoyRunId))
+                {
+                    l.Remove(r);
+                }
+            }
+        }
+
+        private void MarkNewMemberForNoRunData()
+        {
+            Logger.Info("在当周不达标人员中标注新加入成员");
+
+            List<NonBreakRecord> l = this.NoRunData.GetCurrentData();
+
+            bool isNew;
+            foreach (NonBreakRecord r in l.ToArray())
+            {
+                isNew = this.memberData.isNewMember(r.Member);
+                if (isNew)
                 {
                     l.Remove(r);
                 }
@@ -163,6 +201,13 @@ namespace RunData
             }
         }
 
+        private void LoadMemberData(string fileName)
+        {
+            this.memberData = new MemberData();
+
+            this.memberData.LoadPreviousData(fileName);
+        }
+
         private void LoadLeaveData(string fileName)
         {
             this.LeaveMemberIdList = new List<long>();
@@ -237,6 +282,7 @@ namespace RunData
 
         public void Save()
         {
+            this.memberData.Save(MEMBER_DATA_FILE);
             this.NoRunData.Save(NO_RUN_DATA_FILE);
             this.NonBreakRunData.Save(NON_BREAK_RUN_DATA_FILE);
         }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RunData
 {
@@ -9,6 +7,7 @@ namespace RunData
         public long JoyRunId { get; }
         public string Name { get; }
         public string Gender { get; }
+        public DateTime JoinDate { get; set; }
 
         private static string[] GroupShortNames = new string[] { "神骏分队", "天马分队", "神马分队", "未分组"};
         private string group;
@@ -68,6 +67,11 @@ namespace RunData
         public override string ToString()
         {
             return string.Format("{0}\t{1}\t{2}\t{3}", this.JoyRunId, this.Name, this.Gender, this.Group);
+        }
+
+        public static Member Create(string[] a)
+        {
+            return new Member(long.Parse(a[0]), a[1], a[2], a[3]);
         }
     }
 }

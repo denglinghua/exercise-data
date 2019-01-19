@@ -81,7 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateUtil.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="MemberData.cs" />
     <Compile Include="NonBreakData.cs" />
     <Compile Include="NonBreakRecord.cs" />
     <Compile Include="DataSource.cs" />
@@ -94,6 +96,7 @@
     </Compile>
     <Compile Include="Member.cs" />
     <Compile Include="Reporter.cs" />
+    <Compile Include="RunDataException.cs" />
     <Compile Include="RunRecord.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

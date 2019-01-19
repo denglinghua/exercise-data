@@ -84,6 +84,11 @@ namespace RunData
                     this.OpenReport(this.saveFileDialogReport.FileName);
                 }
             }
+            catch(RunDataException ex)
+            {
+                Logger.Info("运行出现错误:");
+                Logger.Info(ex.Message);
+            }
             catch (Exception ex)
             {
                 Logger.Info("运行出现错误:");
