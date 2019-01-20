@@ -332,3 +332,4 @@ ASALocalRun/
 # final package files
 run.exe
 run.exe.config
+misc/run_data/
