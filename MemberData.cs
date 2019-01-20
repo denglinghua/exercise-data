@@ -6,7 +6,7 @@ namespace RunData
 {
     class MemberData
     {
-        private Dictionary<Member, Member> members = new Dictionary<Member, Member>(); // use as a set
+        private Dictionary<long, Member> members = new Dictionary<long, Member>();
 
         public void LoadPreviousData(string fileName)
         {
@@ -25,7 +25,7 @@ namespace RunData
                 string[] a = lines[i].Split('\t');
                 Member m = Member.Create(a);
                 m.JoinDate = DateUtil.ParseDate(a[4]);
-                this.members[m] = m;
+                this.members[m.JoyRunId] = m;
             }
 
             Logger.Info("    上期成员：{0} 人", this.members.Keys.Count);
@@ -33,20 +33,22 @@ namespace RunData
 
         public void TryAdd(Member m)
         {
-            if (!members.ContainsKey(m))
+            Member existMember;
+            if (!members.TryGetValue(m.JoyRunId, out existMember))
             {
                 m.JoinDate = DataSource.Instance.CurrentDateRange.Start;
-                this.members[m] = m;
             }
             else
             {
-                m.JoinDate = this.members[m].JoinDate;
+                m.JoinDate = existMember.JoinDate;
             }
+            // 已经存在的member属性（name/group）可能会更新，所以要用最新的member放入
+            this.members[m.JoyRunId] = m;
         }
 
         public bool isNewMember(Member m)
         {
-            if (members.ContainsKey(m))
+            if (members.ContainsKey(m.JoyRunId))
             {
                 return m.JoinDate == DataSource.Instance.CurrentDateRange.Start;
             }
@@ -62,7 +64,7 @@ namespace RunData
 
             // sort only for debug
             List<Member> sortedList = new List<Member>();
-            sortedList.AddRange(this.members.Keys);
+            sortedList.AddRange(this.members.Values);
             sortedList.Sort(delegate (Member a, Member b)
             {
                 return a.JoinDate.CompareTo(b.JoinDate);

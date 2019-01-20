@@ -6,6 +6,6 @@ namespace RunData
 {
     class Version
     {
-        public static readonly string VER_NO = "20190120.1"; 
+        public static readonly string VER_NO = "20190120.2"; 
     }
 }
