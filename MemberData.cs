@@ -27,6 +27,8 @@ namespace RunData
                 m.JoinDate = DateUtil.ParseDate(a[4]);
                 this.members[m] = true;
             }
+
+            Logger.Info("    上期成员：{0} 人", this.members.Keys.Count);
         }
 
         public void TryAdd(Member m)

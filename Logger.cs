@@ -21,5 +21,10 @@ namespace RunData
         {
             Instance.appender(msg);
         }
+
+        public static void Info(string format, params object[] args)
+        {
+            Info(string.Format(format, args));
+        }
     }
 }

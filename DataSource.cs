@@ -70,9 +70,9 @@ namespace RunData
         // 请假了相当于跑了，所以要从无跑步人员中移除，避免不达标上榜
         private void MarkLeaveForNoRunData()
         {
-            if (this.LeaveMemberIdList.Count == 0) return;
-
             Logger.Info("在当周不达标人员中标注请假");
+
+            if (this.LeaveMemberIdList.Count == 0) return;
 
             List<NonBreakRecord> l = this.NoRunData.GetCurrentData();
 
@@ -81,6 +81,7 @@ namespace RunData
                 if (this.LeaveMemberIdList.Contains(r.Member.JoyRunId))
                 {
                     l.Remove(r);
+                    Logger.Info("    {0}", r.Member);
                 }
             }
         }
@@ -98,6 +99,7 @@ namespace RunData
                 if (isNew)
                 {
                     l.Remove(r);
+                    Logger.Info("    {0}", r.Member);
                 }
             }
         }
@@ -162,6 +164,8 @@ namespace RunData
                         new RunRecord(long.Parse(values[1]), values[0], values[3], values[2], float.Parse(values[4]), TimeSpan.Parse(values[5]).TotalSeconds,
                         short.Parse(values[6])));
                 }
+
+                Logger.Info("    数据时段：{0} ，跑步记录 {1} 条", this.CurrentDateRange.ToString(), this.RunRecoreds.Count);
             }
         }
 
@@ -189,6 +193,7 @@ namespace RunData
                 ICell groupCell = GetCellByReference(sheet, "B4");
                 String groupName = groupCell.StringCellValue;
 
+                int c = 0;
                 for (int rowIndex = 6; rowIndex <= sheet.LastRowNum; rowIndex++)
                 {
                     IRow row = sheet.GetRow(rowIndex);
@@ -197,7 +202,11 @@ namespace RunData
                     string[] values = ReadRowToArray(row, 3);
 
                     this.NoRunData.AddCurrentRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步");
+
+                    c++;
                 }
+
+                Logger.Info("    {0} ：{1} 人未跑步", groupName, c);
             }
         }
 
@@ -236,6 +245,8 @@ namespace RunData
 
                     this.LeaveMemberIdList.Add(long.Parse(values[2]));
                 }
+
+                Logger.Info("    {0} 人请假", this.LeaveMemberIdList.Count);
             }
         }
 
