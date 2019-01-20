@@ -19,9 +19,9 @@ namespace RunData
 
         public static readonly DataSource Instance = new DataSource();
 
-        private static readonly string MEMBER_DATA_FILE = "members_data";
-        private static readonly string NO_RUN_DATA_FILE = "no_run_data";
-        private static readonly string NON_BREAK_RUN_DATA_FILE = "no_break_run_data";
+        private static readonly string MEMBER_DATA_FILE = "data_members";
+        private static readonly string NO_RUN_DATA_FILE = "data_no_run";
+        private static readonly string NON_BREAK_RUN_DATA_FILE = "data_no_break_run";
 
         public static void Init(string runRecordFile, string[] noRunFiles, string leaveFile)
         {
