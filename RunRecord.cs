@@ -15,7 +15,7 @@ namespace RunData
         public bool IsQualifiedOfAvgPace { get; }
         public bool IsQualifiedOfDistance { get; }        
 
-        private static readonly short MAX_AVG_PACE = 8 * 60;
+        private static readonly short MAX_AVG_PACE = (short)(8.5 * 60);
         private static readonly short MIN_DISTANCE = 10;  
 
         public RunRecord(long joyRunId, string name, string gender, string group, double distance, double totalTimeSeconds, short runTimes)
