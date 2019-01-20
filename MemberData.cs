@@ -6,7 +6,7 @@ namespace RunData
 {
     class MemberData
     {
-        private Dictionary<Member, bool> members = new Dictionary<Member, bool>(); // use as a set
+        private Dictionary<Member, Member> members = new Dictionary<Member, Member>(); // use as a set
 
         public void LoadPreviousData(string fileName)
         {
@@ -25,7 +25,7 @@ namespace RunData
                 string[] a = lines[i].Split('\t');
                 Member m = Member.Create(a);
                 m.JoinDate = DateUtil.ParseDate(a[4]);
-                this.members[m] = true;
+                this.members[m] = m;
             }
 
             Logger.Info("    上期成员：{0} 人", this.members.Keys.Count);
@@ -36,7 +36,11 @@ namespace RunData
             if (!members.ContainsKey(m))
             {
                 m.JoinDate = DataSource.Instance.CurrentDateRange.Start;
-                this.members[m] = true;
+                this.members[m] = m;
+            }
+            else
+            {
+                m.JoinDate = this.members[m].JoinDate;
             }
         }
 
@@ -54,7 +58,7 @@ namespace RunData
 
         public void Save(string fileName)
         {
-            Logger.Info("保存成员{0}数据");
+            Logger.Info("保存成员数据");
 
             // sort only for debug
             List<Member> sortedList = new List<Member>();
