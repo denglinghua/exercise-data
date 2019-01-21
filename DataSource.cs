@@ -54,6 +54,14 @@ namespace RunData
             this.NonBreakRunData.Merge();
         }
 
+        public int MemberCount
+        {
+            get
+            {
+                return this.memberData.MemberCount;
+            }
+        }
+
         private void AddNewMembers()
         {
             foreach (RunRecord r in this.RunRecoreds)

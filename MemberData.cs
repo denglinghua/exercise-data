@@ -8,6 +8,14 @@ namespace RunData
     {
         private Dictionary<long, Member> members = new Dictionary<long, Member>();
 
+        public int MemberCount
+        {
+            get
+            {
+                return this.members.Count;
+            }
+        }
+
         public void LoadPreviousData(string fileName)
         {
             if (!File.Exists(fileName))

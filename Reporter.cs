@@ -70,12 +70,32 @@ namespace RunData
             }
 
             // title
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
+            for (int i = 0; i < 4; i++)
+            {
+                CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
+            }            
 
-            SetCellValueWithStye(sheet.GetRow(0).GetCell(1), this.data.Group, basicBoldStyle);
-            SetCellValueWithStye(sheet.GetRow(1).GetCell(1), this.data.CurrentDateRange.ToString(), basicBoldStyle);          
+            SetCellValueWithStye(sheet, "B1", this.data.Group, basicBoldStyle);
+            SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
+
+            int memberCount = this.data.MemberCount;
+            int runCount = this.data.RunRecoreds.Count;
+            int qulifiedRunCount = this.data.NonBreakRunData.GetCurrentData().Count;
+
+            SetCellValueWithStye(sheet, "D1", "跑团人数", this.basicStyle);
+            SetCellValueWithStye(sheet, "E1", memberCount, this.basicHCenterStyle);
+
+            SetCellValueWithStye(sheet, "D2", "本周跑步人数", this.basicStyle);
+            SetCellValueWithStye(sheet, "E2", runCount, this.basicHCenterStyle);
+
+            SetCellValueWithStye(sheet, "D3", "本周达标人数", this.basicStyle);
+            SetCellValueWithStye(sheet, "E3", qulifiedRunCount, this.basicHCenterStyle);
+
+            SetCellValueWithStye(sheet, "G1", "打卡率", this.basicStyle);
+            SetCellValueWithStye(sheet, "H1", string.Format("{0:P2}", (double)runCount /memberCount), this.basicHCenterStyle);
+
+            SetCellValueWithStye(sheet, "G2", "达标率", this.basicStyle);
+            SetCellValueWithStye(sheet, "H2", string.Format("{0:P2}.", (double)qulifiedRunCount / memberCount), this.basicHCenterStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -139,8 +159,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            SetCellValueWithStye(sheet.GetRow(0).GetCell(1), group + " 不达标统计", basicBoldStyle);            
-            SetCellValueWithStye(sheet.GetRow(1).GetCell(1), this.data.CurrentDateRange.ToString(), basicBoldStyle);
+            SetCellValueWithStye(sheet, "B1", group + " 不达标统计", basicBoldStyle);            
+            SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -221,8 +241,8 @@ namespace RunData
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
 
-            SetCellValueWithStye(sheet.GetRow(0).GetCell(1), group + " 连续达标统计", basicBoldStyle);
-            SetCellValueWithStye(sheet.GetRow(1).GetCell(1), this.data.CurrentDateRange.ToString(), basicBoldStyle);
+            SetCellValueWithStye(sheet, "B1", group + " 连续达标统计", basicBoldStyle);
+            SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
@@ -360,18 +380,21 @@ namespace RunData
             font.FontName = "Calibri";
 
             return font;
-        }   
-        
-        private static void SetCellValueWithStye(ICell cell, string val, ICellStyle style)
-        {
-            cell.CellStyle = style;
-            cell.SetCellValue(val);
         }
 
-        private static void SetCellValueWithStye(ICell cell, double val, ICellStyle style)
+        private static void SetCellValueWithStye(ISheet sheet, string cellRef, object val, ICellStyle style)
         {
+            CellReference cr = new CellReference(cellRef);
+            ICell cell = sheet.GetRow(cr.Row).GetCell(cr.Col);
             cell.CellStyle = style;
-            cell.SetCellValue(val);
+
+            if (val is int || val is double)
+            {
+                cell.SetCellValue(Convert.ToDouble(val));
+            } else
+            {
+                cell.SetCellValue(val.ToString());
+            }
         }
     }
 }
