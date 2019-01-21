@@ -26,6 +26,8 @@ namespace RunData
             this.openFileDialogNoRunFile.Filter = fileFilter;
             this.openFileDialogLeaveFile.Filter = fileFilter;
 
+            this.saveFileDialogReport.DefaultExt = "xlsx";
+
             CheckDoButtonState();            
 
             Logger.Init(this.AppendNewLineResult);
