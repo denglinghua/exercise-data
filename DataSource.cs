@@ -42,7 +42,7 @@ namespace RunData
 
         public void HandleData()
         {
-            this.AddNewMembers();
+            this.MarkMembers();
 
             this.ClassifyRunData();
 
@@ -62,17 +62,24 @@ namespace RunData
             }
         }
 
-        private void AddNewMembers()
+        /// <summary>
+        /// 标记新会员和活跃会员
+        /// </summary>
+        private void MarkMembers()
         {
+            Logger.Info("标注新加入和退出成员");
+
             foreach (RunRecord r in this.RunRecoreds)
             {
-                this.memberData.TryAdd(r.Member);
+                this.memberData.Mark(r.Member);
             }
 
             foreach (NonBreakRecord r in this.NoRunData.GetCurrentData())
             {
-                this.memberData.TryAdd(r.Member);
+                this.memberData.Mark(r.Member);
             }
+
+            this.memberData.RemoveInactiveMembers();
         }
 
         // 请假了相当于跑了，所以要从无跑步人员中移除，避免不达标上榜

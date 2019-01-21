@@ -39,19 +39,34 @@ namespace RunData
             Logger.Info("    上期成员：{0} 人", this.members.Keys.Count);
         }
 
-        public void TryAdd(Member m)
+        public void Mark(Member m)
         {
             Member existMember;
             if (!members.TryGetValue(m.JoyRunId, out existMember))
             {
                 m.JoinDate = DataSource.Instance.CurrentDateRange.Start;
+                Logger.Info("    +：{0}", m);
             }
             else
             {
                 m.JoinDate = existMember.JoinDate;
             }
             // 已经存在的member属性（name/group）可能会更新，所以要用最新的member放入
+            m.IsActive = true;
             this.members[m.JoyRunId] = m;
+        }
+
+        public void RemoveInactiveMembers()
+        {
+            List<Member> l = new List<Member>(this.members.Values);
+            foreach (Member m in l)
+            {
+                if (!m.IsActive)
+                {
+                    this.members.Remove(m.JoyRunId);
+                    Logger.Info("    -：{0}", m);
+                }
+            }
         }
 
         public bool isNewMember(Member m)

@@ -8,6 +8,7 @@ namespace RunData
         public string Name { get; }
         public string Gender { get; }
         public DateTime JoinDate { get; set; }
+        public bool IsActive = false;
 
         private static string[] GroupShortNames = new string[] { "神骏分队", "天马分队", "神马分队", "未分组"};
         private string group;
