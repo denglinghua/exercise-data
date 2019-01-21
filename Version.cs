@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RunData
+﻿namespace RunData
 {
-    class Version
+    static class Version
     {
         public static readonly string VER_NO = "20190121.02"; 
     }
