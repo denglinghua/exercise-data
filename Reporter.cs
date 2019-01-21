@@ -77,7 +77,7 @@ namespace RunData
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             int memberCount = this.data.MemberCount;
-            int runCount = this.data.RunRecoreds.Count;
+            int runCount = this.data.RunRecords.Count;
             int qulifiedRunCount = this.data.NonBreakRunData.GetCurrentData().Count;
 
             SetCellValueWithStye(sheet, "D1", "跑团人数", this.basicStyle);
@@ -105,9 +105,9 @@ namespace RunData
             }
 
             // data rows
-            for (int i = 0; i < this.data.RunRecoreds.Count; i++)
+            for (int i = 0; i < this.data.RunRecords.Count; i++)
             {
-                RunRecord rr = this.data.RunRecoreds[i];
+                RunRecord rr = this.data.RunRecords[i];
                 row = CreateRow(sheet, rowIndex++, CELL_COUNT, (i % 2 == 0) ? rowCellStyles : altRowCellStyles);
 
                 int c = 0;

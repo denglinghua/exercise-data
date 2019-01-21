@@ -45,7 +45,7 @@ namespace RunData
             if (!members.TryGetValue(m.JoyRunId, out existMember))
             {
                 m.JoinDate = DataSource.Instance.CurrentDateRange.Start;
-                Logger.Info("    +：{0}", m);
+                Logger.Info("    + {0}", m);
             }
             else
             {
@@ -64,7 +64,7 @@ namespace RunData
                 if (!m.IsActive)
                 {
                     this.members.Remove(m.JoyRunId);
-                    Logger.Info("    -：{0}", m);
+                    Logger.Info("    - {0}", m);
                 }
             }
         }
