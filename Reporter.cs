@@ -91,11 +91,11 @@ namespace RunData
             SetCellValueWithStye(sheet, "D3", "本周达标人数", this.basicStyle);
             SetCellValueWithStye(sheet, "E3", qulifiedRunCount, this.basicHCenterStyle);
 
-            SetCellValueWithStye(sheet, "G1", "打卡率", this.basicStyle);
-            SetCellValueWithStye(sheet, "H1", string.Format("{0:P2}", (double)runCount /memberCount), this.basicHCenterStyle);
+            SetCellValueWithStye(sheet, "G2", "打卡率", this.basicStyle);
+            SetCellValueWithStye(sheet, "H2", string.Format("{0:P2}", (double)runCount /memberCount), this.basicHCenterStyle);
 
-            SetCellValueWithStye(sheet, "G2", "达标率", this.basicStyle);
-            SetCellValueWithStye(sheet, "H2", string.Format("{0:P2}.", (double)qulifiedRunCount / memberCount), this.basicHCenterStyle);
+            SetCellValueWithStye(sheet, "G3", "达标率", this.basicStyle);
+            SetCellValueWithStye(sheet, "H3", string.Format("{0:P2}.", (double)qulifiedRunCount / memberCount), this.basicHCenterStyle);
 
             // header
             IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
