@@ -102,7 +102,7 @@ namespace RunData
 
         private void Do()
         {
-            DataSource.Init(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
+            DataSource.Instance.LoadData(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
             DataSource.Instance.HandleData();
 
             MessageBox.Show("报表已经生成，请选择保存文件夹。");

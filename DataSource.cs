@@ -23,12 +23,7 @@ namespace RunData
         private static readonly string NO_RUN_DATA_FILE = "data_no_run";
         private static readonly string NON_BREAK_RUN_DATA_FILE = "data_no_break_run";
 
-        public static void Init(string runRecordFile, string[] noRunFiles, string leaveFile)
-        {
-            Instance.LoadData(runRecordFile, noRunFiles, leaveFile);
-        }
-
-        private void LoadData(string runRecordFile, string[] noRunFiles, string leaveFile)
+        public void LoadData(string runRecordFile, string[] noRunFiles, string leaveFile)
         {
             // 所有的load数据方法，都是只加载原始数据，不做任何处理，方法之间不依赖，顺序无关。千万不要边加载，边处理。
             // 处理都在所有加载之后，这样比较好协调处理顺序。顺序！顺序！顺序！处理数据有顺序依赖！非常重要！

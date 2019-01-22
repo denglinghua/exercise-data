@@ -54,24 +54,27 @@ namespace RunData
             //sheet.TabColorIndex = IndexedColors.Green.Index;           
 
             // column
-            string[] columnNames = new string[] { "周排名", "用户昵称", "悦跑圈ID", "所属跑团", "性别", "周跑量(KM)", "总用时", "周跑步次数", "平均配速" };
-            ICellStyle[] rowCellStyles = new ICellStyle[] {b_hc_s, b_s, b_s, b_hc_s, b_hc_s, b_hc_s, b_hc_s, b_hc_s, b_hc_s };
-            ICellStyle[] altRowCellStyles = new ICellStyle[] { a_hc_s, a_s, a_s, a_hc_s, a_hc_s, a_hc_s, a_hc_s, a_hc_s, a_hc_s };
-            int[] columnWidth = new int[] { 6, 15, 9, 11, 5, 9, 8, 9, 8 };
-            short CELL_COUNT = (short)columnNames.Length;
-            int rowIndex = 0;
-            ICell cell;
-
-            for (int i = 0; i < CELL_COUNT; i++)
+            CI[] colInfo = new CI[]
             {
-                sheet.SetColumnWidth(i, columnWidth[i] * 256);
-            }
+                new CI("周排名", 6, b_hc_s, a_hc_s),
+                new CI("用户昵称", 15, b_s, a_s),
+                new CI("悦跑圈ID", 9, b_s, a_s),
+                new CI("所属跑团", 11, b_hc_s, a_hc_s),
+                new CI("性别", 5, b_hc_s, a_hc_s),
+                new CI("周跑量(KM)", 9, b_hc_s, a_hc_s),
+                new CI("总用时", 8, b_hc_s, a_hc_s),
+                new CI("周跑步次数", 9, b_hc_s, a_hc_s),
+                new CI("平均配速", 8, b_hc_s, a_hc_s)
+            };
+            int rowIndex = 0;
+
+            SetColumnWidth(sheet, colInfo);
 
             // title
             for (int i = 0; i < 4; i++)
             {
-                CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
-            }            
+                CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
+            }
 
             SetCellValueWithStye(sheet, "B1", this.data.Team, basicBoldStyle);
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
@@ -90,36 +93,23 @@ namespace RunData
             SetCellValueWithStye(sheet, "E3", qulifiedRunCount, this.basicHCenterStyle);
 
             SetCellValueWithStye(sheet, "G2", "打卡率", this.basicStyle);
-            SetCellValueWithStye(sheet, "H2", string.Format("{0:P2}", (double)runCount /memberCount), this.basicHCenterStyle);
+            SetCellValueWithStye(sheet, "H2", string.Format("{0:P2}", (double)runCount / memberCount), this.basicHCenterStyle);
 
             SetCellValueWithStye(sheet, "G3", "达标率", this.basicStyle);
             SetCellValueWithStye(sheet, "H3", string.Format("{0:P2}.", (double)qulifiedRunCount / memberCount), this.basicHCenterStyle);
 
             // header
-            IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
-            row.Height = (short)(sheet.DefaultRowHeight * 1.2);
-            for (int i = 0; i < CELL_COUNT; i++)
-            {
-                cell = row.GetCell(i);
-                cell.SetCellValue(columnNames[i]);
-            }
+            CreateHeaderRow(sheet, rowIndex++, colInfo, headerStyle);
 
             // data rows
             for (int i = 0; i < this.data.RunRecords.Count; i++)
             {
                 RunRecord rr = this.data.RunRecords[i];
-                row = CreateRow(sheet, rowIndex++, CELL_COUNT, (i % 2 == 0) ? rowCellStyles : altRowCellStyles);
+                IRow row = CreateRow(sheet, rowIndex++, colInfo, i % 2 != 0);
 
-                int c = 0;
-                row.GetCell(c++).SetCellValue(i + 1);
-                row.GetCell(c++).SetCellValue(rr.Member.Name);
-                row.GetCell(c++).SetCellValue(rr.Member.JoyRunId);
-                row.GetCell(c++).SetCellValue(rr.Member.GroupShortName);
-                row.GetCell(c++).SetCellValue(rr.Member.Gender);
-                row.GetCell(c++).SetCellValue(rr.Distance);
-                row.GetCell(c++).SetCellValue(RunRecord.ToTimeSpanFromSeconds(rr.TotalTimeSeconds));
-                row.GetCell(c++).SetCellValue(rr.RunTimes);
-                row.GetCell(c++).SetCellValue(RunRecord.ToTimeSpanFromSeconds(rr.AvgPaceSeconds));
+                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.GroupShortName , rr.Member.Gender , rr.Distance ,
+                RunRecord.ToTimeSpanFromSeconds(rr.TotalTimeSeconds), rr.RunTimes, RunRecord.ToTimeSpanFromSeconds(rr.AvgPaceSeconds)};
+                SetRowValues(row, values);
             }
         }
 
@@ -131,7 +121,7 @@ namespace RunData
             IDictionary<string, List<NonBreakRecord>> noRunData = this.data.NoRunData.SumByGroup();
             foreach (string group in noRunData.Keys)
             {
-                // 某个组没数据，创建空sheet吗？暂时创建吧
+                // 假如某个组没数据，创建空sheet吗？暂时创建吧
                 CreateOneGroupNoRunSheet(group, noRunData[group]);
             }
         }
@@ -142,69 +132,35 @@ namespace RunData
             //sheet.TabColorIndex = IndexedColors.Red.Index;
 
             // columns
-            string[] columnNames = new string[] {"序号", "用户昵称", "悦跑圈ID", "连续不达标次数", "未达标原因" };
-            ICellStyle[] rowCellStyles = new ICellStyle[] {b_hc_s, b_s, b_s, b_hc_s, b_s };
-            int[] columnWidth = new int[] {5, 17, 10, 13, 13 };
-            int CELL_COUNT = columnNames.Length;
+            CI[] colInfo = new CI[]
+            {
+                new CI("序号", 5, b_hc_s),
+                new CI("用户昵称", 17, b_s),
+                new CI("悦跑圈ID", 10, b_s),
+                new CI("连续不达标次数", 13, b_hc_s),
+                new CI("未达标原因", 13, b_s)
+            };
             int rowIndex = 0;
 
-            for (int i = 0; i < CELL_COUNT; i++)
-            {
-                sheet.SetColumnWidth(i, columnWidth[i] * 256);
-            }
+            SetColumnWidth(sheet, colInfo);
 
             // title
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
+            CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
+            CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
 
-            SetCellValueWithStye(sheet, "B1", group + " 不达标统计", basicBoldStyle);            
+            SetCellValueWithStye(sheet, "B1", group + " 不达标统计", basicBoldStyle);
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
-            IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
-            row.Height = (short)(sheet.DefaultRowHeight * 1.2);
-            for (int i = 0; i < CELL_COUNT; i++)
-            {
-                ICell cell = row.GetCell(i);
-                cell.SetCellValue(columnNames[i]);
-            }
+            CreateHeaderRow(sheet, rowIndex++, colInfo, headerStyle);
 
             // data rows
-            List<object[]> showData = this.ConvertNoRunDataToShow(noRunList);
-
-            int seq = 1;
+            List<object[]> showData = this.ConvertNonBreakDataToShow(noRunList);
             foreach (object[] o in showData)
             {
-                row = CreateRow(sheet, rowIndex++, CELL_COUNT, rowCellStyles);
-
-                int c = 0;
-                row.GetCell(c++).SetCellValue(seq++);
-                row.GetCell(c++).SetCellValue((string)o[0]);
-                row.GetCell(c++).SetCellValue((long)o[1]);
-                row.GetCell(c++).SetCellValue((int)o[2]);
-                row.GetCell(c++).SetCellValue((string)o[3]);
+                IRow row = CreateRow(sheet, rowIndex++, colInfo, false);
+                SetRowValues(row, o);
             }
-        }
-
-        private List<object[]> ConvertNoRunDataToShow(List<NonBreakRecord> noRunList)
-        {
-            List<object[]> showData = new List<object[]>();
-
-            foreach (NonBreakRecord r in noRunList)
-            {
-                showData.Add(new object[] { r.Member.Name, r.Member.JoyRunId, r.Count, r.Reason });
-            }
-
-            // sorted by no run times desc
-            showData.Sort(delegate (object[] a, object[] b)
-            {
-                int c1 = (int)a[2];
-                int c2 = (int)b[2];
-
-                return -c1.CompareTo(c2);
-            });
-
-            return showData;
         }
 
         private void CreateNonBreakRunSheets()
@@ -224,68 +180,80 @@ namespace RunData
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
 
             // columns
-            string[] columnNames = new string[] {"序号", "用户昵称", "悦跑圈ID", "连续达标次数" };
-            ICellStyle[] rowCellStyles = new ICellStyle[] {b_hc_s, b_s, b_s, b_hc_s};
-            int[] columnWidth = new int[] {5, 17, 10, 12 };
-            int CELL_COUNT = columnNames.Length;
+            CI[] colInfo = new CI[]
+            {
+                new CI("序号", 5, b_hc_s),
+                new CI("用户昵称", 17, b_s),
+                new CI("悦跑圈ID", 10, b_s),
+                new CI("连续达标次数", 12, b_hc_s)
+            };
             int rowIndex = 0;
 
-            for (int i = 0; i < CELL_COUNT; i++)
-            {
-                sheet.SetColumnWidth(i, columnWidth[i] * 256);
-            }
+            SetColumnWidth(sheet, colInfo);
 
             // title
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
-            CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
+            CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
+            CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
 
             SetCellValueWithStye(sheet, "B1", group + " 连续达标统计", basicBoldStyle);
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
-            IRow row = CreateRow(sheet, rowIndex++, CELL_COUNT, headerStyle);
-            row.Height = (short)(sheet.DefaultRowHeight * 1.2);
-            for (int i = 0; i < CELL_COUNT; i++)
-            {
-                ICell cell = row.GetCell(i);
-                cell.SetCellValue(columnNames[i]);
-            }
+            CreateHeaderRow(sheet, rowIndex++, colInfo, headerStyle);
 
             // data rows
-            List<object[]> showData = this.ConvertNonBreakRunDataShow(runList);
-
-            int seq = 1;
+            List<object[]> showData = this.ConvertNonBreakDataToShow(runList);
             foreach (object[] o in showData)
             {
-                row = CreateRow(sheet, rowIndex++, CELL_COUNT, rowCellStyles);
-
-                int c = 0;
-                row.GetCell(c++).SetCellValue(seq++);
-                row.GetCell(c++).SetCellValue((string)o[0]);
-                row.GetCell(c++).SetCellValue((long)o[1]);
-                row.GetCell(c++).SetCellValue((int)o[2]);
+                IRow row = CreateRow(sheet, rowIndex++, colInfo, false);
+                object[] values = new object[] { o[0], o[1], o[2], o[3] };
+                SetRowValues(row, values);
             }
         }
 
-        private List<object[]> ConvertNonBreakRunDataShow(List<NonBreakRecord> runList)
+        private List<object[]> ConvertNonBreakDataToShow(List<NonBreakRecord> dataList)
         {
             List<object[]> showData = new List<object[]>();
 
-            foreach (NonBreakRecord r in runList)
+            foreach (NonBreakRecord r in dataList)
             {
-                showData.Add(new object[] { r.Member.Name, r.Member.JoyRunId, r.Count });
+                showData.Add(new object[] { 0, r.Member.Name, r.Member.JoyRunId, r.Count, r.Reason });
             }
 
-            // sorted by non-break run times desc
+            // sorted by count desc
             showData.Sort(delegate (object[] a, object[] b)
             {
-                int c1 = (int)a[2];
-                int c2 = (int)b[2];
+                int c1 = (int)a[3];
+                int c2 = (int)b[3];
 
                 return -c1.CompareTo(c2);
             });
 
+            // set seq no
+            for (int i = 0; i < showData.Count; i++)
+            {
+                showData[i][0] = i + 1;
+            }
+
             return showData;
+        }
+
+        private void SetColumnWidth(ISheet sheet, CI[] colInfo)
+        {
+            for (int i = 0; i < colInfo.Length; i++)
+            {
+                sheet.SetColumnWidth(i, colInfo[i].Width * 256);
+            }
+        }
+
+        private static void CreateHeaderRow(ISheet sheet, int rowIndex, CI[] colInfo, ICellStyle headerStyle)
+        {
+            IRow row = CreateRow(sheet, rowIndex, colInfo.Length, headerStyle);
+            row.Height = Convert.ToInt16(sheet.DefaultRowHeight * 1.2);
+            for (int i = 0; i < colInfo.Length; i++)
+            {
+                row.GetCell(i).SetCellValue(colInfo[i].Title);
+            }
         }
 
         private static IRow CreateRow(ISheet sheet, int rowIndex, int cellCount, ICellStyle cellStyle)
@@ -299,13 +267,13 @@ namespace RunData
             return row;
         }
 
-        private static IRow CreateRow(ISheet sheet, int rowIndex, int cellCount, ICellStyle[] rowCellStyles)
+        private static IRow CreateRow(ISheet sheet, int rowIndex, CI[] colInfo, bool altRow)
         {
             IRow row = sheet.CreateRow(rowIndex);
-            for (int i = 0; i < cellCount; i++)
+            for (int i = 0; i < colInfo.Length; i++)
             {
                 ICell cell = row.CreateCell(i);
-                cell.CellStyle = rowCellStyles[i];
+                cell.CellStyle = altRow ? colInfo[i].AltRowStyle : colInfo[i].RowStyle;
             }
             return row;
         }
@@ -386,13 +354,45 @@ namespace RunData
             ICell cell = sheet.GetRow(cr.Row).GetCell(cr.Col);
             cell.CellStyle = style;
 
-            if (val is int || val is double)
+            SetCellValue(cell, val);
+        }
+
+        private static void SetRowValues(IRow row, object[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                SetCellValue(row.GetCell(i), values[i]);
+            }
+        }
+
+        private static void SetCellValue(ICell cell, object val)
+        {
+            if (val is short || val is int || val is long || val is double)
             {
                 cell.SetCellValue(Convert.ToDouble(val));
-            } else
+            }
+            else
             {
                 cell.SetCellValue(val.ToString());
             }
+        }
+
+        private class CI // short for Column Info. why short ? for typing 
+        {
+            public readonly string Title;
+            public readonly short Width;
+            public readonly ICellStyle RowStyle, AltRowStyle;
+
+            public CI(string title, short width, ICellStyle rowStyle, ICellStyle altRowStyle)
+            {
+                this.Title = title;
+                this.Width = width;
+                this.RowStyle = rowStyle;
+                this.AltRowStyle = altRowStyle;
+            }
+
+            public CI(string title, short width, ICellStyle rowStyle) : this(title, width, rowStyle, rowStyle)
+            { }
         }
     }
 }
