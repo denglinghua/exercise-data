@@ -107,7 +107,7 @@ namespace RunData
 
             MessageBox.Show("报表已经生成，请选择保存文件夹。");
 
-            this.saveFileDialogReport.FileName = string.Format("{0}-{1}-报表.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Group);
+            this.saveFileDialogReport.FileName = string.Format("{0}-{1}-报表.xlsx", DataSource.Instance.CurrentDateRange, DataSource.Instance.Team);
             if (this.saveFileDialogReport.ShowDialog() == DialogResult.OK)
             {
                 bool fileExists = File.Exists(this.saveFileDialogReport.FileName);

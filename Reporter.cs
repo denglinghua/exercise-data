@@ -50,7 +50,7 @@ namespace RunData
         {
             Logger.Info("导出跑量统计");
 
-            ISheet sheet = book.CreateSheet(this.data.Group + " 跑量");
+            ISheet sheet = book.CreateSheet(this.data.Team + " 跑量");
             //sheet.TabColorIndex = IndexedColors.Green.Index;           
 
             // column
@@ -73,7 +73,7 @@ namespace RunData
                 CreateRow(sheet, rowIndex++, CELL_COUNT, basicStyle);
             }            
 
-            SetCellValueWithStye(sheet, "B1", this.data.Group, basicBoldStyle);
+            SetCellValueWithStye(sheet, "B1", this.data.Team, basicBoldStyle);
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             int memberCount = this.data.MemberCount;

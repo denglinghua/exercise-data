@@ -10,7 +10,7 @@ namespace RunData
     class DataSource
     {
         public DateRange CurrentDateRange;
-        public string Group;
+        public string Team;
         private Dictionary<long, RunRecord> runRecords;
         public NonBreakData NoRunData;
         private MemberData memberData;
@@ -90,6 +90,8 @@ namespace RunData
                 if (this.runRecords.ContainsKey(r.Member.JoyRunId))
                 {
                     l.Remove(r);
+                    // 无跑步记录的分队是最新分队，悦跑圈不太可能把旧分组生成跑步记录
+                    this.runRecords[r.Member.JoyRunId].Member.Group = r.Member.Group;
                     Logger.Info("    {0}", r.Member);
                 }
             }
@@ -194,7 +196,7 @@ namespace RunData
                 book = WorkbookFactory.Create(FS);
                 sheet = book.GetSheetAt(0);
 
-                this.Group = GetCellByReference(sheet, "B1").StringCellValue;
+                this.Team = GetCellByReference(sheet, "B1").StringCellValue;
 
                 ICell dataRangeCell = GetCellByReference(sheet, "B3");
                 String dataRangeStr = dataRangeCell.StringCellValue;
