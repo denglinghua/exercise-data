@@ -120,16 +120,16 @@ namespace RunData
             {
                 string reason = null;
 
-                if (!r.IsQualifiedOfDistance)
-                {
-                    reason = string.Format("跑量：{0}", r.Distance);
-                }
-
                 if (!r.IsQualifiedOfAvgPace)
                 {
                     reason = string.Format("配速：{0}", RunRecord.ToTimeSpanFromSeconds(r.AvgPaceSeconds));
                 }
 
+                // 如果配速和距离都没达标，只显示距离未达标。
+                if (!r.IsQualifiedOfDistance)
+                {
+                    reason = string.Format("跑量：{0} KM", r.Distance);
+                }                
 
                 if (reason != null)
                 {
