@@ -234,6 +234,7 @@ namespace RunData
                     {
                         if (!string.IsNullOrEmpty(tb.Text)) tb.AppendText(Environment.NewLine);
                         tb.AppendText(file);
+                        if (!tb.Multiline) break;
                     }
                 }
             }

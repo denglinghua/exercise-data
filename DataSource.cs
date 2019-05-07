@@ -119,7 +119,7 @@ namespace RunData
 
         private void ReEvalNoQualifiedOfAvgPace()
         {
-            Logger.Info("用原始跑步记录修正了配速（针对越野）");
+            Logger.Info("用原始跑步记录修正配速（针对越野或徒步）");
 
             foreach (PeriodRunRecord r in this.RunRecords)
             {
@@ -264,11 +264,7 @@ namespace RunData
 
                     long joyRunId = long.Parse(values[2]);
                     RunRecordDetail detail;
-                    if (this.runRecordDetail.ContainsKey(joyRunId))
-                    {
-                        detail = this.runRecordDetail[joyRunId];
-                    }
-                    else
+                    if (!this.runRecordDetail.TryGetValue(joyRunId, out detail))
                     {
                         detail = new RunRecordDetail();
                         this.runRecordDetail[joyRunId] = detail;
@@ -276,9 +272,9 @@ namespace RunData
 
                     detail.Add(new RunData(float.Parse(values[5]), TimeSpan.Parse(values[6]).TotalSeconds));
                 }
-
-                Logger.Info("    加载 {0} 人原始跑步记录", this.runRecordDetail.Count);
             }
+
+            Logger.Info("    加载 {0} 人原始跑步记录", this.runRecordDetail.Count);
         }
 
         private void LoadNoRunData(string[] noRunFiles)
