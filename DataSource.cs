@@ -11,7 +11,8 @@ namespace RunData
     {
         public DateRange CurrentDateRange;
         public string Team;
-        private Dictionary<long, RunRecord> runRecords;
+        private Dictionary<long, PeriodRunRecord> runRecords;
+        private Dictionary<long, RunRecordDetail> runRecordDetail;
         public NonBreakData NoRunData;
         private MemberData memberData;
         public NonBreakData NonBreakRunData;
@@ -23,11 +24,13 @@ namespace RunData
         private static readonly string NO_RUN_DATA_FILE = "data_no_run";
         private static readonly string NON_BREAK_RUN_DATA_FILE = "data_no_break_run";
 
-        public void LoadData(string runRecordFile, string[] noRunFiles, string leaveFile)
+        public void LoadData(string runRecordFile, string runDetailFile, string[] noRunFiles, string leaveFile)
         {
             // 所有的load数据方法，都是只加载原始数据，不做任何处理，方法之间不依赖，顺序无关。千万不要边加载，边处理。
             // 处理都在所有加载之后，这样比较好协调处理顺序。顺序！顺序！顺序！处理数据有顺序依赖！非常重要！
             this.LoadRunRecord(runRecordFile);
+
+            this.LoadRunRecordDetail(runDetailFile);
 
             this.LoadNoRunData(noRunFiles);
 
@@ -46,6 +49,8 @@ namespace RunData
 
             this.MarkMembers();
 
+            this.ReEvalNoQualifiedOfAvgPace();
+
             this.ClassifyRunData();
 
             this.MarkLeaveForNoRunData();
@@ -57,11 +62,11 @@ namespace RunData
             this.NonBreakRunData.Merge();
         }
 
-        public List<RunRecord> RunRecords
+        public List<PeriodRunRecord> RunRecords
         {
             get
             {
-                return new List<RunRecord>(this.runRecords.Values);
+                return new List<PeriodRunRecord>(this.runRecords.Values);
             }
         }
 
@@ -99,7 +104,7 @@ namespace RunData
         {
             Logger.Info("标注新加入和退出成员");
 
-            foreach (RunRecord r in this.RunRecords)
+            foreach (PeriodRunRecord r in this.RunRecords)
             {
                 this.memberData.Mark(r.Member);
             }
@@ -112,23 +117,39 @@ namespace RunData
             this.memberData.RemoveInactiveMembers();
         }
 
+        private void ReEvalNoQualifiedOfAvgPace()
+        {
+            Logger.Info("用原始跑步记录修正了配速（针对越野）");
+
+            foreach (PeriodRunRecord r in this.RunRecords)
+            {
+                if (this.runRecordDetail.ContainsKey(r.Member.JoyRunId))
+                {
+                    if (r.ReEvalQualifiedByDetail(this.runRecordDetail[r.Member.JoyRunId]))
+                    {
+                        Logger.Info("    {0}", r.Member);
+                    }
+                }
+            }
+        }
+
         private void ClassifyRunData()
         {
             Logger.Info("分离跑步达标和不达标的数据");
 
-            foreach (RunRecord r in this.RunRecords)
+            foreach (PeriodRunRecord r in this.RunRecords)
             {
                 string reason = null;
 
                 if (!r.IsQualifiedOfAvgPace)
                 {
-                    reason = string.Format("配速：{0}", RunRecord.ToTimeSpanFromSeconds(r.AvgPaceSeconds));
+                    reason = string.Format("配速：{0}", RunData.ToTimeSpanFromSeconds(r.Data.AvgPaceSeconds));
                 }
 
                 // 如果配速和距离都没达标，只显示距离未达标。
                 if (!r.IsQualifiedOfDistance)
                 {
-                    reason = string.Format("跑量：{0} KM", r.Distance);
+                    reason = string.Format("跑量：{0} KM", r.Data.Distance);
                 }                
 
                 if (reason != null)
@@ -197,7 +218,7 @@ namespace RunData
                 String dataRangeStr = dataRangeCell.StringCellValue;
                 this.CurrentDateRange = DateRange.Create(dataRangeStr.Split(new String[] { "--" }, StringSplitOptions.None), "yyyy-MM-dd HH:mm:ss");
 
-                this.runRecords = new Dictionary<long, RunRecord>();
+                this.runRecords = new Dictionary<long, PeriodRunRecord>();
 
                 for (int rowIndex = 10; rowIndex <= sheet.LastRowNum; rowIndex++)
                 {
@@ -208,10 +229,55 @@ namespace RunData
 
                     long joyRunId = long.Parse(values[1]);
                     this.runRecords.Add(joyRunId,
-                        new RunRecord(joyRunId, values[0], values[3], values[2], float.Parse(values[4]), TimeSpan.Parse(values[5]).TotalSeconds, short.Parse(values[6])));
+                        new PeriodRunRecord(joyRunId, values[0], values[3], values[2], float.Parse(values[4]), TimeSpan.Parse(values[5]).TotalSeconds, short.Parse(values[6])));
                 }
 
                 Logger.Info("    数据时段：{0} ，跑步记录 {1} 条", this.CurrentDateRange.ToString(), this.runRecords.Count);
+            }
+        }
+
+        private void LoadRunRecordDetail(string fileName)
+        {
+            this.runRecordDetail = new Dictionary<long, RunRecordDetail>();
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            Logger.Info("加载原始跑步记录");
+
+            IWorkbook book = null;
+            ISheet sheet = null;
+
+            using (FileStream FS = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                book = WorkbookFactory.Create(FS);
+                sheet = book.GetSheetAt(0);
+
+                for (int rowIndex = 8; rowIndex <= sheet.LastRowNum; rowIndex++)
+                {
+                    IRow row = sheet.GetRow(rowIndex);
+
+                    //跑步结束时间 记录状态 悦跑号 用户昵称 性别 跑步距离（公里） 跑步耗时 跑步类型 平均配速（分钟/公里）
+                    string[] values = ReadRowToArray(row, 9);
+
+                    long joyRunId = long.Parse(values[2]);
+                    RunRecordDetail detail;
+                    if (this.runRecordDetail.ContainsKey(joyRunId))
+                    {
+                        detail = this.runRecordDetail[joyRunId];
+                    }
+                    else
+                    {
+                        detail = new RunRecordDetail();
+                        this.runRecordDetail[joyRunId] = detail;
+                    }
+
+                    detail.Add(new RunData(float.Parse(values[5]), TimeSpan.Parse(values[6]).TotalSeconds));
+                }
+
+                Logger.Info("    加载 {0} 人原始跑步记录", this.runRecordDetail.Count);
             }
         }
 

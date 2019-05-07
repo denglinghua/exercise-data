@@ -104,11 +104,11 @@ namespace RunData
             // data rows
             for (int i = 0; i < this.data.RunRecords.Count; i++)
             {
-                RunRecord rr = this.data.RunRecords[i];
+                PeriodRunRecord rr = this.data.RunRecords[i];
                 IRow row = CreateRow(sheet, rowIndex++, colInfo, i % 2 != 0);
 
-                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.GroupShortName , rr.Member.Gender , rr.Distance ,
-                RunRecord.ToTimeSpanFromSeconds(rr.TotalTimeSeconds), rr.RunTimes, RunRecord.ToTimeSpanFromSeconds(rr.AvgPaceSeconds)};
+                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.GroupShortName , rr.Member.Gender , rr.Data.Distance ,
+                RunData.ToTimeSpanFromSeconds(rr.Data.TotalTimeSeconds), rr.RunTimes, RunData.ToTimeSpanFromSeconds(rr.Data.AvgPaceSeconds)};
                 SetRowValues(row, values);
             }
         }

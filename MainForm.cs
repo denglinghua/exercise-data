@@ -23,6 +23,7 @@ namespace RunData
 
             string fileFilter = "Excel文件|*.xls;*.xlsx";
             this.openFileDialogRunFile.Filter = fileFilter;
+            this.openFileDialogRunDetail.Filter = fileFilter;
             this.openFileDialogNoRunFile.Filter = fileFilter;
             this.openFileDialogLeaveFile.Filter = fileFilter;
 
@@ -39,6 +40,14 @@ namespace RunData
             {
                 this.textBoxRunRecordFile.Text = this.openFileDialogRunFile.FileName;
                 CheckDoButtonState();
+            }
+        }
+
+        private void buttonRunDetailFileSelect_Click(object sender, EventArgs e)
+        {
+            if (this.openFileDialogRunDetail.ShowDialog() == DialogResult.OK)
+            {
+                this.textBoxRunDetailFile.Text = this.openFileDialogRunDetail.FileName;
             }
         }
 
@@ -102,7 +111,7 @@ namespace RunData
 
         private void Do()
         {
-            DataSource.Instance.LoadData(this.textBoxRunRecordFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
+            DataSource.Instance.LoadData(this.textBoxRunRecordFile.Text, this.textBoxRunDetailFile.Text, this.textBoxNoRunFiles.Lines, this.textBoxLeaveFile.Text);
             DataSource.Instance.HandleData();
 
             MessageBox.Show("报表已经生成，请选择保存文件夹。");
@@ -145,6 +154,10 @@ namespace RunData
         {
             List<string> files = new List<string>();
             files.Add(this.textBoxRunRecordFile.Text);
+            if (this.textBoxRunDetailFile.Text != string.Empty)
+            {
+                files.Add(this.textBoxRunDetailFile.Text);
+            }
             files.AddRange(this.textBoxNoRunFiles.Lines);
             if (this.textBoxLeaveFile.Text != string.Empty)
             {
@@ -195,6 +208,6 @@ namespace RunData
             this.textBoxNoRunFiles.Text = @"C:\Users\denglinghua\Desktop\run\data\_201901_广·马帮_天马分队_无跑步成员_0107-0113_14p7.xlsx";
             this.textBoxRunRecordFile.Text = @"C:\Users\denglinghua\Desktop\run\data\_201901_广·马帮跑步数据统计_0107-0113_gbv3.xlsx";
             this.textBoxLeaveFile.Text = @"C:\Users\denglinghua\Desktop\run\data\天马分队请假条报名清单.xls";
-        }
+        }        
     }
 }
