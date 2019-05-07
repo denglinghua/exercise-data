@@ -68,6 +68,16 @@ namespace RunData
             }
         }
 
+        private void buttonBatchSelect_Click(object sender, EventArgs e)
+        {
+            if (this.openFileDialogBatchSelect.ShowDialog() == DialogResult.OK)
+            {
+                string[] files = this.openFileDialogBatchSelect.FileNames;
+                this.AutoFillFiles(files);
+                CheckDoButtonState();
+            }
+        }
+
         private bool isReportSaved = false;
 
 
@@ -201,6 +211,32 @@ namespace RunData
         {
             this.textBoxLog.SelectionStart = this.textBoxLog.Text.Length;
             this.textBoxLog.ScrollToCaret();
+        }
+
+        private void AutoFillFiles(string[] files)
+        {
+            var dict = new Dictionary<string, TextBox>
+            {
+                { "跑步数据统计", this.textBoxRunRecordFile },
+                { "原始跑步记录", this.textBoxRunDetailFile },
+                { "无跑步成员", this.textBoxNoRunFiles },
+                { "请假", this.textBoxLeaveFile }
+            };
+
+            foreach (string keyword in dict.Keys)
+            {
+                TextBox tb = dict[keyword];
+                tb.Clear();
+
+                foreach (string file in files)
+                {
+                    if (file.Contains(keyword))
+                    {
+                        if (!string.IsNullOrEmpty(tb.Text)) tb.AppendText(Environment.NewLine);
+                        tb.AppendText(file);
+                    }
+                }
+            }
         }
 
         private void InitTestData()

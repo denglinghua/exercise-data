@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxDataSource = new System.Windows.Forms.GroupBox();
+            this.buttonRunDetailFileSelect = new System.Windows.Forms.Button();
+            this.textBoxRunDetailFile = new System.Windows.Forms.TextBox();
+            this.labelRunDetail = new System.Windows.Forms.Label();
             this.buttonLeaveFileSelect = new System.Windows.Forms.Button();
             this.textBoxLeaveFile = new System.Windows.Forms.TextBox();
             this.labelLeavelFile = new System.Windows.Forms.Label();
@@ -46,10 +49,9 @@
             this.buttonDo = new System.Windows.Forms.Button();
             this.openFileDialogLeaveFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialogReport = new System.Windows.Forms.SaveFileDialog();
-            this.buttonRunDetailFileSelect = new System.Windows.Forms.Button();
-            this.textBoxRunDetailFile = new System.Windows.Forms.TextBox();
-            this.labelRunDetail = new System.Windows.Forms.Label();
             this.openFileDialogRunDetail = new System.Windows.Forms.OpenFileDialog();
+            this.buttonBatchSelect = new System.Windows.Forms.Button();
+            this.openFileDialogBatchSelect = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxDataSource.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +76,36 @@
             this.groupBoxDataSource.TabIndex = 0;
             this.groupBoxDataSource.TabStop = false;
             this.groupBoxDataSource.Text = "数据源";
+            // 
+            // buttonRunDetailFileSelect
+            // 
+            this.buttonRunDetailFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
+            this.buttonRunDetailFileSelect.Location = new System.Drawing.Point(1257, 88);
+            this.buttonRunDetailFileSelect.Name = "buttonRunDetailFileSelect";
+            this.buttonRunDetailFileSelect.Size = new System.Drawing.Size(116, 38);
+            this.buttonRunDetailFileSelect.TabIndex = 1;
+            this.buttonRunDetailFileSelect.Text = "选择...";
+            this.buttonRunDetailFileSelect.UseVisualStyleBackColor = true;
+            this.buttonRunDetailFileSelect.Click += new System.EventHandler(this.buttonRunDetailFileSelect_Click);
+            // 
+            // textBoxRunDetailFile
+            // 
+            this.textBoxRunDetailFile.Font = new System.Drawing.Font("Calibri", 9F);
+            this.textBoxRunDetailFile.Location = new System.Drawing.Point(189, 93);
+            this.textBoxRunDetailFile.Name = "textBoxRunDetailFile";
+            this.textBoxRunDetailFile.ReadOnly = true;
+            this.textBoxRunDetailFile.Size = new System.Drawing.Size(1056, 29);
+            this.textBoxRunDetailFile.TabIndex = 10;
+            // 
+            // labelRunDetail
+            // 
+            this.labelRunDetail.AutoSize = true;
+            this.labelRunDetail.Font = new System.Drawing.Font("Calibri", 9F);
+            this.labelRunDetail.Location = new System.Drawing.Point(19, 99);
+            this.labelRunDetail.Name = "labelRunDetail";
+            this.labelRunDetail.Size = new System.Drawing.Size(158, 22);
+            this.labelRunDetail.TabIndex = 9;
+            this.labelRunDetail.Text = "原始跑步记录文件 ";
             // 
             // buttonLeaveFileSelect
             // 
@@ -214,44 +246,30 @@
             // 
             this.openFileDialogLeaveFile.Title = "选择请假名单文件";
             // 
-            // buttonRunDetailFileSelect
-            // 
-            this.buttonRunDetailFileSelect.Font = new System.Drawing.Font("Calibri", 9F);
-            this.buttonRunDetailFileSelect.Location = new System.Drawing.Point(1257, 88);
-            this.buttonRunDetailFileSelect.Name = "buttonRunDetailFileSelect";
-            this.buttonRunDetailFileSelect.Size = new System.Drawing.Size(116, 38);
-            this.buttonRunDetailFileSelect.TabIndex = 1;
-            this.buttonRunDetailFileSelect.Text = "选择...";
-            this.buttonRunDetailFileSelect.UseVisualStyleBackColor = true;
-            this.buttonRunDetailFileSelect.Click += new System.EventHandler(this.buttonRunDetailFileSelect_Click);
-            // 
-            // textBoxRunDetailFile
-            // 
-            this.textBoxRunDetailFile.Font = new System.Drawing.Font("Calibri", 9F);
-            this.textBoxRunDetailFile.Location = new System.Drawing.Point(189, 93);
-            this.textBoxRunDetailFile.Name = "textBoxRunDetailFile";
-            this.textBoxRunDetailFile.ReadOnly = true;
-            this.textBoxRunDetailFile.Size = new System.Drawing.Size(1056, 29);
-            this.textBoxRunDetailFile.TabIndex = 10;
-            // 
-            // labelRunDetail
-            // 
-            this.labelRunDetail.AutoSize = true;
-            this.labelRunDetail.Font = new System.Drawing.Font("Calibri", 9F);
-            this.labelRunDetail.Location = new System.Drawing.Point(19, 99);
-            this.labelRunDetail.Name = "labelRunDetail";
-            this.labelRunDetail.Size = new System.Drawing.Size(158, 22);
-            this.labelRunDetail.TabIndex = 9;
-            this.labelRunDetail.Text = "原始跑步记录文件 ";
-            // 
             // openFileDialogRunDetail
             // 
             this.openFileDialogRunDetail.Title = "选择跑步数据统计文件";
+            // 
+            // buttonBatchSelect
+            // 
+            this.buttonBatchSelect.Location = new System.Drawing.Point(1095, 354);
+            this.buttonBatchSelect.Name = "buttonBatchSelect";
+            this.buttonBatchSelect.Size = new System.Drawing.Size(141, 42);
+            this.buttonBatchSelect.TabIndex = 0;
+            this.buttonBatchSelect.Text = "批量选择文件";
+            this.buttonBatchSelect.UseVisualStyleBackColor = true;
+            this.buttonBatchSelect.Click += new System.EventHandler(this.buttonBatchSelect_Click);
+            // 
+            // openFileDialogBatchSelect
+            // 
+            this.openFileDialogBatchSelect.Multiselect = true;
+            this.openFileDialogBatchSelect.Title = "选择无跑步成员文件（多选）";
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1416, 1022);
+            this.Controls.Add(this.buttonBatchSelect);
             this.Controls.Add(this.buttonDo);
             this.Controls.Add(this.groupBoxOutput);
             this.Controls.Add(this.groupBoxDataSource);
@@ -295,6 +313,8 @@
         private System.Windows.Forms.TextBox textBoxRunDetailFile;
         private System.Windows.Forms.Label labelRunDetail;
         private System.Windows.Forms.OpenFileDialog openFileDialogRunDetail;
+        private System.Windows.Forms.Button buttonBatchSelect;
+        private System.Windows.Forms.OpenFileDialog openFileDialogBatchSelect;
     }
 }
 
