@@ -50,7 +50,7 @@ namespace RunData
         {
             Logger.Info("导出跑量统计");
 
-            ISheet sheet = book.CreateSheet(this.data.Team + " 跑量");
+            ISheet sheet = book.CreateSheet(this.data.Team + "-跑量");
             //sheet.TabColorIndex = IndexedColors.Green.Index;           
 
             // column
@@ -128,7 +128,7 @@ namespace RunData
 
         private void CreateOneGroupNoRunSheet(string group, List<NonBreakRecord> noRunList)
         {
-            ISheet sheet = book.CreateSheet(group + " 不达标");
+            ISheet sheet = book.CreateSheet(group + "-不达标");
             //sheet.TabColorIndex = IndexedColors.Red.Index;
 
             // columns
@@ -176,7 +176,7 @@ namespace RunData
 
         private void CreateOneGroupNonBreakRunSheets(string group, List<NonBreakRecord> runList)
         {
-            ISheet sheet = book.CreateSheet(group + "达标");
+            ISheet sheet = book.CreateSheet(group + "-达标");
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
 
             // columns

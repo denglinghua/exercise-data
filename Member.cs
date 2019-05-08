@@ -10,9 +10,17 @@ namespace RunData
         public DateTime JoinDate { get; set; }
         public bool IsActive = false;
 
-        private static string[] GroupShortNames = new string[] { "神骏分队", "天马分队", "神马分队", "未分组"};
+        private static string[] GroupShortNames;
         private string group;
         private string groupShortName;
+
+        static Member()
+        {
+            var setting = Properties.Settings.Default.GroupShortNames;
+            GroupShortNames = new string[setting.Count];
+            setting.CopyTo(GroupShortNames, 0);
+        }
+
         public string Group
         {
             get

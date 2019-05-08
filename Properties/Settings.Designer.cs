@@ -22,5 +22,21 @@ namespace RunData.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>神骏</string>
+  <string>天马</string>
+  <string>神马</string>
+  <string>河马</string>
+  <string>未分组</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection GroupShortNames {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["GroupShortNames"]));
+            }
+        }
     }
 }
