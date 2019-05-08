@@ -108,7 +108,7 @@ namespace RunData
                 IRow row = CreateRow(sheet, rowIndex++, colInfo, i % 2 != 0);
 
                 object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.GroupShortName , rr.Member.Gender , rr.Data.Distance ,
-                RunData.ToTimeSpanFromSeconds(rr.Data.TotalTimeSeconds), rr.RunTimes, RunData.ToTimeSpanFromSeconds(rr.Data.AvgPaceSeconds)};
+                rr.Data.TimeSpanOfTotalTime, rr.RunTimes, rr.Data.TimeSpanOfAvgPace};
                 SetRowValues(row, values);
             }
         }

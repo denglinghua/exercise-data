@@ -143,7 +143,7 @@ namespace RunData
 
                 if (!r.IsQualifiedOfAvgPace)
                 {
-                    reason = string.Format("配速：{0}", RunData.ToTimeSpanFromSeconds(r.Data.AvgPaceSeconds));
+                    reason = string.Format("配速：{0}", r.Data.TimeSpanOfAvgPace);
                 }
 
                 // 如果配速和距离都没达标，只显示距离未达标。

@@ -15,10 +15,26 @@ namespace RunData
             this.AvgPaceSeconds = (long)(totalTimeSeconds / distance);
         }
 
-        public static string ToTimeSpanFromSeconds(double seconds)
+        private static string ToTimeSpanFromSeconds(double seconds)
         {
             TimeSpan t = TimeSpan.FromSeconds(seconds);
             return string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+        }
+
+        public string TimeSpanOfAvgPace
+        {
+            get
+            {
+                return ToTimeSpanFromSeconds(this.AvgPaceSeconds);
+            }
+        }
+
+        public string TimeSpanOfTotalTime
+        {
+            get
+            {
+                return ToTimeSpanFromSeconds(this.TotalTimeSeconds);
+            }
         }
     }
 }
