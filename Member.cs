@@ -60,7 +60,7 @@ namespace RunData
                     return shortName;
                 }
             }
-            return name;
+            return name.Replace(DataSource.Instance.Team, string.Empty);
         }
 
         public override bool Equals(object obj)
