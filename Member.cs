@@ -10,58 +10,15 @@ namespace RunData
         public DateTime JoinDate { get; set; }
         public bool IsActive = false;
 
-        private static string[] GroupShortNames;
-        private string group;
-        private string groupShortName;
+        public Group Group;
 
-        static Member()
-        {
-            var setting = Properties.Settings.Default.GroupShortNames;
-            GroupShortNames = new string[setting.Count];
-            setting.CopyTo(GroupShortNames, 0);
-        }
-
-        public string Group
-        {
-            get
-            {
-                return this.group;
-            }
-            set
-            {
-                this.group = value;
-                this.groupShortName = CreateGroupShortName(this.group);
-            }
-        }
-        
-        public string GroupShortName
-        {
-            get
-            {
-                return this.groupShortName;
-            }
-
-        }
-
-        public Member(long joyRunId, string name, string gender, string group)
+        public Member(long joyRunId, string name, string gender, string groupName)
         {
             this.JoyRunId = joyRunId;
             this.Name = name;
             this.Gender = gender;
-            this.Group = group;
-        }
-
-        private string CreateGroupShortName(string name)
-        {
-            foreach (string shortName in GroupShortNames)
-            {
-                if (name.Contains(shortName))
-                {
-                    return shortName;
-                }
-            }
-            return name.Replace(DataSource.Instance.Team + "_", string.Empty);
-        }
+            this.Group = Group.GetByName(groupName);
+        }        
 
         public override bool Equals(object obj)
         {
@@ -75,7 +32,7 @@ namespace RunData
 
         public override string ToString()
         {
-            return string.Format("{0}\t{1}\t{2}\t{3}", this.JoyRunId, this.Name, this.Gender, this.Group);
+            return string.Format("{0}\t{1}\t{2}\t{3}", this.JoyRunId, this.Name, this.Gender, this.Group.ShortName);
         }
 
         public static Member Create(string[] a)

@@ -87,8 +87,10 @@ namespace RunData
 
             foreach (NonBreakRecord r in this.curData)
             {
+                if (r.Member.Group.Disabled) continue;
+
                 List<NonBreakRecord> groupData;
-                string group = r.Member.GroupShortName;
+                string group = r.Member.Group.ShortName;
                 if (!sumData.ContainsKey(group))
                 {
                     groupData = new List<NonBreakRecord>();

@@ -45,6 +45,8 @@ namespace RunData
 
         public void HandleData()
         {
+            this.RemoveDisabledGroupDataInRunRecords();
+
             this.RemoveNoRunInRunRecords();
 
             this.MarkMembers();
@@ -78,8 +80,22 @@ namespace RunData
             }
         }
 
+        private void RemoveDisabledGroupDataInRunRecords()
+        {
+            Logger.Info("删除无效分队的跑步记录");
+
+            List<long> ids = new List<long>();
+
+            foreach (PeriodRunRecord r in this.runRecords.Values)
+            {
+                if (r.Member.Group.Disabled) ids.Add(r.Member.JoyRunId);
+            }
+
+            ids.ForEach(x => this.runRecords.Remove(x));
+        }
+
         // 当中途转分队之后，会出现既有跑步记录，又有无跑步记录的情况
-        public void RemoveNoRunInRunRecords()
+        private void RemoveNoRunInRunRecords()
         {
             Logger.Info("删除有跑步记录的无跑步成员记录");
 

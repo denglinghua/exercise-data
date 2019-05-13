@@ -107,7 +107,7 @@ namespace RunData
                 PeriodRunRecord rr = this.data.RunRecords[i];
                 IRow row = CreateRow(sheet, rowIndex++, colInfo, i % 2 != 0);
 
-                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.GroupShortName , rr.Member.Gender , rr.Data.Distance ,
+                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.Group.ShortName , rr.Member.Gender , rr.Data.Distance ,
                 rr.Data.TimeSpanOfTotalTime, rr.RunTimes, rr.Data.TimeSpanOfAvgPace};
                 SetRowValues(row, values);
             }
