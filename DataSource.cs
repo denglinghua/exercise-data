@@ -245,7 +245,7 @@ namespace RunData
 
                     long joyRunId = long.Parse(values[1]);
                     this.runRecords.Add(joyRunId,
-                        new PeriodRunRecord(joyRunId, values[0], values[3], values[2], float.Parse(values[4]), DateUtil.ParseTimeSpanSeconds(values[5]), short.Parse(values[6])));
+                        new PeriodRunRecord(joyRunId, values[0], values[3], values[2], float.Parse(values[4]), DateUtil.ParseTimeSpanToSeconds(values[5]), short.Parse(values[6])));
                 }
 
                 Logger.Info("    数据时段：{0} ，跑步记录 {1} 条", this.CurrentDateRange.ToString(), this.runRecords.Count);
@@ -286,7 +286,7 @@ namespace RunData
                         this.runRecordDetail[joyRunId] = detail;
                     }
 
-                    detail.Add(new RunData(float.Parse(values[5]), DateUtil.ParseTimeSpanSeconds(values[6])));
+                    detail.Add(new RunData(float.Parse(values[5]), DateUtil.ParseTimeSpanToSeconds(values[6])));
                 }
             }
 

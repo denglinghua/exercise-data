@@ -17,8 +17,8 @@ namespace RunData
             return d.ToString(DATE_FORMAT);
         }
 
-        // why use this method instead of TimeSpan.Parse ? for hours greater than 24
-        public static double ParseTimeSpanSeconds(string str)
+        // why use this method instead of TimeSpan.Parse ? coz time span string's hours greater than 24 
+        public static double ParseTimeSpanToSeconds(string str)
         {
             string[] items = str.Split(':');
             int h = int.Parse(items[0]);
