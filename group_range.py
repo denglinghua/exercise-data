@@ -1,10 +1,11 @@
+# encoding:utf-8
 from group import Group, GroupRow, str_to_time
 
 def __in_range_group_func(data_row, group, group_row):
     val = group.value_func(data_row[group.column])
     return val >= group_row.low and val < group_row.up
 
-def create_range_group(column, rows, filter_func, value_func):
+def create_range_group(title, column, rows, filter_func, value_func):
     group_rows = []
     for row in rows:
         group_row = GroupRow(row[0])
@@ -14,12 +15,13 @@ def create_range_group(column, rows, filter_func, value_func):
 
     in_this_group_func = __in_range_group_func
 
-    group = Group(column, group_rows, filter_func, in_this_group_func)
+    group = Group(title, column, group_rows, filter_func, in_this_group_func)
     group.value_func = value_func
 
     return group
 
 def create_avg_pace_group():
+    title = '跑多快'
     col = 'Avg Pace'
     rows = [
         ("<4:00", 1, 4),
@@ -34,9 +36,10 @@ def create_avg_pace_group():
 
     def value_func(val): return str_to_time(val).tm_min
 
-    return create_range_group(col, rows, filter_func, value_func)
+    return create_range_group(title, col, rows, filter_func, value_func)
 
 def create_activity_hour_group():
+    title = '那些时辰比较活跃'
     col = 'Date'
     rows = []
     for h in range(0, 24):
@@ -44,9 +47,10 @@ def create_activity_hour_group():
 
     def value_func(val): return str_to_time(val).tm_hour
 
-    return create_range_group(col, rows, None, value_func)
+    return create_range_group(title, col, rows, None, value_func)
 
 def create_activity_month_group():
+    title = '那些月份比较活跃'
     col = 'Date'
     rows = []
     for m in range(1, 13):
@@ -54,9 +58,10 @@ def create_activity_month_group():
 
     def value_func(val): return str_to_time(val).tm_mon
 
-    return create_range_group(col, rows, None, value_func)
+    return create_range_group(title, col, rows, None, value_func)
 
 def create_avg_run_distance_group():
+    title = '跑多远'
     col = 'Distance'
     rows = []
     for d in range(0, 20):
@@ -67,5 +72,5 @@ def create_avg_run_distance_group():
 
     def value_func(val): return float(val)
 
-    return create_range_group(col, rows, filter_func, value_func)
+    return create_range_group(title, col, rows, filter_func, value_func)
 
