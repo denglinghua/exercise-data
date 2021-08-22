@@ -1,6 +1,6 @@
 from group import Group, GroupRow, str_to_time
 
-def in_range_group_func(data_row, group, group_row):
+def __in_range_group_func(data_row, group, group_row):
     val = group.value_func(data_row[group.column])
     return val >= group_row.low and val < group_row.up
 
@@ -12,7 +12,7 @@ def create_range_group(column, rows, filter_func, value_func):
         group_row.up = row[2]
         group_rows.append(group_row)
 
-    in_this_group_func = in_range_group_func
+    in_this_group_func = __in_range_group_func
 
     group = Group(column, group_rows, filter_func, in_this_group_func)
     group.value_func = value_func

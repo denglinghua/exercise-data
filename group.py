@@ -1,6 +1,6 @@
 import time
 
-def group_row(data_row, group):
+def __group_row(data_row, group):
     if group.filter_func and not group.filter_func(data_row):
         return
     for group_row in group.rows:
@@ -8,11 +8,15 @@ def group_row(data_row, group):
             group_row.count = group_row.count + 1
             break
 
-def do_group(data_rows, group):
+def do_group(data_rows, groups):
     for data_row in data_rows:
-        group_row(data_row, group)
-    print(group)
-    print('\n')
+        for group in groups:
+            __group_row(data_row, group)
+
+def print_groups(groups):
+    for group in groups:
+        print(group)
+        print('\n')
 
 class GroupRow(object):
     def __init__(self, label):
@@ -23,7 +27,7 @@ class GroupRow(object):
         return str(self)
 
     def __str__(self):
-        return '[%s : %s]' % (self.label, self.count)
+        return '{%s : %s}' % (self.label, self.count)
 
 class Group(object):
     def __init__(self, column, rows, filter_func, in_this_group_func):
@@ -33,7 +37,7 @@ class Group(object):
         self.in_this_group_func = in_this_group_func
     
     def __str__(self):
-        return '[%s, %s]' % (self.column, self.rows)
+        return '{%s, %s}' % (self.column, self.rows)
 
 def str_to_time(str):
     strlen = len(str)
