@@ -16,8 +16,9 @@ def draw_group_chart(group):
     )
     return c
 
-def draw_groups_chart(groups):
+def draw_groups_chart(title, groups):
     page = Page()
+    page.page_title = title
     for group in groups:
         page.add(draw_group_chart(group))
     page.render('chart_html/all.html')

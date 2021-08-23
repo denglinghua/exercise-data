@@ -9,4 +9,4 @@ with open('Activities.csv', 'rt') as f:
     groups = sum_groups + range_groups
     do_group(rows, groups)
     print_groups(groups)    
-    draw_groups_chart(groups)
+    draw_groups_chart("Triathlon execise data review", groups)
