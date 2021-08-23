@@ -8,7 +8,7 @@ from group import Group
 
 def draw_group_chart(group):
     axis_values = group.get_axis_values()
-    c = (Bar(init_opts=opts.InitOpts(theme=ThemeType.WHITE))
+    c = (Bar(init_opts=opts.InitOpts(theme=ThemeType.ROMA))
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1])
          .set_global_opts(title_opts=opts.TitleOpts(title=group.title, subtitle=""))

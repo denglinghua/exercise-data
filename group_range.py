@@ -45,6 +45,18 @@ def create_activity_hour_group():
 
     return create_range_group(title, col, rows, None, value_func)
 
+def create_activity_weekday_group():
+    title = '星期几比较活跃'
+    col = 'Date'
+    weekDays = ("一","二","三","四","五","六","日")
+    rows = []
+    for w in range(0, 7):
+        rows.append((weekDays[w], w, w+1))
+
+    def value_func(val): return str_to_time(val).tm_wday
+
+    return create_range_group(title, col, rows, None, value_func)
+
 def create_activity_month_group():
     title = '那些月份比较活跃'
     col = 'Date'
@@ -69,4 +81,12 @@ def create_avg_run_distance_group():
     def value_func(val): return float(val)
 
     return create_range_group(title, col, rows, filter_func, value_func)
+
+range_groups = [
+    create_activity_month_group(),
+    create_activity_weekday_group(),
+    create_activity_hour_group(),
+    create_avg_run_distance_group(),
+    create_avg_pace_group()
+]
 

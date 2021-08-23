@@ -18,3 +18,7 @@ def create_activity_type_group():
         data_row, group, group_row): return data_row[group.column].find(group_row.label) >= 0
 
     return create_sum_group(title, column, rows, None, in_this_group_func)
+
+sum_groups = [
+    create_activity_type_group()
+]
