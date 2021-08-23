@@ -1,6 +1,6 @@
 import time
 
-def __group_row(data_row, group):
+def __do_group_row(data_row, group):
     if group.filter_func and not group.filter_func(data_row):
         return
     for group_row in group.rows:
@@ -11,7 +11,7 @@ def __group_row(data_row, group):
 def do_group(data_rows, groups):
     for data_row in data_rows:
         for group in groups:
-            __group_row(data_row, group)
+            __do_group_row(data_row, group)
 
 def print_groups(groups):
     for group in groups:
