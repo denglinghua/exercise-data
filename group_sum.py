@@ -1,5 +1,6 @@
 # encoding:utf-8
 from group import Group, GroupRow
+from lang import get_lang
 
 def create_sum_group(title, column, rows, filter_func, in_this_group_func):
     group = Group(title, column, rows, filter_func, in_this_group_func)
@@ -7,11 +8,11 @@ def create_sum_group(title, column, rows, filter_func, in_this_group_func):
 
 def create_activity_type_group():
     title = "三项分别做了多少"
-    column = 'Activity Type'
+    column = get_lang('activity_type')
     rows = [
-        GroupRow('Running'),
-        GroupRow('Swimming'),
-        GroupRow('Cycling')
+        GroupRow(get_lang('running')),
+        GroupRow(get_lang('swimming')),
+        GroupRow(get_lang('cycling'))
     ]
 
     def in_this_group_func(
@@ -19,6 +20,7 @@ def create_activity_type_group():
 
     return create_sum_group(title, column, rows, None, in_this_group_func)
 
-sum_groups = [
-    create_activity_type_group()
-]
+def get_sum_groups() :
+    return [
+        create_activity_type_group()
+    ]
