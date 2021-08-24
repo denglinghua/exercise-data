@@ -1,5 +1,5 @@
 # encoding:utf-8
-from group import Group, GroupRow, str_to_time
+from group import Group, GroupRow, str_to_time, get_calc_func
 from lang import get_lang
 
 def __in_range_group_func(data_row, group, group_row):
@@ -22,7 +22,8 @@ def create_range_group(title, column, rows, filter_func, value_func):
 
     in_this_group_func = __in_range_group_func
 
-    group = Group(title, column, group_rows, filter_func, in_this_group_func)
+    calc_func = get_calc_func("count")
+    group = Group(title, column, group_rows, in_this_group_func, calc_func, filter_func)
     group.value_func = value_func
 
     return group
