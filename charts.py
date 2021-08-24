@@ -7,17 +7,16 @@ from group import Group
 
 
 def draw_group_chart(group):
-    yaxis_opts = None
-    if (group.ytitle):
-        yaxis_opts = opts.AxisOpts(axislabel_opts=opts.LabelOpts(
-            formatter="{value} /%s" % group.ytitle))
-
     axis_values = group.get_axis_values()
+    ytitle = ''
+    if (group.ytitle) :
+        ytitle = group.ytitle
     c = (Bar(init_opts=opts.InitOpts(theme=ThemeType.ROMA))
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1], itemstyle_opts=opts.ItemStyleOpts(color='purple'))
-         .set_global_opts(title_opts=opts.TitleOpts(title=group.title, subtitle=""), yaxis_opts=yaxis_opts)
-         # .render('chart_html/' + group.title + ".html")
+         .set_series_opts(label_opts=opts.LabelOpts(formatter='{c} %s' % ytitle))
+         .set_global_opts(title_opts=opts.TitleOpts(title=group.title, subtitle=""),
+                          yaxis_opts=opts.AxisOpts(is_show=False))
          )
 
     return c
