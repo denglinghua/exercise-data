@@ -14,6 +14,7 @@ def draw_group_chart(group):
          .set_global_opts(title_opts=opts.TitleOpts(title=group.title, subtitle=""))
          #.render('chart_html/' + group.title + ".html")
     )
+
     return c
 
 def draw_groups_chart(title, groups):

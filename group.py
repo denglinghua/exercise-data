@@ -15,7 +15,7 @@ def do_group(data_rows, groups):
     
     for group in groups:
         for row in group.rows:
-            group.calc_func(row)
+            row.value = group.calc_func(group, row)
 
 def print_groups(groups):
     for group in groups:
@@ -37,6 +37,8 @@ class GroupRow(object):
 class Group(object):
     def __init__(self, title, column, rows, in_this_group_func, calc_func, filter_func = None):
         self.title = title
+        self.xtitle = None
+        self.ytitle = None
         self.column = column
         self.rows = rows
         self.filter_func = filter_func
@@ -46,6 +48,14 @@ class Group(object):
     def __str__(self):
         return '{%s, %s, %s}' % (self.title, self.column, self.rows)
     
+    def set_xtitle(self, title):
+        self.xtitle = title
+        return self
+    
+    def set_ytitle(self, title):
+        self.ytitle = title
+        return self
+
     def get_axis_values(self):
         xlist = []
         ylist = []
@@ -68,15 +78,20 @@ def str_to_time(str):
     
     return time.strptime(str, format)
 
-def __calc_count_func(group_row):
-    group_row.value = len(group_row.data_rows)
+def __calc_count_func(group, group_row):
+    return len(group_row.data_rows)
 
-def __calc_avg_func(group_row):
-    group_row.value = 0
+def __calc_sum_func(group, group_row):
+    return sum(int(r[group.sum_column]) for r in group_row.data_rows)
+
+def __calc_avg_func(group, group_row):
+    return 0
 
 def get_calc_func(func_name):
     if func_name == "count":
         return __calc_count_func
+    if func_name == "sum":
+        return __calc_sum_func
     if func_name == "avg":
         return __calc_avg_func
     return None

@@ -26,6 +26,8 @@ def create_range_group(title, column, rows, filter_func, value_func):
     group = Group(title, column, group_rows, in_this_group_func, calc_func, filter_func)
     group.value_func = value_func
 
+    group.set_ytitle("次")
+
     return group
 
 def create_run_pace_group():
