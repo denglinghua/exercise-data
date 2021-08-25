@@ -1,4 +1,5 @@
 import time
+from functools import wraps
 
 def __do_group_row(data_row, group):
     if group.filter_func and not group.filter_func(data_row):
@@ -49,6 +50,7 @@ class Group(object):
         self.filter_func = filter_func
         self.in_this_group_func = in_this_group_func
         self.calc_func = calc_func
+        self.check_data_func = None
     
     def __str__(self):
         return '{%s, %s, %s}' % (self.title, self.column, self.rows)
@@ -70,6 +72,17 @@ class Group(object):
                 ylist.append(row.value)
         
         return [xlist, ylist]
+    
+    # for data correctness check
+    def check_data(self, context):      
+        if self.check_data_func:
+            total = sum(map(lambda r : r.value, self.rows))
+            if (self.check_data_func(context, total)):
+                print('O check OK %s' % self.title)
+            else:
+                print('X check FAILED %s' % self.title)
+        else:
+            print('- check no function %s' % self.title)
 
 def __calc_count_func(group, group_row):
     return len(group_row.data_rows)
@@ -88,3 +101,13 @@ def get_calc_func(func_name):
     if func_name == "avg":
         return __calc_avg_func
     return None
+
+def check_data(check_data_func):
+    def check_data_decorator(func):
+        @wraps(func)
+        def wrapped_function(*args, **kwargs):            
+            group = func(*args, **kwargs)
+            group.check_data_func = check_data_func
+            return group
+        return wrapped_function
+    return check_data_decorator

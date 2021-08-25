@@ -1,5 +1,5 @@
 # encoding:utf-8
-from group import Group, GroupRow, get_calc_func
+from group import Group, GroupRow, get_calc_func, check_data
 from lang import get_lang
 
 def __in_range_group_func(data_row, group, group_row):
@@ -32,6 +32,7 @@ def create_range_group(title, column, rows, filter_func, value_func=None):
 
     return group
 
+@check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_pace_group():
     title = '跑多快'
     col = get_lang('avg_pace')
@@ -43,6 +44,7 @@ def create_run_pace_group():
 
     return create_range_group(title, col, rows, __filter_running_func, value_func)
 
+@check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_cadence_group():
     title = '步频'
     col = get_lang('avg_run_cadence')
@@ -52,6 +54,7 @@ def create_run_cadence_group():
     
     return create_range_group(title, col, rows, __filter_running_func)
 
+@check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_stride_group():
     title = '步长'
     col = get_lang('avg_stride_length')
@@ -61,6 +64,7 @@ def create_run_stride_group():
     
     return create_range_group(title, col, rows, __filter_running_func)
 
+@check_data(lambda ctx, total : total == ctx['data_rows_count'])
 def create_activity_hour_group():
     title = '那些时辰比较活跃'
     col = get_lang('date')
@@ -70,6 +74,7 @@ def create_activity_hour_group():
 
     return create_range_group(title, col, rows, None, value_func)
 
+@check_data(lambda ctx, total : total == ctx['data_rows_count'])
 def create_activity_weekday_group():
     title = '星期几比较活跃'
     col = get_lang('date')
@@ -80,6 +85,7 @@ def create_activity_weekday_group():
 
     return create_range_group(title, col, rows, None, value_func)
 
+@check_data(lambda ctx, total : total == ctx['data_rows_count'])
 def create_activity_month_group():
     title = '那些月份比较活跃'
     col = get_lang('date')
@@ -89,12 +95,14 @@ def create_activity_month_group():
 
     return create_range_group(title, col, rows, None, value_func)
 
+@check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_distance_group():
     title = '跑多远'
     col = get_lang('distance')
     rows = map(lambda d : ('%s-%skm' % (d*5, (d+1)*5), d*5, (d+1)*5), range(0, 20))
     return create_range_group(title, col, rows, __filter_running_func)
 
+@check_data(lambda ctx, total : total == ctx['swim_times'])
 def create_swimming_distance_group():
     title = '游多远'
     col = get_lang('distance')
@@ -115,4 +123,3 @@ def get_range_groups():
         create_run_stride_group(),
         create_swimming_distance_group()
     ]
-

@@ -1,5 +1,5 @@
 # encoding:utf-8
-from group import Group, GroupRow, get_calc_func
+from group import Group, GroupRow, get_calc_func, check_data
 from lang import get_lang
 
 def create_basic_group(title, column, rows, filter_func, in_this_group_func, calc_func):
@@ -19,6 +19,7 @@ def __activity_type_rows():
         ("自行车", get_lang('cycling'))
     ]
 
+@check_data(lambda ctx, total : total == ctx['data_rows_count'])
 def create_activity_type_times_group():
     title = "三项分别做了多少次"
     column = get_lang('activity_type')
@@ -29,7 +30,10 @@ def create_activity_type_times_group():
     
     calc_func = get_calc_func("count")
 
-    return create_basic_group(title, column, rows, None, in_this_group_func, calc_func).set_ytitle("次")
+    group = create_basic_group(title, column, rows, None, in_this_group_func, calc_func)
+    group.set_ytitle("次")
+
+    return group
 
 def create_activity_type_distance_group():
     title = "三项距离"
