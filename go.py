@@ -5,12 +5,14 @@ from group_basic import get_basic_groups
 from group_range import get_range_groups
 from charts import draw_groups_chart
 from lang import set_lang
+from datasource import prehandle_data
 
 data_file = sys.argv[1]
 set_lang(int(sys.argv[2]))
 
 with open(data_file, 'rt', encoding="utf-8") as f:
     rows = list(csv.DictReader(f))
+    prehandle_data(rows)
     groups = get_basic_groups() + get_range_groups()
     do_group(rows, groups)
     print_groups(groups)    

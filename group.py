@@ -66,23 +66,11 @@ class Group(object):
         
         return [xlist, ylist]
 
-def str_to_time(str):
-    strlen = len(str)
-    format = ''
-    if (strlen > 10):
-        format = '%Y-%m-%d %H:%M:%S'
-    elif (strlen > 6):
-        format = '%H:%M:%S'
-    else:
-        format = '%M:%S'
-    
-    return time.strptime(str, format)
-
 def __calc_count_func(group, group_row):
     return len(group_row.data_rows)
 
 def __calc_sum_func(group, group_row):
-    return sum(int(r[group.sum_column]) for r in group_row.data_rows)
+    return sum(r[group.sum_column] for r in group_row.data_rows)
 
 def __calc_avg_func(group, group_row):
     return 0

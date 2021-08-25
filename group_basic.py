@@ -41,7 +41,7 @@ def create_activity_type_distance_group():
         data_row, group, group_row): return data_row[column].find(group_row.keyword) >= 0
     
     def calc_func(group, group_row):
-        val = sum(float(r[get_lang("distance")].replace(',', '')) for r in group_row.data_rows)
+        val = sum(r[get_lang("distance")] for r in group_row.data_rows)
         if group_row.label =='游泳':
             val = val / 1000
         return int(val)
