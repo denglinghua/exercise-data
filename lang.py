@@ -9,7 +9,9 @@ __lang_dict = {
     'date':('Date', '日期'),
     'distance':('Distance', '距离'),
     'avg_run_cadence':('Avg Run Cadence', '平均步频'),
-    'avg_stride_length':('Avg Stride Length', '平均步长')
+    'avg_stride_length':('Avg Stride Length', '平均步长'),
+    'calories':('Calories', '卡路里'),
+    'time':('Time', '时间')
 }
 
 def get_lang(key):
