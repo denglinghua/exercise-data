@@ -35,6 +35,11 @@ class GroupRow(object):
         return '{%s : %s}' % (self.label, self.value)
 
 class Group(object):
+    #export_groups = []
+    #@staticmethod
+    #def export(fn):
+    #    Group.export_groups.append((fn, fn.__name__))
+
     def __init__(self, title, column, rows, in_this_group_func, calc_func, filter_func = None):
         self.title = title
         self.xtitle = None
@@ -83,5 +88,3 @@ def get_calc_func(func_name):
     if func_name == "avg":
         return __calc_avg_func
     return None
-
-

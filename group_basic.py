@@ -12,14 +12,17 @@ def create_basic_group(title, column, rows, filter_func, in_this_group_func, cal
     group = Group(title, column, group_rows, in_this_group_func, calc_func, filter_func)
     return group
 
-def create_activity_type_times_group():
-    title = "三项分别做了多少次"
-    column = get_lang('activity_type')
-    rows = [
+def __activity_type_rows():
+    return [
         ("跑步", get_lang('running')),
         ("游泳", get_lang('swimming')),
         ("自行车", get_lang('cycling'))
     ]
+
+def create_activity_type_times_group():
+    title = "三项分别做了多少次"
+    column = get_lang('activity_type')
+    rows = __activity_type_rows()
 
     def in_this_group_func(
         data_row, group, group_row): return data_row[column].find(group_row.keyword) >= 0
@@ -31,11 +34,7 @@ def create_activity_type_times_group():
 def create_activity_type_distance_group():
     title = "三项距离"
     column = get_lang('activity_type')
-    rows = [
-        ("跑步", get_lang('running')),
-        ("游泳", get_lang('swimming')),
-        ("自行车", get_lang('cycling'))
-    ]
+    rows = __activity_type_rows()
 
     def in_this_group_func(
         data_row, group, group_row): return data_row[column].find(group_row.keyword) >= 0

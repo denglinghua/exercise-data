@@ -36,8 +36,7 @@ def create_run_pace_group():
     title = '跑多快'
     col = get_lang('avg_pace')
     rows = [("<4:00分", 1, 4)]
-    for n in range(4, 9):
-        rows.append(('%s-%s:00分' % (n, n+1), n, n + 1))
+    rows.extend(map(lambda n : ('%s:00-%s:00分' % (n, n+1), n, n + 1), range(4, 9)))    
     rows.append((">9:00分", 9, 999))
     
     def value_func(val): return val.tm_min
@@ -47,38 +46,25 @@ def create_run_pace_group():
 def create_run_cadence_group():
     title = '步频'
     col = get_lang('avg_run_cadence')
-    rows = [
-        ("<160 步/分", 1, 160),
-        ("160+ 步/分", 160, 170),
-        ("170+ 步/分", 170, 180),
-        ("180+ 步/分", 180, 190),
-        ("190+ 步/分", 190, 200),
-        (">200 步/分", 200, 999)
-        ]
+    rows = [("<160 步/分", 1, 160)]
+    rows.extend(map(lambda n : ('%s+ 步/分' % n, n, n + 10), [160, 170, 180, 190]))
+    rows.append((">200 步/分", 200, 999))
     
     return create_range_group(title, col, rows, __filter_running_func)
 
 def create_run_stride_group():
     title = '步长'
     col = get_lang('avg_stride_length')
-    rows = [
-        ("<0.7 m", 0, 0.7),
-        ("0.7+ m", 0.7, 0.8),
-        ("0.8+ m", 0.8, 0.9),
-        ("0.9+ m", 0.9, 1.0),
-        ("1.0+ m", 1.0, 1.1),
-        ("1.1+ m", 1.1, 1.2),
-        (">1.2 m", 1.2, 999)
-        ]
+    rows = [("<0.7 m", 0, 0.7)]
+    rows.extend(map(lambda n : ('%s+ m' % n, n, n + 0.1), [0.7, 0.8, 0.9,1.0,1.1]))
+    rows.append((">1.2 m", 1.2, 999))
     
     return create_range_group(title, col, rows, __filter_running_func)
 
 def create_activity_hour_group():
     title = '那些时辰比较活跃'
     col = get_lang('date')
-    rows = []
-    for h in range(0, 24):
-        rows.append((str(h) + "时", h, h+1))
+    rows = map(lambda h : (str(h) + '时', h, h+1), range(0, 24))
 
     def value_func(val): return val.tm_hour
 
@@ -88,9 +74,7 @@ def create_activity_weekday_group():
     title = '星期几比较活跃'
     col = get_lang('date')
     weekDays = ("一","二","三","四","五","六","日")
-    rows = []
-    for w in range(0, 7):
-        rows.append((weekDays[w], w, w+1))
+    rows = map(lambda w : (weekDays[w], w, w+1), range(0, 7))
 
     def value_func(val): return val.tm_wday
 
@@ -99,9 +83,7 @@ def create_activity_weekday_group():
 def create_activity_month_group():
     title = '那些月份比较活跃'
     col = get_lang('date')
-    rows = []
-    for m in range(1, 13):
-        rows.append((str(m) + "月", m, m+1))
+    rows = map(lambda m : ((str(m) + "月", m, m+1)), range(1, 13))
 
     def value_func(val): return val.tm_mon
 
@@ -110,22 +92,14 @@ def create_activity_month_group():
 def create_run_distance_group():
     title = '跑多远'
     col = get_lang('distance')
-    rows = []
-    for d in range(0, 20):
-        start = d * 5
-        end = start + 5
-        rows.append(('%s-%skm' % (start, end), start, end))
-
+    rows = map(lambda d : ('%s-%skm' % (d*5, (d+1)*5), d*5, (d+1)*5), range(0, 20))
     return create_range_group(title, col, rows, __filter_running_func)
 
 def create_swimming_distance_group():
     title = '游多远'
     col = get_lang('distance')
     rows = [('<500m', 0, 500)]
-    for i in range(1, 9):
-        start = i * 500
-        end = start + 500
-        rows.append(('%s-%sm' % (start, end), start, end))
+    rows.extend(map(lambda i : ('%s-%sm' % (i*500, (i+1)*500), i*500, (i+1)*500), range(1,9)))
     rows.append(('>5000m', 5000, 999999))
 
     return create_range_group(title, col, rows, __filter_swimming_func)
