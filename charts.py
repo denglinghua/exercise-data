@@ -1,13 +1,15 @@
-# encoding:utf-8
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Page
 from pyecharts.faker import Faker
 from pyecharts.globals import ThemeType
 from pyecharts.commons import utils
 from group import Group
+from lang import lang
 
 
 def draw_group_chart(group):
+    __init_formatter()
+
     axis_values = group.get_axis_values()
     ytitle = ''
     if (group.ytitle) :
@@ -32,17 +34,18 @@ def draw_groups_chart(title, groups):
 
 __mins_to_hm_formatter = """function (params) {
         mins = params.value;
-        h = Math.floor(mins / 60); m = mins % 60;
+        h = Math.floor(mins / 60); m = mins %% 60;
         r = '';
-        if (h > 0) r += (h + '小时');
-        if (m > 0) r += (m + '分');
+        if (h > 0) r += (h + ' %s ');
+        if (m > 0) r += (m + ' %s ');
         return r;
     }
 """
 
-__formatters = {
-    "三项耗时" : __mins_to_hm_formatter    
-}
+__formatters = {}
+
+def __init_formatter():
+    __formatters[lang.total_activity_time] = __mins_to_hm_formatter % (lang.hour, lang.min)
 
 def __get_formatter(title, ytitle):
     if title in __formatters:

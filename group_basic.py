@@ -1,6 +1,5 @@
-# encoding:utf-8
 from group import Group, GroupRow, get_calc_func, check_data
-from lang import get_lang
+from lang import lang
 
 def create_basic_group(title, column, rows, filter_func, in_this_group_func, calc_func):
     group_rows = []
@@ -14,66 +13,65 @@ def create_basic_group(title, column, rows, filter_func, in_this_group_func, cal
 
 def __activity_type_rows():
     return [
-        ("跑步", get_lang('running')),
-        ("游泳", get_lang('swimming')),
-        ("自行车", get_lang('cycling'))
+        (lang.running, lang.running),
+        (lang.swimming, lang.swimming),
+        (lang.cycling, lang.cycling_keyword)
     ]
 
 def __in_activity_type_group_func(data_row, group, group_row): 
-    return data_row[get_lang('activity_type')].find(group_row.keyword) >= 0
+    return data_row[lang.col_activity_type].find(group_row.keyword) >= 0
     
 @check_data(lambda ctx, total : total == ctx['data_rows_count'])
 def create_activity_type_count_group():
-    title = "三项分别做了多少次"
-    column = get_lang('activity_type')
+    title = lang.activities
+    column = lang.col_activity_type
     rows = __activity_type_rows()
 
     calc_func = get_calc_func("count")
 
     group = create_basic_group(title, column, rows, None, __in_activity_type_group_func, calc_func)
-    group.set_ytitle("次")
+    group.set_ytitle(lang.activity_times)
 
     return group
 
 def create_activity_type_distance_group():
-    title = "三项距离"
-    column = get_lang('activity_type')
+    title = lang.total_distance
+    column = lang.col_activity_type
     rows = __activity_type_rows()
 
     def calc_func(group, group_row):
-        val = sum(r[get_lang("distance")] for r in group_row.data_rows)
-        if group_row.label =='游泳':
+        val = sum(r[lang.col_distance] for r in group_row.data_rows)
+        if group_row.label ==lang.swimming:
             val = val / 1000
         return int(val)
 
     group = create_basic_group(title, column, rows, None, __in_activity_type_group_func, calc_func)
-    group.set_ytitle("公里")
+    group.set_ytitle(lang.km)
     
     return group
 
 def create_activity_type_calory_group():
-    title = "三项热量消耗"
-    column = get_lang('activity_type')
+    title = lang.activity_calories
+    column = lang.col_activity_type
     rows = __activity_type_rows()
 
     calc_func = get_calc_func('sum')
 
     group = create_basic_group(title, column, rows, None, __in_activity_type_group_func, calc_func)
-    group.sum_column = get_lang('calories')
-    group.set_ytitle("千卡")
+    group.sum_column = lang.col_calories
+    group.set_ytitle(lang.kcal)
     
     return group
 
 def create_activity_type_time_group():
-    title = "三项耗时"
-    column = get_lang('activity_type')
+    title = lang.total_activity_time
+    column = lang.col_activity_type
     rows = __activity_type_rows()
 
     calc_func = get_calc_func('sum')
 
     group = create_basic_group(title, column, rows, None, __in_activity_type_group_func, calc_func)
-    group.sum_column = get_lang('time')
-    #group.set_ytitle("分钟")
+    group.sum_column = lang.col_time
     
     return group
 

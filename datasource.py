@@ -1,6 +1,6 @@
 import time
 
-from lang import get_lang
+from lang import lang
 
 def __to_time(str):
     strlen = len(str)
@@ -45,15 +45,15 @@ def __handle_data_row(row, data_type_map):
 
 def prehandle_data(raw_data):
     data_type_map = {}
-    data_type_map[get_lang('date')] = (__to_time,)
-    data_type_map[get_lang('distance')] = (__to_float,)
+    data_type_map[lang.col_date] = (__to_time,)
+    data_type_map[lang.col_distance] = (__to_float,)
     # the pace value varies by activity types
     # mm:ss/km for running, km/hour for cycling
-    data_type_map[get_lang('avg_pace')] = (__to_time, __to_float)
-    data_type_map[get_lang('avg_run_cadence')] = (__to_int,)
-    data_type_map[get_lang('avg_stride_length')] = (__to_float,)
-    data_type_map[get_lang('calories')] = (__to_int,)
-    data_type_map[get_lang('time')] = (__to_time_min,)
+    data_type_map[lang.col_avg_pace] = (__to_time, __to_float)
+    data_type_map[lang.col_avg_run_cadence] = (__to_int,)
+    data_type_map[lang.col_avg_stride_length] = (__to_float,)
+    data_type_map[lang.col_calories] = (__to_int,)
+    data_type_map[lang.col_time] = (__to_time_min,)
 
     for row in raw_data:    
         __handle_data_row(row, data_type_map)

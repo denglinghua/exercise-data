@@ -1,10 +1,10 @@
 import sys
 import csv
+from lang import set_lang
 from group import do_group, print_groups
 from group_basic import get_basic_groups
 from group_range import get_range_groups
 from charts import draw_groups_chart
-from lang import set_lang
 from datasource import prehandle_data
 
 data_file = sys.argv[1]
