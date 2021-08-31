@@ -47,7 +47,9 @@ def prehandle_data(raw_data):
     data_type_map = {}
     data_type_map[get_lang('date')] = (__to_time,)
     data_type_map[get_lang('distance')] = (__to_float,)
-    data_type_map[get_lang('avg_pace')] = (__to_time, __to_float) # 不同运动配速类型不同
+    # the pace value varies by activity types
+    # mm:ss/km for running, km/hour for cycling
+    data_type_map[get_lang('avg_pace')] = (__to_time, __to_float)
     data_type_map[get_lang('avg_run_cadence')] = (__to_int,)
     data_type_map[get_lang('avg_stride_length')] = (__to_float,)
     data_type_map[get_lang('calories')] = (__to_int,)

@@ -73,7 +73,7 @@ def create_activity_type_time_group():
 
     group = create_basic_group(title, column, rows, None, __in_activity_type_group_func, calc_func)
     group.sum_column = get_lang('time')
-    group.set_ytitle("分钟")
+    #group.set_ytitle("分钟")
     
     return group
 
