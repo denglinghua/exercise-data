@@ -11,19 +11,22 @@ def draw_group_chart(group):
     __init_formatter()
 
     axis_values = group.get_axis_values()
+    xtitle = ''
     ytitle = ''
-    if (group.ytitle) :
+    if (group.xtitle):
+        xtitle = group.xtitle
+    if (group.ytitle):
         ytitle = group.ytitle
     c = (Bar(init_opts=opts.InitOpts(theme=ThemeType.ROMA))
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1], itemstyle_opts=opts.ItemStyleOpts(color='purple'))
          .set_series_opts(label_opts=opts.LabelOpts(formatter=__get_formatter(group.title, ytitle)))
          .set_global_opts(title_opts=opts.TitleOpts(title=group.title, subtitle=""),
-                          yaxis_opts=opts.AxisOpts(is_show=False))
+                        xaxis_opts=opts.AxisOpts(name=xtitle),
+                        yaxis_opts=opts.AxisOpts(is_show=False))
          )
     
     return c
-
 
 def draw_groups_chart(title, groups):
     page = Page()

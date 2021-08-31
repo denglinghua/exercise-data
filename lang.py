@@ -37,6 +37,7 @@ __lang_dict = {
     'activity_times':('', ''),
     'total_distance':('Total Distance', '三项距离'),
     'km':('km', '公里'),
+    'm':('m', '米'),
     'activity_calories':('Activity Calories', '三项热量消耗'),
     'kcal':('C', '千卡'),
     'total_activity_time':('Total Activity Time', '三项耗时'),
