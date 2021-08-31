@@ -7,14 +7,17 @@ def __in_range_group_func(data_row, group, group_row):
         val = group.value_func(val)
     return val >= group_row.low and val < group_row.up
 
+def __filter_activity_type(data_row, keyword):
+    return data_row[lang.col_activity_type].find(keyword) >= 0
+
 def __filter_running_func(data_row):
-    return data_row[lang.col_activity_type].find(lang.running) >= 0
+    return __filter_activity_type(data_row, lang.running)
 
 def __filter_swimming_func(data_row):
-    return data_row[lang.col_activity_type].find(lang.swimming) >= 0
+    return __filter_activity_type(data_row, lang.swimming)
 
 def __filter_cycling_func(data_row):
-    return data_row[lang.col_activity_type].find(lang.cycling_keyword) >= 0
+    return __filter_activity_type(data_row, lang.cycling_keyword)
 
 def create_range_group(title, column, rows, filter_func, value_func=None):
     group_rows = []
