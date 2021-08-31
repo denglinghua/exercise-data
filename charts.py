@@ -48,7 +48,7 @@ __mins_to_hm_formatter = """function (params) {
 __formatters = {}
 
 def __init_formatter():
-    __formatters[lang.total_activity_time] = __mins_to_hm_formatter % (lang.hour, lang.min)
+    __formatters[lang.total_activity_time] = __mins_to_hm_formatter % (lang.hour_short, lang.min_short)
 
 def __get_formatter(title, ytitle):
     if title in __formatters:
