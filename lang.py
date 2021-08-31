@@ -21,13 +21,13 @@ __lang_dict = {
     'average_run_cadence':('Average Run Cadence', '步频'),
     'steps_per_min':('steps/min', '步/分'),
     'average_stride_length':('Average Stride Length', '步长'),
-    'activity_hours':('Activity Hours', '那些时辰比较活跃'),
+    'activity_hours':('Activities by Hour', '那些时辰比较活跃'),
     'activity_h':('H', '时'),
-    'activity_weekdays':('Activity Days of Week', '星期几比较活跃'),
+    'activity_weekdays':('Activities by Day of Week', '星期几比较活跃'),
     'days_of_week':(
         ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], 
         ["一","二","三","四","五","六","日"]),
-    'activity_months':('Activity Months', '那些月份比较活跃'),
+    'activity_months':('Activities by Month', '那些月份比较活跃'),
     'months':(
         ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], 
         list(map(lambda m : str(m) + "月", range(1, 13)))),
