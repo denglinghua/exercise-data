@@ -33,24 +33,25 @@ def create_range_group(title, column, rows, filter_func, value_func=None):
     group.set_ytitle(lang.activity_times)
     return group
 
-def __create_series(start, end, step=1, format='%s'):
-    series = [("<" + format % (start * step), 0, start * step)]
+def __create_series(start, end, step=1, format='%s', list = None):
+    series = [("<" + format % start, 0, start)]
     def map_func(n):
-        s = n * step
-        e = (n + 1) * step
+        s = n
+        e = n + step
         label = '%s-%s' % (format % s, format % e)
         return (label, s, e)
-    series.extend(map(map_func, range(start, end)))
-    series.append((">" + format % (end * step), end * step, 9999999))
+    if list:
+        series.extend(map(map_func, list))
+    else:
+        series.extend(map(map_func, range(start, end, step)))
+    series.append((">" + format % end, end, 9999999))
     return series
 
 @check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_pace_group():
     title = lang.average_run_pace
     col = lang.col_avg_pace
-    rows = [("<4:00", 1, 4)]
-    rows.extend(map(lambda n : ('%s:00-%s:00' % (n, n+1), n, n + 1), range(4, 9)))    
-    rows.append((">9:00", 9, 999))
+    rows = __create_series(4, 9, 1, '%s:00')
     
     def value_func(val): return val.tm_min
 
@@ -62,9 +63,7 @@ def create_run_pace_group():
 def create_run_cadence_group():
     title = lang.average_run_cadence
     col = lang.col_avg_run_cadence
-    rows = [("<160", 1, 160)]
-    rows.extend(map(lambda n : ('%s+' % n, n, n + 10), [160, 170, 180, 190]))
-    rows.append((">200", 200, 999))
+    rows = __create_series(160, 200, 10, '%s')
     
     group = create_range_group(title, col, rows, __filter_running_func)
     group.xtitle = lang.steps_per_min
@@ -75,7 +74,7 @@ def create_run_stride_group():
     title = lang.average_stride_length
     col = lang.col_avg_stride_length
     rows = [("<0.7", 0, 0.7)]
-    rows.extend(map(lambda n : ('%s' % n, n, n + 0.1), [0.7, 0.8, 0.9,1.0,1.1]))
+    rows.extend(map(lambda n : ('%s-%s' % (n, round(n+.1,2)), n, round(n+.1,2)), [0.7, 0.8, 0.9,1.0,1.1]))
     rows.append((">1.2", 1.2, 999))
     
     group = create_range_group(title, col, rows, __filter_running_func)
@@ -118,7 +117,7 @@ def create_activity_month_group():
 def create_run_distance_group():
     title = lang.running_distance
     col = lang.col_distance
-    rows = map(lambda d : ('%s-%s' % (d*5, (d+1)*5), d*5, (d+1)*5), range(0, 20))
+    rows = __create_series(5, 100, 5)
     group = create_range_group(title, col, rows, __filter_running_func)
     group.xtitle = lang.km
     return group
@@ -127,9 +126,7 @@ def create_run_distance_group():
 def create_swimming_distance_group():
     title = lang.swimming_distance
     col = lang.col_distance
-    rows = [('<500', 0, 500)]
-    rows.extend(map(lambda i : ('%s-%s' % (i*500, (i+1)*500), i*500, (i+1)*500), range(1,9)))
-    rows.append(('>5000', 5000, 999999))
+    rows = __create_series(500, 5000, 500)
 
     group = create_range_group(title, col, rows, __filter_swimming_func)
     group.xtitle = lang.m
@@ -139,9 +136,7 @@ def create_swimming_distance_group():
 def create_cycling_distance_group():
     title = lang.cycling_distance
     col = lang.col_distance
-    rows = [('<20', 0, 20)]
-    rows.extend(map(lambda i : ('%s-%s' % (i*20, (i+1)*20), i*20, (i+1)*20), range(1,6)))
-    rows.append(('>100', 100, 999999))
+    rows = __create_series(20, 100, 20)
 
     group = create_range_group(title, col, rows, __filter_cycling_func)
     group.xtitle = lang.km
@@ -151,7 +146,7 @@ def create_cycling_distance_group():
 def create_activity_time_group():
     title = lang.activity_time
     col = lang.col_time
-    rows = __create_series(1, 6, 30)
+    rows = __create_series(30, 180, 30)
     
     group = create_range_group(title, col, rows, None)
     group.xtitle = lang.min_full
