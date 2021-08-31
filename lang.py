@@ -33,6 +33,7 @@ __lang_dict = {
         list(map(lambda m : str(m) + "月", range(1, 13)))),
     'running_distance':('Running Distance', '跑多远'),
     'swimming_distance':('Swimming Distance', '游多远'),
+    'cycling_distance':('Cycling Distance', '骑多远'),
     'activities':('Activities', '三项分别做了多少次'),
     'activity_times':('', ''),
     'total_distance':('Total Distance', '三项距离'),

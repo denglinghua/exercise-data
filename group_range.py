@@ -13,6 +13,9 @@ def __filter_running_func(data_row):
 def __filter_swimming_func(data_row):
     return data_row[lang.col_activity_type].find(lang.swimming) >= 0
 
+def __filter_cycling_func(data_row):
+    return data_row[lang.col_activity_type].find(lang.cycling_keyword) >= 0
+
 def create_range_group(title, column, rows, filter_func, value_func=None):
     group_rows = []
     for row in rows:
@@ -121,6 +124,18 @@ def create_swimming_distance_group():
     group.xtitle = lang.m
     return group
 
+@check_data(lambda ctx, total : total == ctx['cycle_times'])
+def create_cycling_distance_group():
+    title = lang.cycling_distance
+    col = lang.col_distance
+    rows = [('<20', 0, 20)]
+    rows.extend(map(lambda i : ('%s-%s' % (i*20, (i+1)*20), i*20, (i+1)*20), range(1,6)))
+    rows.append(('>100', 100, 999999))
+
+    group = create_range_group(title, col, rows, __filter_cycling_func)
+    group.xtitle = lang.km
+    return group
+
 def get_range_groups():
     return [
         create_activity_month_group(),
@@ -130,5 +145,6 @@ def get_range_groups():
         create_run_pace_group(),
         create_run_cadence_group(),
         create_run_stride_group(),
-        create_swimming_distance_group()
+        create_swimming_distance_group(),
+        create_cycling_distance_group()
     ]
