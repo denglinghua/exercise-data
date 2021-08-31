@@ -16,6 +16,7 @@ __lang_dict = {
     'cycling':('Cycling','自行车'),
     'hour':('hrs', '小时'),
     'min':('mins', '分'),
+    'min_full':('mins', '分钟'),
     'average_run_pace':('Average Run Pace', '跑多快'),
     'run_pace_unit':('mins/km', '分配'),
     'average_run_cadence':('Average Run Cadence', '步频'),
@@ -42,6 +43,7 @@ __lang_dict = {
     'activity_calories':('Activity Calories', '三项热量消耗'),
     'kcal':('C', '千卡'),
     'total_activity_time':('Total Activity Time', '三项耗时'),
+    'activity_time':('Activity Time', '运动多久')
 }
 
 class Lang(object):

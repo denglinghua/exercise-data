@@ -33,6 +33,17 @@ def create_range_group(title, column, rows, filter_func, value_func=None):
     group.set_ytitle(lang.activity_times)
     return group
 
+def __create_series(start, end, step=1, format='%s'):
+    series = [("<" + format % (start * step), 0, start * step)]
+    def map_func(n):
+        s = n * step
+        e = (n + 1) * step
+        label = '%s-%s' % (format % s, format % e)
+        return (label, s, e)
+    series.extend(map(map_func, range(start, end)))
+    series.append((">" + format % (end * step), end * step, 9999999))
+    return series
+
 @check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_pace_group():
     title = lang.average_run_pace
@@ -136,8 +147,19 @@ def create_cycling_distance_group():
     group.xtitle = lang.km
     return group
 
+@check_data(lambda ctx, total : total == ctx['data_rows_count'])
+def create_activity_time_group():
+    title = lang.activity_time
+    col = lang.col_time
+    rows = __create_series(1, 6, 30)
+    
+    group = create_range_group(title, col, rows, None)
+    group.xtitle = lang.min_full
+    return group
+
 def get_range_groups():
     return [
+        create_activity_time_group(),
         create_activity_month_group(),
         create_activity_weekday_group(),
         create_activity_hour_group(),
