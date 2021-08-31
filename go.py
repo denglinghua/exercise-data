@@ -5,6 +5,7 @@ from group import do_group, print_groups
 from group_basic import get_basic_groups
 from group_range import get_range_groups
 from charts import draw_groups_chart
+from test_charts import draw_groups_chart as draw_test_chart
 from datasource import prehandle_data
 
 data_file = sys.argv[1]
@@ -17,6 +18,7 @@ with open(data_file, 'rt', encoding="utf-8") as f:
     do_group(rows, groups)
     print_groups(groups)    
     draw_groups_chart("Triathlon execise data review", groups)
+    draw_test_chart("Percent charts", groups)
 
     # check group data is correct?
     check_context = {}
