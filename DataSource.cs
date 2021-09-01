@@ -286,7 +286,9 @@ namespace RunData
                         this.runRecordDetail[joyRunId] = detail;
                     }
 
-                    detail.Add(new RunData(float.Parse(values[5]), DateUtil.ParseTimeSpanToSeconds(values[6])));
+                    detail.Add(new RunData(float.Parse(values[5]),
+                        DateUtil.ParseTimeSpanToSeconds(values[6]),
+                        DateUtil.ParseDateTime(values[0])));
                 }
             }
 

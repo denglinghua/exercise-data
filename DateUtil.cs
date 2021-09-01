@@ -6,10 +6,16 @@ namespace RunData
     class DateUtil
     {
         private static readonly string DATE_FORMAT = "yyyy-MM-dd";
+        private static readonly string DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
         public static DateTime ParseDate(string s)
         {
             return DateTime.ParseExact(s, DATE_FORMAT, CultureInfo.InvariantCulture);
+        }
+
+        public static DateTime ParseDateTime(string s)
+        {
+            return DateTime.ParseExact(s, DATE_TIME_FORMAT, CultureInfo.InvariantCulture);
         }
 
         public static string ToDateString(DateTime d)

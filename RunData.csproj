@@ -81,6 +81,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAnalysis\AnalysisDataSource.cs" />
+    <Compile Include="DataAnalysis\Facade.cs" />
+    <Compile Include="DataAnalysis\GroupRange.cs" />
+    <Compile Include="DataAnalysis\GroupSet.cs" />
+    <Compile Include="DataAnalysis\GroupSetRepo.cs" />
+    <Compile Include="DataAnalysis\SumGroup.cs" />
+    <Compile Include="DataAnalysis\GroupOps.cs" />
+    <Compile Include="DataAnalysis\GroupUtil.cs" />
     <Compile Include="DateUtil.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Logger.cs" />

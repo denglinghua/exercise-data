@@ -11,6 +11,11 @@ namespace RunData
             this.detail.Add(data);
         }
 
+        public List<RunData> Detail
+        {
+            get { return detail; }
+        }
+
         // 在原始记录中，按配速从高到低挑选10公里以上最快速度的跑步记录，看平均配速是否达标
         // 最优配速组合都不能达标，肯定就不达标了
         public bool IsAvgPaceQualified()
