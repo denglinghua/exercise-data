@@ -111,3 +111,17 @@ def check_data(check_data_func):
             return group
         return wrapped_function
     return check_data_decorator
+
+def create_series(start, end, step=1, format='%s', list = None):
+    series = [("<" + format % start, 0, start)]
+    def map_func(n):
+        s = n
+        e = n + step
+        label = '%s-%s' % (format % s, format % e)
+        return (label, s, e)
+    if list:
+        series.extend(map(map_func, list))
+    else:
+        series.extend(map(map_func, range(start, end, step)))
+    series.append((">" + format % end, end, 9999999))
+    return series

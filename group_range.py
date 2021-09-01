@@ -1,4 +1,4 @@
-from group import Group, GroupRow, get_calc_func, check_data
+from group import Group, GroupRow, get_calc_func, check_data, create_series
 from lang import lang
 
 def __in_range_group_func(data_row, group, group_row):
@@ -36,25 +36,11 @@ def create_range_group(title, column, rows, filter_func, value_func=None):
     group.set_ytitle(lang.activity_times)
     return group
 
-def __create_series(start, end, step=1, format='%s', list = None):
-    series = [("<" + format % start, 0, start)]
-    def map_func(n):
-        s = n
-        e = n + step
-        label = '%s-%s' % (format % s, format % e)
-        return (label, s, e)
-    if list:
-        series.extend(map(map_func, list))
-    else:
-        series.extend(map(map_func, range(start, end, step)))
-    series.append((">" + format % end, end, 9999999))
-    return series
-
 @check_data(lambda ctx, total : total == ctx['run_times'])
 def create_run_pace_group():
     title = lang.average_run_pace
     col = lang.col_avg_pace
-    rows = __create_series(4, 9, 1, '%s:00')
+    rows = create_series(4, 9, 1, '%s:00')
     
     def value_func(val): return val.tm_min
 
@@ -66,7 +52,7 @@ def create_run_pace_group():
 def create_run_cadence_group():
     title = lang.average_run_cadence
     col = lang.col_avg_run_cadence
-    rows = __create_series(160, 200, 10, '%s')
+    rows = create_series(160, 200, 10, '%s')
     
     group = create_range_group(title, col, rows, __filter_running_func)
     group.xtitle = lang.steps_per_min
@@ -120,7 +106,7 @@ def create_activity_month_group():
 def create_run_distance_group():
     title = lang.running_distance
     col = lang.col_distance
-    rows = __create_series(5, 100, 5)
+    rows = create_series(5, 100, 5)
     group = create_range_group(title, col, rows, __filter_running_func)
     group.xtitle = lang.km
     return group
@@ -129,7 +115,7 @@ def create_run_distance_group():
 def create_swimming_distance_group():
     title = lang.swimming_distance
     col = lang.col_distance
-    rows = __create_series(500, 5000, 500)
+    rows = create_series(500, 5000, 500)
 
     group = create_range_group(title, col, rows, __filter_swimming_func)
     group.xtitle = lang.m
@@ -139,7 +125,7 @@ def create_swimming_distance_group():
 def create_cycling_distance_group():
     title = lang.cycling_distance
     col = lang.col_distance
-    rows = __create_series(20, 100, 20)
+    rows = create_series(20, 100, 20)
 
     group = create_range_group(title, col, rows, __filter_cycling_func)
     group.xtitle = lang.km
@@ -149,7 +135,7 @@ def create_cycling_distance_group():
 def create_activity_time_group():
     title = lang.activity_time
     col = lang.col_time
-    rows = __create_series(30, 180, 30)
+    rows = create_series(30, 180, 30)
     
     group = create_range_group(title, col, rows, None)
     group.xtitle = lang.min_full
