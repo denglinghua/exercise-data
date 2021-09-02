@@ -70,6 +70,7 @@ namespace RunData
 
         private void buttonBatchSelect_Click(object sender, EventArgs e)
         {
+            this.openFileDialogBatchSelect.Filter = "Excel|*.xlsx;*.xls|All|*.*";
             if (this.openFileDialogBatchSelect.ShowDialog() == DialogResult.OK)
             {
                 string[] files = this.openFileDialogBatchSelect.FileNames;
