@@ -64,7 +64,7 @@ def __run_stride_group_set():
     col = lang.col_avg_stride_length
     series = [("<0.7", 0, 0.7)]
     series.extend(map(lambda n : ('%s-%s' % (n, round(n+.1,2)), n, round(n+.1,2)), [0.7, 0.8, 0.9,1.0,1.1]))
-    series.append((">1.2", 1.2, 999))
+    series.append((">=1.2", 1.2, 999))
     
     group_set = __range_group_set(title, col, series, __filter_running_func)
     group_set.xtitle = lang.m
@@ -87,7 +87,7 @@ def __activity_weekday_group_set():
     weekDays = lang.days_of_week
     series = map(lambda w : (weekDays[w], w, w+1), range(0, 7))
 
-    def value_func(val): return val.tm_wday
+    def value_func(val): return val.tm_wday #Monday is 0
 
     return __range_group_set(title, col, series, None, value_func)
 

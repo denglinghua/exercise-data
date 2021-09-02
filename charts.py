@@ -21,7 +21,7 @@ def draw_group_chart(group_set):
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1], itemstyle_opts=opts.ItemStyleOpts(color='purple'))
          .set_series_opts(label_opts=opts.LabelOpts(formatter=__get_formatter(group_set.title, ytitle)))
-         .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, subtitle=""),
+         .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, subtitle="", pos_left='center'),
                         xaxis_opts=opts.AxisOpts(name=xtitle),
                         yaxis_opts=opts.AxisOpts(is_show=False))
          )

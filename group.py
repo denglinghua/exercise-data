@@ -123,5 +123,5 @@ def create_series(start, end, step=1, format='%s', list = None):
         series.extend(map(map_func, list))
     else:
         series.extend(map(map_func, range(start, end, step)))
-    series.append((">" + format % end, end, 9999999))
+    series.append((">=" + format % end, end, 9999999))
     return series
