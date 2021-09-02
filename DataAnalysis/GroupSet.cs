@@ -7,18 +7,21 @@ namespace RunData.DataAnalysis
 {
     class GroupSet
     {
-        private string Title { get; }
+        // for html chart element
+        public string Id { get; }
+        public string Title { get; }
         public string XTitle { get; set; }
-        private string YTitle { get; set; }
         public string GroupColumn { get; }
         public string SumColumn { get; set; }
         public List<SumGroup> Groups { get; }
         private GroupyStrategy groupyStrategy;
         private CalcGroupValueOp CalcGroupValue { get; }
 
-        public GroupSet(string title, string groupColumn, GroupyStrategy groupyStrategy, CalcGroupValueOp calcGroupValue = null)
+        public GroupSet(string id, string title, string groupColumn, GroupyStrategy groupyStrategy, CalcGroupValueOp calcGroupValue = null)
         {
+            this.Id = id;
             this.Title = title;
+            this.XTitle = string.Empty;
             this.GroupColumn = groupColumn;
             this.groupyStrategy = groupyStrategy;
             groupyStrategy.GroupSet = this;

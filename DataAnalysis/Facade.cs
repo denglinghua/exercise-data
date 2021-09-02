@@ -8,6 +8,8 @@ namespace RunData.DataAnalysis
     {
         public static void Analyze(DataSource dataSource)
         {
+            Logger.Info("开始分析数据");
+
             DataTable sumData = AnalysisDataSource.CreateRunSumData(dataSource.RunRecords);
             DataTable detailData = AnalysisDataSource.CreateRunDetailData(dataSource.RunDetailRecords);
 
@@ -26,6 +28,14 @@ namespace RunData.DataAnalysis
 
             GroupSet.DoGroup(sumData, sumGroupSets);
             GroupSet.PrintGroupSets(sumGroupSets);
+
+            Logger.Info("生成数据分析图");
+
+            List<GroupSet> exportGroupSets = new List<GroupSet>(detailGroupSets);
+            exportGroupSets.AddRange(sumGroupSets);
+            DataExport.Export(exportGroupSets);
+
+            Logger.Info("数据分析完成");
         }
     }
 }

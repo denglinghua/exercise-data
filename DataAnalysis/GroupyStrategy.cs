@@ -110,7 +110,7 @@ namespace RunData.DataAnalysis
             List<int> values = new List<int>(iter);
 
             int first = values[0];
-            ranges.Add(new SumGroup("<" + format(first), null));
+            ranges.Add(new SumGroup("<" + format(first)));
 
             for (int i = 0; i < values.Count - 1; i++)
             {
@@ -118,11 +118,11 @@ namespace RunData.DataAnalysis
                 int end = values[i + 1];
                 string s = format(start);
                 string e = format(end);
-                ranges.Add(new SumGroup(string.Format("{0}-{1}", s, e), null));
+                ranges.Add(new SumGroup(string.Format("{0}-{1}", s, e)));
             }
 
             int last = values[values.Count - 1];
-            ranges.Add(new SumGroup(">=" + format(last), null));
+            ranges.Add(new SumGroup(">=" + format(last)));
 
             return ranges;
         }
