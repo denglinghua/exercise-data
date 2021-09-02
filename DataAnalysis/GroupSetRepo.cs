@@ -8,17 +8,23 @@ namespace RunData.DataAnalysis
     {
         public static GroupSet CreateRunWeekDayGroupSet()
         {
-            return new GroupSet("DayOfWeekGroup", "跑步日分布", "run_time", new DayOfWeekGroupStrategy()); ; ;
+            GroupSet g = new GroupSet("DayOfWeekGroup", "跑步日分布", "run_time", new DayOfWeekGroupStrategy());
+            g.XTitle = "星期";
+            return g;
         }
 
         public static GroupSet CreateRunHourGroupSet()
         {
-            return new GroupSet("HourGroup", "跑步时辰分布", "run_time", new HourGroupStrategy());
+            GroupSet g = new GroupSet("HourGroup", "跑步时辰分布", "run_time", new HourGroupStrategy());
+            g.XTitle = "时";
+            return g;
         }
 
         public static GroupSet CreateRunCountGroupSet()
         {
-            return new GroupSet("RunCountGroup", "跑步次数分布", "run_times", new RunCountGroupStrategy());
+            GroupSet g = new GroupSet("RunCountGroup", "跑步次数分布", "run_times", new RunCountGroupStrategy());
+            g.XTitle = "次";
+            return g;
         }
 
         public static GroupSet CreateDistanceGroupSet()

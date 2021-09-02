@@ -35,7 +35,7 @@ namespace RunData.DataAnalysis
         public override List<SumGroup> CreateGroups()
         {
             List<SumGroup> groups = new List<SumGroup>();
-            for (int h = 0; h < 24; h++) groups.Add(new SumGroup(string.Format("{0}时", h)));
+            for (int h = 0; h < 24; h++) groups.Add(new SumGroup(string.Format("{0}", h)));
 
             return groups;
         }
@@ -53,8 +53,8 @@ namespace RunData.DataAnalysis
         public override List<SumGroup> CreateGroups()
         {
             List<SumGroup> groups = new List<SumGroup>();
-            for (int c = 1; c < MAX_COUNT; c++) groups.Add(new SumGroup(string.Format("{0}次", c)));
-            groups.Add(new SumGroup(string.Format(">{0}次", MAX_COUNT - 1)));
+            for (int c = 1; c < MAX_COUNT; c++) groups.Add(new SumGroup(string.Format("{0}", c)));
+            groups.Add(new SumGroup(string.Format(">{0}", MAX_COUNT - 1)));
 
             return groups;
         }
