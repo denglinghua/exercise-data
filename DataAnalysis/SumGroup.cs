@@ -8,16 +8,10 @@ namespace RunData.DataAnalysis
         public string Label { get; }
         public float Value { get; set; }
         public List<DataRow> DataRows { get; } = new List<DataRow>();
-        public object MatchParam { get;}
 
-        SumGroup(string label, object matchParam)
+        public SumGroup(string label)
         {
             this.Label = label;
-            this.MatchParam = matchParam;
-        }
-
-        SumGroup(GroupRange range) : this(range.Label, range)
-        {
         }
 
         public void AddDataRow(DataRow dataRow)

@@ -72,6 +72,14 @@ namespace RunData
             }
         }
 
+        public List<RunRecordDetail> RunDetailRecords
+        {
+            get
+            {
+                return new List<RunRecordDetail>(this.runRecordDetail.Values);
+            }
+        }
+
         public int MemberCount
         {
             get

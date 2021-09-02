@@ -140,6 +140,8 @@ namespace RunData
             this.isReportSaved = true;
 
             DataSource.Instance.Save();
+
+            DataAnalysis.Facade.Analyze(DataSource.Instance);
         }
 
         private void OpenReport(string file)

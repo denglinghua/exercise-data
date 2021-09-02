@@ -8,31 +8,31 @@ namespace RunData.DataAnalysis
     class GroupSet
     {
         private string Title { get; }
-        private string XTitle { get; set; }
+        public string XTitle { get; set; }
         private string YTitle { get; set; }
         public string GroupColumn { get; }
         public string SumColumn { get; set; }
-        private List<SumGroup> Groups { get; }
-        private InGroupOp InThisGroup { get; }
-        private CalcGroupValueOp CalcGroupValue { get; set; }
+        public List<SumGroup> Groups { get; }
+        private GroupyStrategy groupyStrategy;
+        private CalcGroupValueOp CalcGroupValue { get; }
 
-        public GroupSet(string title, string groupColumn, List<SumGroup> groups, InGroupOp inThisGroup)
+        public GroupSet(string title, string groupColumn, GroupyStrategy groupyStrategy, CalcGroupValueOp calcGroupValue = null)
         {
             this.Title = title;
             this.GroupColumn = groupColumn;
-            this.Groups = groups;
-            this.InThisGroup = inThisGroup;
+            this.groupyStrategy = groupyStrategy;
+            groupyStrategy.GroupSet = this;
+            this.Groups = groupyStrategy.CreateGroups();
+            this.CalcGroupValue = calcGroupValue != null ? calcGroupValue : GroupOps.CalcGroupCountValue;
         }
 
         private void DoRowGroup(DataRow dataRow)
         {
-            foreach (SumGroup group in this.Groups)
+            int groupIndex = this.groupyStrategy.FindGroup(dataRow[this.GroupColumn]);
+            if (groupIndex >= 0)
             {
-                if (InThisGroup(this, group, dataRow))
-                {
-                    group.AddDataRow(dataRow);
-                    break;
-                }
+                SumGroup group = this.Groups[groupIndex];
+                group.AddDataRow(dataRow);
             }
         }
 
@@ -64,7 +64,7 @@ namespace RunData.DataAnalysis
             }
         }
 
-        public void PrintGroupSets(List<GroupSet> groupSets)
+        public static void PrintGroupSets(List<GroupSet> groupSets)
         {
             foreach (GroupSet gs in groupSets)
             {
