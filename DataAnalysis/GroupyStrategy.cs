@@ -8,7 +8,7 @@ namespace RunData.DataAnalysis
     {
         public GroupSet GroupSet { get; set; }
         public abstract List<SumGroup> CreateGroups();
-        public abstract int FindGroup(object groupValue);
+        public abstract int MapGroup(object groupValue);
     }
 
     class DayOfWeekGroupStrategy : GroupyStrategy
@@ -22,7 +22,7 @@ namespace RunData.DataAnalysis
             return groups;
         }
 
-        public override int FindGroup(object groupValue)
+        public override int MapGroup(object groupValue)
         {
             DateTime time = (DateTime)groupValue;
             int index = (int)time.DayOfWeek - 1;
@@ -40,7 +40,7 @@ namespace RunData.DataAnalysis
             return groups;
         }
 
-        public override int FindGroup(object groupValue)
+        public override int MapGroup(object groupValue)
         {
             DateTime time = (DateTime)groupValue;
             return time.Hour;
@@ -59,7 +59,7 @@ namespace RunData.DataAnalysis
             return groups;
         }
 
-        public override int FindGroup(object groupValue)
+        public override int MapGroup(object groupValue)
         {
             short count = (short)groupValue;
             if (count > MAX_COUNT) count = MAX_COUNT;
@@ -74,7 +74,8 @@ namespace RunData.DataAnalysis
         private int step;
         private LabelFormatter format;
 
-        public RangeGroupStrategy(int start, int end, int step) : this(start, end, step, DefaultFormat)
+        public RangeGroupStrategy(int start, int end, int step) : this(start, end, step,
+            (val) => string.Format("{0}", val))
         {
         }
 
@@ -91,7 +92,7 @@ namespace RunData.DataAnalysis
             return CreateRangeSeries(Range(start, end, step), format);
         }
 
-        public override int FindGroup(object groupValue)
+        public override int MapGroup(object groupValue)
         {
             int groupCount = this.GroupSet.Groups.Count;
             double val = Convert.ToDouble(groupValue);
@@ -133,11 +134,6 @@ namespace RunData.DataAnalysis
             {
                 yield return i;
             }
-        }
-
-        static string DefaultFormat(object val)
-        {
-            return string.Format("{0}", val);
-        }
+        }       
     }
 }

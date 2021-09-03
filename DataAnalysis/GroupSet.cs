@@ -31,7 +31,7 @@ namespace RunData.DataAnalysis
 
         private void DoRowGroup(DataRow dataRow)
         {
-            int groupIndex = this.groupyStrategy.FindGroup(dataRow[this.GroupColumn]);
+            int groupIndex = this.groupyStrategy.MapGroup(dataRow[this.GroupColumn]);
             if (groupIndex >= 0)
             {
                 SumGroup group = this.Groups[groupIndex];
@@ -76,37 +76,3 @@ namespace RunData.DataAnalysis
         }
     }
 }
-
-/*
-
-    def get_axis_values(self):
-        xlist = []
-        ylist = []
-        for row in self.rows:
-            if (row.value > 0):
-                xlist.append(row.label)
-                ylist.append(row.value)
-        
-        return [xlist, ylist]
-    
-    # for data correctness check
-    def check_data(self, context):      
-        if self.check_data_func:
-            total = sum(map(lambda r : r.value, self.rows))
-            if (self.check_data_func(context, total)):
-                print('O check OK %s' % self.title)
-            else:
-                print('X check FAILED %s' % self.title)
-        else:
-            print('- check no function %s' % self.title)
-
-def check_data(check_data_func):
-    def check_data_decorator(func):
-        @wraps(func)
-        def wrapped_function(*args, **kwargs):            
-            group = func(*args, **kwargs)
-            group.check_data_func = check_data_func
-            return group
-        return wrapped_function
-    return check_data_decorator
-*/
