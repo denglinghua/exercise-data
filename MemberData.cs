@@ -51,7 +51,7 @@ namespace RunData
             {
                 m.JoinDate = existMember.JoinDate;
             }
-            // 已经存在的member属性（name/group）可能会更新，所以要用最新的member放入
+            // 已经存在的member属性（name/team）可能会更新，所以要用最新的member放入
             m.IsActive = true;
             this.members[m.JoyRunId] = m;
         }

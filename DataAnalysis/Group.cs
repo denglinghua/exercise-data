@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace RunData.DataAnalysis
 {
-    class SumGroup
+    class Group
     {
         public string Label { get; }
         public float Value { get; set; }
         public List<DataRow> DataRows { get; } = new List<DataRow>();
 
-        public SumGroup(string label)
+        public Group(string label)
         {
             this.Label = label;
         }

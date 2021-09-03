@@ -10,14 +10,14 @@ namespace RunData
         public DateTime JoinDate { get; set; }
         public bool IsActive = false;
 
-        public Group Group;
+        public Team Team;
 
-        public Member(long joyRunId, string name, string gender, string groupName)
+        public Member(long joyRunId, string name, string gender, string teamName)
         {
             this.JoyRunId = joyRunId;
             this.Name = name;
             this.Gender = gender;
-            this.Group = Group.GetByName(groupName);
+            this.Team = Team.GetByName(teamName);
         }        
 
         public override bool Equals(object obj)
@@ -32,7 +32,7 @@ namespace RunData
 
         public override string ToString()
         {
-            return string.Format("{0}\t{1}\t{2}\t{3}", this.JoyRunId, this.Name, this.Gender, this.Group.ShortName);
+            return string.Format("{0}\t{1}\t{2}\t{3}", this.JoyRunId, this.Name, this.Gender, this.Team.ShortName);
         }
 
         public static Member Create(string[] a)

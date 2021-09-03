@@ -107,7 +107,7 @@ namespace RunData
                 PeriodRunRecord rr = this.data.RunRecords[i];
                 IRow row = CreateRow(sheet, rowIndex++, colInfo, i % 2 != 0);
 
-                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.Group.ShortName , rr.Member.Gender , rr.Data.Distance ,
+                object[] values = new object[] {i+1, rr.Member.Name , rr.Member.JoyRunId , rr.Member.Team.ShortName , rr.Member.Gender , rr.Data.Distance ,
                 rr.Data.TimeSpanOfTotalTime, rr.RunTimes, rr.Data.TimeSpanOfAvgPace};
                 SetRowValues(row, values);
             }
@@ -118,17 +118,17 @@ namespace RunData
         {
             Logger.Info("导出连续不达标统计");
 
-            IDictionary<string, List<NonBreakRecord>> noRunData = this.data.NoRunData.SumByGroup();
-            foreach (string group in noRunData.Keys)
+            IDictionary<string, List<NonBreakRecord>> noRunData = this.data.NoRunData.SumByTeam();
+            foreach (string team in noRunData.Keys)
             {
                 // 假如某个组没数据，创建空sheet吗？暂时创建吧
-                CreateOneGroupNoRunSheet(group, noRunData[group]);
+                CreateOneTeamNoRunSheet(team, noRunData[team]);
             }
         }
 
-        private void CreateOneGroupNoRunSheet(string group, List<NonBreakRecord> noRunList)
+        private void CreateOneTeamNoRunSheet(string team, List<NonBreakRecord> noRunList)
         {
-            ISheet sheet = book.CreateSheet(group + "×");
+            ISheet sheet = book.CreateSheet(team + "×");
             //sheet.TabColorIndex = IndexedColors.Red.Index;
 
             // columns
@@ -148,7 +148,7 @@ namespace RunData
             CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
             CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
 
-            SetCellValueWithStye(sheet, "B1", group + " 不达标统计", basicBoldStyle);
+            SetCellValueWithStye(sheet, "B1", team + " 不达标统计", basicBoldStyle);
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header
@@ -167,16 +167,16 @@ namespace RunData
         {
             Logger.Info("导出连续达标统计");
 
-            IDictionary<string, List<NonBreakRecord>> sumData = this.data.NonBreakRunData.SumByGroup();
-            foreach (string group in sumData.Keys)
+            IDictionary<string, List<NonBreakRecord>> sumData = this.data.NonBreakRunData.SumByTeam();
+            foreach (string team in sumData.Keys)
             {
-                CreateOneGroupNonBreakRunSheets(group, sumData[group]);
+                CreateOneTeamNonBreakRunSheets(team, sumData[team]);
             }
         }
 
-        private void CreateOneGroupNonBreakRunSheets(string group, List<NonBreakRecord> runList)
+        private void CreateOneTeamNonBreakRunSheets(string team, List<NonBreakRecord> runList)
         {
-            ISheet sheet = book.CreateSheet(group + "√");
+            ISheet sheet = book.CreateSheet(team + "√");
             //sheet.TabColorIndex = IndexedColors.Yellow.Index;
 
             // columns
@@ -195,7 +195,7 @@ namespace RunData
             CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
             CreateRow(sheet, rowIndex++, colInfo.Length, basicStyle);
 
-            SetCellValueWithStye(sheet, "B1", group + " 连续达标统计", basicBoldStyle);
+            SetCellValueWithStye(sheet, "B1", team + " 连续达标统计", basicBoldStyle);
             SetCellValueWithStye(sheet, "B2", this.data.CurrentDateRange.ToString(), basicBoldStyle);
 
             // header

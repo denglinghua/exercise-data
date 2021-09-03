@@ -7,17 +7,17 @@ namespace RunData.DataAnalysis
     abstract class GroupyStrategy
     {
         public GroupSet GroupSet { get; set; }
-        public abstract List<SumGroup> CreateGroups();
+        public abstract List<Group> CreateGroups();
         public abstract int MapGroup(object groupValue);
     }
 
     class DayOfWeekGroupStrategy : GroupyStrategy
     {
-        public override List<SumGroup> CreateGroups()
+        public override List<Group> CreateGroups()
         {
             string[] days = new string[] { "一", "二", "三", "四", "五", "六", "日" };
-            List<SumGroup> groups = new List<SumGroup>();
-            foreach (string day in days) groups.Add(new SumGroup(day));
+            List<Group> groups = new List<Group>();
+            foreach (string day in days) groups.Add(new Group(day));
 
             return groups;
         }
@@ -32,10 +32,10 @@ namespace RunData.DataAnalysis
 
     class HourGroupStrategy : GroupyStrategy
     {
-        public override List<SumGroup> CreateGroups()
+        public override List<Group> CreateGroups()
         {
-            List<SumGroup> groups = new List<SumGroup>();
-            for (int h = 0; h < 24; h++) groups.Add(new SumGroup(string.Format("{0}", h)));
+            List<Group> groups = new List<Group>();
+            for (int h = 0; h < 24; h++) groups.Add(new Group(string.Format("{0}", h)));
 
             return groups;
         }
@@ -50,11 +50,11 @@ namespace RunData.DataAnalysis
     class RunCountGroupStrategy : GroupyStrategy
     {
         private static readonly short MAX_COUNT = 16;
-        public override List<SumGroup> CreateGroups()
+        public override List<Group> CreateGroups()
         {
-            List<SumGroup> groups = new List<SumGroup>();
-            for (int c = 1; c < MAX_COUNT; c++) groups.Add(new SumGroup(string.Format("{0}", c)));
-            groups.Add(new SumGroup(string.Format(">{0}", MAX_COUNT - 1)));
+            List<Group> groups = new List<Group>();
+            for (int c = 1; c < MAX_COUNT; c++) groups.Add(new Group(string.Format("{0}", c)));
+            groups.Add(new Group(string.Format(">{0}", MAX_COUNT - 1)));
 
             return groups;
         }
@@ -87,7 +87,7 @@ namespace RunData.DataAnalysis
             this.format = format;
         }
 
-        public override List<SumGroup> CreateGroups()
+        public override List<Group> CreateGroups()
         {
             return CreateRangeSeries(Range(start, end, step), format);
         }
@@ -105,13 +105,13 @@ namespace RunData.DataAnalysis
 
         public delegate string LabelFormatter(object val);
 
-        static List<SumGroup> CreateRangeSeries(IEnumerable<int> iter, LabelFormatter format)
+        static List<Group> CreateRangeSeries(IEnumerable<int> iter, LabelFormatter format)
         {
-            List<SumGroup> ranges = new List<SumGroup>();
+            List<Group> ranges = new List<Group>();
             List<int> values = new List<int>(iter);
 
             int first = values[0];
-            ranges.Add(new SumGroup("<" + format(first)));
+            ranges.Add(new Group("<" + format(first)));
 
             for (int i = 0; i < values.Count - 1; i++)
             {
@@ -119,11 +119,11 @@ namespace RunData.DataAnalysis
                 int end = values[i + 1];
                 string s = format(start);
                 string e = format(end);
-                ranges.Add(new SumGroup(string.Format("{0}-{1}", s, e)));
+                ranges.Add(new Group(string.Format("{0}-{1}", s, e)));
             }
 
             int last = values[values.Count - 1];
-            ranges.Add(new SumGroup(">=" + format(last)));
+            ranges.Add(new Group(">=" + format(last)));
 
             return ranges;
         }

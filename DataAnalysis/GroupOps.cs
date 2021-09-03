@@ -3,16 +3,19 @@ using System.Data;
 
 namespace RunData.DataAnalysis
 {
-    delegate void CalcGroupValueOp(GroupSet groupSet, SumGroup group);
+    /// <summary>
+    /// Group aggregate operation
+    /// </summary>
+    delegate void GroupAggOp(GroupSet groupSet, Group group);
 
     static class GroupOps
     {
-        public static void CalcGroupCountValue(GroupSet groupSet, SumGroup group)
+        public static void GroupAggCount(GroupSet groupSet, Group group)
         {
             group.Value = group.DataRows.Count;
         }
 
-        public static void CalcGroupSumValue(GroupSet groupSet, SumGroup group)
+        public static void GroupAggSum(GroupSet groupSet, Group group)
         {
             float total = 0;
             foreach (DataRow dr in group.DataRows)

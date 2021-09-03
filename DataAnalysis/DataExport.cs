@@ -33,7 +33,7 @@ namespace RunData.DataAnalysis
 
             float totalVal = 0;
             List<string> groupLabels = new List<string>();
-            foreach (SumGroup group in groupSet.Groups)
+            foreach (Group group in groupSet.Groups)
             {
                 if (group.Value <= 0) continue;
                 groupLabels.Add("'" + group.Label + "'");
@@ -41,7 +41,7 @@ namespace RunData.DataAnalysis
             }
 
             List<String> series = new List<string>();
-            foreach (SumGroup group in groupSet.Groups)
+            foreach (Group group in groupSet.Groups)
             {
                 if (group.Value <= 0) continue;
                 float percent = group.Value * 100 / totalVal;

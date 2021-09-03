@@ -45,7 +45,7 @@ namespace RunData
 
         public void HandleData()
         {
-            this.RemoveDisabledGroupDataInRunRecords();
+            this.RemoveDisabledTeamDataInRunRecords();
 
             this.RemoveNoRunInRunRecords();
 
@@ -88,7 +88,7 @@ namespace RunData
             }
         }
 
-        private void RemoveDisabledGroupDataInRunRecords()
+        private void RemoveDisabledTeamDataInRunRecords()
         {
             Logger.Info("删除无效分队的跑步记录");
 
@@ -96,7 +96,7 @@ namespace RunData
 
             foreach (PeriodRunRecord r in this.runRecords.Values)
             {
-                if (r.Member.Group.Disabled) ids.Add(r.Member.JoyRunId);
+                if (r.Member.Team.Disabled) ids.Add(r.Member.JoyRunId);
             }
 
             ids.ForEach(x => this.runRecords.Remove(x));
@@ -115,7 +115,7 @@ namespace RunData
                 {
                     l.Remove(r);
                     // 无跑步记录的分队是最新分队，悦跑圈不太可能把旧分组生成跑步记录
-                    this.runRecords[r.Member.JoyRunId].Member.Group = r.Member.Group;
+                    this.runRecords[r.Member.JoyRunId].Member.Team = r.Member.Team;
                     Logger.Info("    {0}", r.Member);
                 }
             }
@@ -324,8 +324,8 @@ namespace RunData
                 book = WorkbookFactory.Create(FS);
                 sheet = book.GetSheetAt(0);
 
-                ICell groupCell = GetCellByReference(sheet, "B4");
-                String groupName = groupCell.StringCellValue;
+                ICell teamCell = GetCellByReference(sheet, "B4");
+                String teamName = teamCell.StringCellValue;
 
                 int c = 0;
                 for (int rowIndex = 6; rowIndex <= sheet.LastRowNum; rowIndex++)
@@ -335,12 +335,12 @@ namespace RunData
                     //悦跑ID 昵称 性别 总跑量（公里） 最后跑步时间
                     string[] values = ReadRowToArray(row, 3);
 
-                    this.NoRunData.AddCurrentRecord(new Member(long.Parse(values[0]), values[1], values[2], groupName), "没跑步");
+                    this.NoRunData.AddCurrentRecord(new Member(long.Parse(values[0]), values[1], values[2], teamName), "没跑步");
 
                     c++;
                 }
 
-                Logger.Info("    {0} ：{1} 人未跑步", groupName, c);
+                Logger.Info("    {0} ：{1} 人未跑步", teamName, c);
             }
         }
 

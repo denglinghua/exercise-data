@@ -81,26 +81,26 @@ namespace RunData
             }
         }
 
-        public IDictionary<string, List<NonBreakRecord>> SumByGroup()
+        public IDictionary<string, List<NonBreakRecord>> SumByTeam()
         {
             IDictionary<string, List<NonBreakRecord>> sumData = new SortedDictionary<string, List<NonBreakRecord>>();
 
             foreach (NonBreakRecord r in this.curData)
             {
-                if (r.Member.Group.Disabled) continue;
+                if (r.Member.Team.Disabled) continue;
 
-                List<NonBreakRecord> groupData;
-                string group = r.Member.Group.ShortName;
-                if (!sumData.ContainsKey(group))
+                List<NonBreakRecord> teamData;
+                string team = r.Member.Team.ShortName;
+                if (!sumData.ContainsKey(team))
                 {
-                    groupData = new List<NonBreakRecord>();
-                    sumData.Add(group, groupData);
+                    teamData = new List<NonBreakRecord>();
+                    sumData.Add(team, teamData);
                 }
                 else
                 {
-                    groupData = sumData[group];
+                    teamData = sumData[team];
                 }
-                groupData.Add(r);
+                teamData.Add(r);
             }
 
             return sumData;

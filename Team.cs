@@ -4,34 +4,34 @@ using System.Text;
 
 namespace RunData
 {
-    class Group
+    class Team
     {
         private static readonly string[] ShortNames;
-        private static readonly Dictionary<string, Group> Groups = new Dictionary<string, Group>();
+        private static readonly Dictionary<string, Team> Teams = new Dictionary<string, Team>();
 
         public string Name { get; }
         public string ShortName { get; }
         public bool Disabled { get; }
 
-        static Group()
+        static Team()
         {
             var setting = Properties.Settings.Default.GroupShortNames;
             ShortNames = new string[setting.Count];
             setting.CopyTo(ShortNames, 0);
         }
 
-        public static Group GetByName(string name)
+        public static Team GetByName(string name)
         {
-            Group g;
-            if (!Groups.TryGetValue(name, out g))
+            Team t;
+            if (!Teams.TryGetValue(name, out t))
             {
-                g = new Group(name);
-                Groups[name] = g;
+                t = new Team(name);
+                Teams[name] = t;
             }
-            return g;
+            return t;
         }
 
-        private Group(string name)
+        private Team(string name)
         {
             this.Name = name;
             this.ShortName = this.Name;
@@ -50,7 +50,7 @@ namespace RunData
 
         public override bool Equals(object obj)
         {
-            return this.Name.Equals(((Group)obj).Name);
+            return this.Name.Equals(((Team)obj).Name);
         }
 
         public override int GetHashCode()

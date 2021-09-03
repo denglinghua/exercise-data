@@ -13,11 +13,11 @@ namespace RunData.DataAnalysis
         public string XTitle { get; set; }
         public string GroupColumn { get; }
         public string SumColumn { get; set; }
-        public List<SumGroup> Groups { get; }
+        public List<Group> Groups { get; }
         private GroupyStrategy groupyStrategy;
-        private CalcGroupValueOp CalcGroupValue { get; }
+        private GroupAggOp GroupAgg { get; }
 
-        public GroupSet(string id, string title, string groupColumn, GroupyStrategy groupyStrategy, CalcGroupValueOp calcGroupValue = null)
+        public GroupSet(string id, string title, string groupColumn, GroupyStrategy groupyStrategy, GroupAggOp groupAgg = null)
         {
             this.Id = id;
             this.Title = title;
@@ -26,7 +26,7 @@ namespace RunData.DataAnalysis
             this.groupyStrategy = groupyStrategy;
             groupyStrategy.GroupSet = this;
             this.Groups = groupyStrategy.CreateGroups();
-            this.CalcGroupValue = calcGroupValue != null ? calcGroupValue : GroupOps.CalcGroupCountValue;
+            this.GroupAgg = groupAgg != null ? groupAgg : GroupOps.GroupAggCount;
         }
 
         private void DoRowGroup(DataRow dataRow)
@@ -34,7 +34,7 @@ namespace RunData.DataAnalysis
             int groupIndex = this.groupyStrategy.MapGroup(dataRow[this.GroupColumn]);
             if (groupIndex >= 0)
             {
-                SumGroup group = this.Groups[groupIndex];
+                Group group = this.Groups[groupIndex];
                 group.AddDataRow(dataRow);
             }
         }
@@ -42,7 +42,7 @@ namespace RunData.DataAnalysis
         public override string ToString()
         {
             List<string> groupStrings = new List<string>();
-            foreach (SumGroup group in this.Groups) groupStrings.Add(group.ToString());
+            foreach (Group group in this.Groups) groupStrings.Add(group.ToString());
 
             return string.Format("{{{0},{1},[{2}]}}",
                 this.Title, this.GroupColumn, string.Join(",", groupStrings.ToArray()));
@@ -60,9 +60,9 @@ namespace RunData.DataAnalysis
 
             foreach (GroupSet groupSet in groupSets)
             {
-                foreach (SumGroup group in groupSet.Groups)
+                foreach (Group group in groupSet.Groups)
                 {
-                    groupSet.CalcGroupValue(groupSet, group);
+                    groupSet.GroupAgg(groupSet, group);
                 }
             }
         }

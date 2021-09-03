@@ -14,9 +14,9 @@ namespace RunData
         public static readonly short MAX_AVG_PACE = (short)(8.5 * 60);
         public static readonly short MIN_DISTANCE = 10;  
 
-        public PeriodRunRecord(long joyRunId, string name, string gender, string group, double distance, double totalTimeSeconds, short runTimes)
+        public PeriodRunRecord(long joyRunId, string name, string gender, string team, double distance, double totalTimeSeconds, short runTimes)
         {
-            this.Member = new Member(joyRunId, name, gender, group);
+            this.Member = new Member(joyRunId, name, gender, team);
             this.Data = new RunData(distance, totalTimeSeconds);
             this.RunTimes = runTimes;
             this.isQualifiedOfAvgPace = this.Data.AvgPaceSeconds <= MAX_AVG_PACE;

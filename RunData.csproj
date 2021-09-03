@@ -87,10 +87,10 @@
     <Compile Include="DataAnalysis\GroupSet.cs" />
     <Compile Include="DataAnalysis\GroupSetRepo.cs" />
     <Compile Include="DataAnalysis\GroupyStrategy.cs" />
-    <Compile Include="DataAnalysis\SumGroup.cs" />
+    <Compile Include="DataAnalysis\Group.cs" />
     <Compile Include="DataAnalysis\GroupOps.cs" />
     <Compile Include="DateUtil.cs" />
-    <Compile Include="Group.cs" />
+    <Compile Include="Team.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MemberData.cs" />
     <Compile Include="NonBreakData.cs" />
