@@ -4,10 +4,19 @@ from functools import wraps
 def __do_group_row(data_row, group_set):
     if group_set.filter_func and not group_set.filter_func(data_row):
         return
-    for group in group_set.groups:
-        if (group_set.in_this_group_func(data_row, group_set, group)):
-            group.data_rows.append(data_row)
-            break
+    
+    group_value = data_row[group_set.group_by_column]
+    value_func = group_set.group_by.value_func
+    if value_func:
+        group_value = value_func(group_value)
+    
+    group_index = group_set.group_by.map_group(group_value)
+    if group_index >= 0 and group_index < len(group_set.groups):
+        group = group_set.groups[group_index]
+        group.data_rows.append(data_row)
+    else:
+        print('%s, %s group index out of range' % (group_set.title, group_index))
+
 
 def do_group(data_rows, group_sets):
     for data_row in data_rows:
@@ -16,7 +25,7 @@ def do_group(data_rows, group_sets):
     
     for group_set in group_sets:
         for group in group_set.groups:
-            group.value = group_set.calc_func(group_set, group)
+            group.value = group_set.agg_func(group_set, group)
 
 def print_group_sets(group_sets):
     for group_set in group_sets:
@@ -36,20 +45,15 @@ class Group(object):
         return '{%s : %s}' % (self.label, self.value)
 
 class GroupSet(object):
-    #export_groups = []
-    #@staticmethod
-    #def export(fn):
-    #    Group.export_groups.append((fn, fn.__name__))
-
-    def __init__(self, title, group_by_column, groups, in_this_group_func, calc_func, filter_func = None):
+    def __init__(self, title, group_by_column, group_by, agg_func, filter_func = None):
         self.title = title
         self.xtitle = None
         self.ytitle = None
         self.group_by_column = group_by_column
-        self.groups = groups
+        self.group_by = group_by.set_group_set(self)
+        self.groups = group_by.groups
         self.filter_func = filter_func
-        self.in_this_group_func = in_this_group_func
-        self.calc_func = calc_func
+        self.agg_func = agg_func
         self.check_data_func = None
     
     def __str__(self):
@@ -84,22 +88,22 @@ class GroupSet(object):
         else:
             print('- check no function %s' % self.title)
 
-def __calc_count_func(group_set, group):
+def __agg_count_func(group_set, group):
     return len(group.data_rows)
 
-def __calc_sum_func(group_set, group):
+def __agg_sum_func(group_set, group):
     return sum(r[group_set.sum_column] for r in group.data_rows)
 
-def __calc_avg_func(group_set, group):
+def __agg_avg_func(group_set, group):
     return 0
 
-def get_calc_func(func_name):
+def get_agg_func(func_name):
     if func_name == "count":
-        return __calc_count_func
+        return __agg_count_func
     if func_name == "sum":
-        return __calc_sum_func
+        return __agg_sum_func
     if func_name == "avg":
-        return __calc_avg_func
+        return __agg_avg_func
     return None
 
 def check_data(check_data_func):
@@ -111,17 +115,3 @@ def check_data(check_data_func):
             return group_set
         return wrapped_function
     return check_data_decorator
-
-def create_series(start, end, step=1, format='%s', list = None):
-    series = [("<" + format % start, 0, start)]
-    def map_func(n):
-        s = n
-        e = n + step
-        label = '%s-%s' % (format % s, format % e)
-        return (label, s, e)
-    if list:
-        series.extend(map(map_func, list))
-    else:
-        series.extend(map(map_func, range(start, end, step)))
-    series.append((">=" + format % end, end, 9999999))
-    return series
