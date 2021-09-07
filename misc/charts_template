@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>跑步数据分析</title>
     <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
-    <script type="text/javascript" src="https://assets.pyecharts.org/assets/themes/roma.js"></script>
 </head>
 <body>
     <style>
@@ -22,7 +21,7 @@
 
         function createChart(id, title, xName, xData, seriesData) {
             var div = createDiv(id);
-            var chart = echarts.init(div, 'roma', { renderer: 'canvas' });
+            var chart = echarts.init(div, 'white', { renderer: 'canvas' });
             var opt = createChartOpt(title, xName, xData, seriesData);
             chart.setOption(opt)
         }
@@ -42,6 +41,7 @@
 
         function createChartOpt(title, xName, xData, seriesData) {
             var opt = {
+                "backgroundColor": "white",
                 "animation": true,
                 "animationThreshold": 2000,
                 "animationDuration": 1000,
