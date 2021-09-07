@@ -17,7 +17,7 @@ def draw_group_chart(group_set):
         xtitle = group_set.xtitle
     if (group_set.ytitle):
         ytitle = group_set.ytitle
-    c = (Bar(init_opts=opts.InitOpts(theme=ThemeType.ROMA))
+    c = (Bar(init_opts=opts.InitOpts(bg_color='white'))
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1], itemstyle_opts=opts.ItemStyleOpts(color='purple'))
          .set_series_opts(label_opts=opts.LabelOpts(formatter=__get_formatter(group_set.title, ytitle)))
