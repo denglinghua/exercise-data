@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunData", "RunData.csproj", "{8FD17387-8917-44AB-9BA9-C378C3151662}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunData", "WeekReport\RunData.csproj", "{8FD17387-8917-44AB-9BA9-C378C3151662}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9E44ABA0-4C72-412E-80ED-319F98333B4C}
 	EndGlobalSection
 EndGlobal
