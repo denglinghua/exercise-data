@@ -1,11 +1,4 @@
-﻿SELECT
-    joy_run_id,
-    name,
-    count(*) AS times
-FROM
-    run_data
-GROUP BY
-    joy_run_id,
-    name
-ORDER BY
-    times DESC
+﻿SELECT joy_run_id, name, COUNT(*) AS run_times
+FROM day_distance_view
+GROUP BY joy_run_id, name
+ORDER BY run_times DESC

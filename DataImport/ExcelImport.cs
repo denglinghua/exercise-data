@@ -8,7 +8,7 @@ namespace DataImport
 {
     class ExcelImport
     {
-        Dictionary<RunData, RunData> checkDuplicate = new Dictionary<RunData, RunData>();
+        HashSet<RunData> checkDuplicate = new HashSet<RunData>();
         List<string> sqls = new List<string>();
 
         public void LoadRunRecord(string dir)
@@ -61,16 +61,16 @@ namespace DataImport
                     RunData runData = new RunData(joyRunId, name, gender, distance, runTime,
                         runType, runEndTime, cadence, strideLength);
 
-                    if (checkDuplicate.ContainsKey(runData))
+                    if (checkDuplicate.Contains(runData))
                     {
-                        Logger.Info("Duplicate run data : {0}/{1}", runData.JoyRunId, runData.RunStartTime);
+                        Logger.Info("Duplicate run data : {0}/{1}", runData.JoyRunId, runData.RunEndTime);
                     }
                     else
                     {
-                        checkDuplicate.Add(runData, runData);
+                        checkDuplicate.Add(runData);
                         string sql = string.Format("INSERT INTO run_data VALUES({0}, '{1}', '{2}', '{3}', '{4}', {5}, {6},{7},{8},{9});",
                             runData.JoyRunId, runData.Name.Replace("'", "''"), runData.Gender,
-                            runData.RunStartTime, runData.RunType,
+                            runData.RunEndTime, runData.RunType,
                             runData.Distance, runData.TotalTimeSeconds, runData.AvgPaceSeconds,
                             runData.Cadence, runData.StrideLength);
 

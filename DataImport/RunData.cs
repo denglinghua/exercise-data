@@ -11,7 +11,7 @@ namespace DataImport
         public double TotalTimeSeconds { get; }
         public string RunType { get; }
         public long AvgPaceSeconds { get; }
-        public DateTime RunStartTime { get; }
+        public DateTime RunEndTime { get; }
         public int Cadence { get; }
         public int StrideLength { get; }
 
@@ -26,7 +26,7 @@ namespace DataImport
             this.TotalTimeSeconds = totalTimeSeconds;
             this.AvgPaceSeconds = (long)(totalTimeSeconds / distance);
             this.RunType = runType;
-            this.RunStartTime = endTime.AddSeconds(-totalTimeSeconds);
+            this.RunEndTime = endTime;
             this.Cadence = cadence;
             this.StrideLength = Convert.ToInt32(strideLength * 100);
         }
@@ -49,7 +49,13 @@ namespace DataImport
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(JoyRunId, RunStartTime);
+            return HashCode.Combine(JoyRunId, RunEndTime);
+        }
+
+        public override bool Equals(object obj)
+        {
+            RunData rd = obj as RunData;
+            return this.JoyRunId == rd.JoyRunId && this.RunEndTime.Equals(rd.RunEndTime);
         }
     }
 }

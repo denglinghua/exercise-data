@@ -1,21 +1,5 @@
-﻿SELECT
-    joy_run_id,
-    name,
-    pace
-FROM
-    (
-        SELECT
-            joy_run_id,
-            name,
-            AVG(avg_pace) AS pace,
-            sum(distance) AS distance
-        FROM
-            run_data
-        GROUP BY
-            joy_run_id,
-            name
-    ) AS T
-WHERE
-    T.distance > 3000
-ORDER BY
-    pace
+﻿SELECT joy_run_id, name, SUM(run_time) / SUM(distance) AS pace, SUM(distance) AS distance
+FROM regular_run_view
+GROUP BY joy_run_id, name
+HAVING SUM(distance) > 1500
+ORDER BY pace

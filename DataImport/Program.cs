@@ -8,6 +8,7 @@ namespace DataImport
         {
             Logger.Init(ConsoleWrite);
             new ExcelImport().LoadRunRecord(args[0]);
+            //new CalendarSql().GenSql();
         }
 
         private static void ConsoleWrite(String text)

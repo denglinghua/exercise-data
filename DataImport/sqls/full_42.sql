@@ -1,19 +1,5 @@
-﻿SELECT
-	joy_run_id,
-	name,
-	count(*) AS full_marathon
-FROM
-	(
-		SELECT
-			joy_run_id,
-			name
-		FROM
-			run_data
-		WHERE
-			distance > 42
-	) AS T
-GROUP BY
-	joy_run_id,
-	name
-ORDER BY
-	full_marathon DESC
+﻿SELECT joy_run_id, name, COUNT(*) AS full_marathon
+FROM run_data
+WHERE distance > 42
+GROUP BY joy_run_id, name
+ORDER BY full_marathon DESC
