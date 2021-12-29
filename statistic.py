@@ -6,7 +6,8 @@ import pandas as pd
 def print_df(df, message=''):
     print('\n')
     print(message)
-    print(df)   
+    print(df)
+    return df
 
 def top_n(df, column, n):
     data = df.nlargest(n, column, 'all')
@@ -35,7 +36,7 @@ def full_marathon(df:pd.DataFrame):
     data = data.reset_index()
     data = top_n(data, 'distance', 10)
         
-    print_df(data, 'full marathon')
+    return print_df(data, 'full marathon')
 
 def distance(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']]
@@ -43,7 +44,7 @@ def distance(df:pd.DataFrame):
     data = data.reset_index()
     data = top_n(data, 'distance', 10)
     
-    print_df(data, 'top distance')
+    return print_df(data, 'top distance')
 
 def every_week(df:pd.DataFrame):
     data = df[['joy_run_id', 'week_no']]

@@ -73,6 +73,7 @@ def load_data(data_dir, debug = False):
     df = pd.DataFrame(columns=cols)
 
     onlyfiles = [f for f in listdir(data_dir) if isfile(join(data_dir, f))]
+    onlyfiles.sort()
 
     if debug :
         onlyfiles = onlyfiles[0:1]
@@ -91,3 +92,16 @@ def load_data(data_dir, debug = False):
     print(df.describe())
 
     return df
+
+def user_id_name_map(df:pd.DataFrame):
+    data = df.groupby(['joy_run_id', 'name']).count()
+    data = data.reset_index()
+    data = data[['joy_run_id', 'name']]
+
+    id_name = {}
+
+    for index, row in data.iterrows():
+        id_name[row['joy_run_id']] = row['name']
+
+
+    return id_name
