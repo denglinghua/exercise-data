@@ -1,5 +1,4 @@
 from datetime import timedelta
-from sys import argv
 
 import pandas as pd
 
@@ -9,9 +8,9 @@ def print_df(df, message=''):
     print(df)
     return df
 
-def top_n(df, column, n):
+def top_n(df, column, n, ascending=True):
     data = df.nlargest(n, column, 'all')
-    data = data.sort_values(column, ascending=False)
+    data = data.sort_values(column, ascending=ascending)
     return data
 
 def test(df:pd.DataFrame):
@@ -75,11 +74,16 @@ def pace(df:pd.DataFrame):
     data = data.groupby("joy_run_id").agg({'time':'sum','distance':'sum'})
     data = data.reset_index()  
     data = data.query('distance > 1500')
+    # Debug mode, the amount of data is small
+    # and there may be empty dataframe causes exception
+    if data.empty:
+        return data
+
     data['avg_pace'] = data.apply(__avg_pace, axis=1)
     data = data.nsmallest(10, 'avg_pace', 'all')
-    data = data.sort_values('avg_pace')
+    data = data.sort_values('avg_pace', ascending=False)
 
-    print_df(data, 'top pace')
+    return print_df(data, 'top pace')
 
 def total_time(df:pd.DataFrame):
     data = df[['joy_run_id', 'time']]
@@ -89,7 +93,7 @@ def total_time(df:pd.DataFrame):
     data = data.reset_index()
     data = top_n(data, 'time', 10)
     
-    print_df(data, 'top total time')
+    return print_df(data, 'top total time')
 
 def total_days(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time']]
@@ -99,7 +103,7 @@ def total_days(df:pd.DataFrame):
     data = data.reset_index(name='days')
     data = top_n(data, 'days', 10)
 
-    print_df(data, 'top total days')
+    return print_df(data, 'top total days')
 
 def top_stride_len(df:pd.DataFrame):
     data = __regular_pace_run(df)
@@ -110,7 +114,7 @@ def top_stride_len(df:pd.DataFrame):
     data = data.query('distance > 1500')
     data = top_n(data, 'stride_len', 10)
 
-    print_df(data, 'top stride len')
+    return print_df(data, 'top stride len')
 
 def __month_distance_sum(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time', 'distance']]
@@ -128,6 +132,18 @@ def month_distance_std(df:pd.DataFrame):
     data = data.reset_index()
     data = top_n(data, 'month', 1)
     data = data.nsmallest(10, 'distance', 'all')
-    
-    print_df(data, 'month distance std')
+    data = data.sort_values('distance', ascending=False)
+        
+    return print_df(data, 'month distance std')
+
+def pace_std(df:pd.DataFrame):
+    data = __regular_pace_run(df)
+    data['pace_secs'] = data['pace'].dt.total_seconds()
+    data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':'std'})
+    data = data.reset_index()
+    data = data.query('distance > 1500')
+    data = data.nsmallest(10, 'pace_secs', 'all')
+    data = data.sort_values('pace_secs', ascending=False)
+        
+    return print_df(data, 'pace std')
 

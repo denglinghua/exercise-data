@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from os import listdir
-from os.path import isfile, join
+import glob
+import os
 
 import pandas as pd
 
@@ -72,17 +72,17 @@ def load_data(data_dir, debug = False):
                 'pace', 'cadence', 'stride_len']
     df = pd.DataFrame(columns=cols)
 
-    onlyfiles = [f for f in listdir(data_dir) if isfile(join(data_dir, f))]
-    onlyfiles.sort()
+    data_files = glob.glob(os.path.join(data_dir, '*.xlsx'))
+    data_files.sort()
 
     if debug :
-        onlyfiles = onlyfiles[0:1]
+        data_files = data_files[0:1]
     
     # file named by date, so files ordered by date
     # data rows in a single file ordered by date too
     # so if all files loaded into one dataframe, these data rows ordered by date (end_time column)
-    for file in onlyfiles:
-        one_file_df = pd.read_excel(join(data_dir, file), header=7, names=cols, converters=__col_converts())
+    for file in data_files:
+        one_file_df = pd.read_excel(file, header=7, names=cols, converters=__col_converts())
         # print(one_file_df)
         df = df.append(one_file_df, ignore_index=True)
     
