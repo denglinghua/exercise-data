@@ -128,7 +128,7 @@ def __month_distance_sum(df:pd.DataFrame):
 def month_distance_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
-    data = data.groupby('joy_run_id').agg({'month':'count','distance':'std'})
+    data = data.groupby('joy_run_id').agg({'month':'count','distance':lambda x : x.std(ddof=0)})
     data = data.reset_index()
     data = top_n(data, 'month', 1)
     data = data.nsmallest(10, 'distance', 'all')
@@ -139,7 +139,8 @@ def month_distance_std(df:pd.DataFrame):
 def pace_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data['pace_secs'] = data['pace'].dt.total_seconds()
-    data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':'std'})
+    # std ddof=1
+    data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':lambda x : x.std(ddof=0)})
     data = data.reset_index()
     data = data.query('distance > 1500')
     data = data.nsmallest(10, 'pace_secs', 'all')
