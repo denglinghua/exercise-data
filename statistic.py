@@ -73,7 +73,7 @@ def pace(df:pd.DataFrame):
     data = data[['joy_run_id', 'time', 'distance']]
     data = data.groupby("joy_run_id").agg({'time':'sum','distance':'sum'})
     data = data.reset_index()  
-    data = data.query('distance > 1500')
+    data = data.query('distance > 1000')
     # Debug mode, the amount of data is small
     # and there may be empty dataframe causes exception
     if data.empty:
@@ -111,7 +111,7 @@ def top_cadence(df:pd.DataFrame):
     data = data[['joy_run_id', 'cadence', 'distance']]
     data = data.groupby('joy_run_id').agg({'cadence':'mean','distance':'sum'})
     data = data.reset_index()  
-    data = data.query('distance > 1500')
+    data = data.query('distance > 1000')
     data = __top_n(data, 'cadence', 10)
 
     return __print_df(data, 'top cadence')
@@ -122,7 +122,7 @@ def top_stride_len(df:pd.DataFrame):
     data = data[['joy_run_id', 'stride_len', 'distance']]
     data = data.groupby('joy_run_id').agg({'stride_len':'mean','distance':'sum'})
     data = data.reset_index()  
-    data = data.query('distance > 1500')
+    data = data.query('distance > 1000')
     data = __top_n(data, 'stride_len', 10)
 
     return __print_df(data, 'top stride len')
@@ -156,7 +156,7 @@ def pace_std(df:pd.DataFrame):
     data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':['std', 'mean']})
     data = data.reset_index()
     data.columns = ['joy_run_id', 'distance', 'pace_std', 'pace_mean']
-    data = data.query('distance > 1500')
+    data = data.query('distance > 1000')
     data['pace_secs'] = data.apply(lambda x : x['pace_std'] / x['pace_mean'], axis=1)
     data = data.nsmallest(10, 'pace_secs', 'all')
     data = data.sort_values('pace_secs', ascending=False)
@@ -207,7 +207,7 @@ def pace_progress(df:pd.DataFrame):
     end = data['end_time'].max().year
     data = data.groupby('joy_run_id').apply(_agg_pace_by_year, start, end)
     data = data.reset_index()
-    data = data.query('distance > 1500')
+    data = data.query('distance > 1000')
     data['pace_diff'] = data.apply(_pace_diff, axis = 1, args = (start, end))
     data = data.query('pace_diff > 0')
     data = __top_n(data, 'pace_diff', 10)
