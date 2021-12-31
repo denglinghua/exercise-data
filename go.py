@@ -35,6 +35,8 @@ add_chart(charts.time, st.total_time(df))
 
 add_chart(charts.days, st.total_days(df))
 
+add_chart(charts.cadence, st.top_cadence(df))
+
 add_chart(charts.stride, st.top_stride_len(df))
 
 add_chart(charts.month_distance_std, st.month_distance_std(df))

@@ -29,9 +29,10 @@ __chart_config = {
     'pace':('配速', 'avg_pace', lambda x : x.total_seconds(), __to_ms_formatter),
     'time':('跑步总时间', 'time', lambda x : x.total_seconds(), __to_hms_formatter),  
     'days':('跑步频次（天）', 'days', lambda x : int(x), '{c} 次'),
+    'cadence':('步频', 'cadence', lambda x : int(x), '{c} 步/分'),
     'stride':('步幅', 'stride_len', lambda x : round(x, 2), '{c} 米'),
-    'month_distance_std':('月跑量标准差', 'distance', lambda x : round(x, 1), '{c} 公里'),
-    'pace_std':('配速标准差', 'pace_secs', lambda x : round(x, 1), '{c} 秒')
+    'month_distance_std':('月跑量波动', 'distance', lambda x : round(x * 100, 2), '{c} %'),
+    'pace_std':('配速波动', 'pace_secs', lambda x : round(x * 100, 2), '{c} %')
 }
 
 class __Charts(object):

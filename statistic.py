@@ -105,6 +105,17 @@ def total_days(df:pd.DataFrame):
 
     return print_df(data, 'top total days')
 
+def top_cadence(df:pd.DataFrame):
+    data = __regular_pace_run(df)
+    data = data.query('cadence > 0 and cadence < 250')
+    data = data[['joy_run_id', 'cadence', 'distance']]
+    data = data.groupby('joy_run_id').agg({'cadence':'mean','distance':'sum'})
+    data = data.reset_index()  
+    data = data.query('distance > 1500')
+    data = top_n(data, 'cadence', 10)
+
+    return print_df(data, 'top cadence')
+
 def top_stride_len(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data.query('stride_len > 0 and stride_len < 1.8')
@@ -128,8 +139,10 @@ def __month_distance_sum(df:pd.DataFrame):
 def month_distance_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
-    data = data.groupby('joy_run_id').agg({'month':'count','distance':lambda x : x.std(ddof=0)})
+    data = data.groupby('joy_run_id').agg({'month':'count','distance':['std', 'mean']})
     data = data.reset_index()
+    data.columns = ['joy_run_id', 'month', 'distance_std', 'distance_mean']
+    data['distance'] = data.apply(lambda x : x['distance_std'] / x['distance_mean'], axis=1)
     data = top_n(data, 'month', 1)
     data = data.nsmallest(10, 'distance', 'all')
     data = data.sort_values('distance', ascending=False)
@@ -140,9 +153,11 @@ def pace_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data['pace_secs'] = data['pace'].dt.total_seconds()
     # std ddof=1
-    data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':lambda x : x.std(ddof=0)})
+    data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':['std', 'mean']})
     data = data.reset_index()
+    data.columns = ['joy_run_id', 'distance', 'pace_std', 'pace_mean']
     data = data.query('distance > 1500')
+    data['pace_secs'] = data.apply(lambda x : x['pace_std'] / x['pace_mean'], axis=1)
     data = data.nsmallest(10, 'pace_secs', 'all')
     data = data.sort_values('pace_secs', ascending=False)
         
