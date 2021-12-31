@@ -3,16 +3,16 @@ from group_by import RangeGroupBy, ValueGroupBy
 from lang import lang
 
 def __filter_activity_type(data_row, keyword):
-    return data_row[lang.col_activity_type].find(keyword) >= 0
+    return data_row[lang.data__activity_type].find(keyword) >= 0
 
 def __filter_running_func(data_row):
-    return __filter_activity_type(data_row, lang.running)
+    return __filter_activity_type(data_row, lang.data__keyword_running)
 
 def __filter_swimming_func(data_row):
-    return __filter_activity_type(data_row, lang.swimming)
+    return __filter_activity_type(data_row, lang.data__keyword_swimming)
 
 def __filter_cycling_func(data_row):
-    return __filter_activity_type(data_row, lang.cycling_keyword)
+    return __filter_activity_type(data_row, lang.data__keyword_cycling)
 
 def __range_group_set(title, column, group_by, filter_func=None):
     agg_func = get_agg_func("count")
@@ -23,7 +23,7 @@ def __range_group_set(title, column, group_by, filter_func=None):
 @check_data(lambda ctx, total: total == ctx['run_times'])
 def __run_pace_group_set():
     title = lang.average_run_pace
-    col = lang.col_avg_pace
+    col = lang.data__avg_pace
 
     def value_func(val): return val.tm_min
 
@@ -35,7 +35,7 @@ def __run_pace_group_set():
 @check_data(lambda ctx, total: total == ctx['run_times'])
 def __run_cadence_group_set():
     title = lang.average_run_cadence
-    col = lang.col_avg_run_cadence
+    col = lang.data__avg_run_cadence
 
     group_by = RangeGroupBy(160, 200, 10)
 
@@ -45,7 +45,7 @@ def __run_cadence_group_set():
 @check_data(lambda ctx, total: total == ctx['run_times'])
 def __run_stride_group_set():
     title = lang.average_stride_length
-    col = lang.col_avg_stride_length
+    col = lang.data__avg_stride_length
 
     series = [0.7, 0.8, 0.9, 1.0, 1.1]
     group_by = RangeGroupBy(0.7, 1.2, 0.1, '%2.1f', series)
@@ -56,7 +56,7 @@ def __run_stride_group_set():
 @check_data(lambda ctx, total: total == ctx['data_rows_count'])
 def __activity_hour_group_set():
     title = lang.activity_hours
-    col = lang.col_date
+    col = lang.data__date
 
     def value_func(val): return val.tm_hour
 
@@ -68,7 +68,7 @@ def __activity_hour_group_set():
 @check_data(lambda ctx, total: total == ctx['data_rows_count'])
 def __activity_weekday_group_set():
     title = lang.activity_weekdays
-    col = lang.col_date
+    col = lang.data__date
     weekDays = lang.days_of_week
     series = map(lambda w: weekDays[w], range(0, 7))
 
@@ -81,7 +81,7 @@ def __activity_weekday_group_set():
 @check_data(lambda ctx, total: total == ctx['data_rows_count'])
 def __activity_month_group_set():
     title = lang.activity_months
-    col = lang.col_date
+    col = lang.data__date
     months = lang.months
     series = map(lambda m: months[m-1], range(1, 13))
 
@@ -93,7 +93,7 @@ def __activity_month_group_set():
 @check_data(lambda ctx, total: total == ctx['run_times'])
 def __run_distance_group_set():
     title = lang.running_distance
-    col = lang.col_distance
+    col = lang.data__distance
     
     return __range_group_set(title, col, RangeGroupBy(5, 100, 5), 
         __filter_running_func).set_xtitle(lang.km)
@@ -101,7 +101,7 @@ def __run_distance_group_set():
 @check_data(lambda ctx, total: total == ctx['swim_times'])
 def __swimming_distance_group_set():
     title = lang.swimming_distance
-    col = lang.col_distance
+    col = lang.data__distance
 
     return __range_group_set(title, col, RangeGroupBy(500, 5000, 500), 
         __filter_swimming_func).set_xtitle(lang.m)
@@ -109,7 +109,7 @@ def __swimming_distance_group_set():
 @check_data(lambda ctx, total: total == ctx['cycle_times'])
 def __cycling_distance_group_set():
     title = lang.cycling_distance
-    col = lang.col_distance
+    col = lang.data__distance
 
     return __range_group_set(title, col, RangeGroupBy(20, 100, 20), 
         __filter_cycling_func).set_xtitle(lang.km)
@@ -117,7 +117,7 @@ def __cycling_distance_group_set():
 @check_data(lambda ctx, total: total == ctx['data_rows_count'])
 def __activity_time_group_set():
     title = lang.activity_time
-    col = lang.col_time
+    col = lang.data__time
 
     return __range_group_set(title, col, RangeGroupBy(30, 180, 30)).set_xtitle(lang.min_full)
 

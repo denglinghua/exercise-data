@@ -9,7 +9,7 @@ from test_charts import draw_groups_chart as draw_test_chart
 from datasource import prehandle_data
 
 data_file = sys.argv[1]
-set_lang(int(sys.argv[2]))
+set_lang(int(sys.argv[2]), int(sys.argv[3]))
 
 with open(data_file, 'rt', encoding="utf-8") as f:
     rows = list(csv.DictReader(f))

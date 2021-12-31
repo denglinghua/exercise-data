@@ -14,6 +14,9 @@ def __to_time(str):
     
     return time.strptime(str, format)
 
+def __to_time_en(str):
+    return time.strptime(str, '%m/%d/%Y %H:%M')
+
 def __to_float(str):
     try:
         return float(str.replace(',', '')) # commas separate thousands
@@ -27,6 +30,7 @@ def __to_int(str):
         return 0
 
 def __to_time_min(str):
+    str = str.replace('.', ':')
     items = str.split(':')
     h = int(items[0])
     m = int(items[1])
@@ -45,15 +49,15 @@ def __handle_data_row(row, data_type_map):
 
 def prehandle_data(raw_data):
     data_type_map = {}
-    data_type_map[lang.col_date] = (__to_time,)
-    data_type_map[lang.col_distance] = (__to_float,)
+    data_type_map[lang.data__date] = (__to_time, __to_time_en)
+    data_type_map[lang.data__distance] = (__to_float,)
     # the pace value varies by activity types
     # mm:ss/km for running, km/hour for cycling
-    data_type_map[lang.col_avg_pace] = (__to_time, __to_float)
-    data_type_map[lang.col_avg_run_cadence] = (__to_int,)
-    data_type_map[lang.col_avg_stride_length] = (__to_float,)
-    data_type_map[lang.col_calories] = (__to_int,)
-    data_type_map[lang.col_time] = (__to_time_min,)
+    data_type_map[lang.data__avg_pace] = (__to_time, __to_float)
+    data_type_map[lang.data__avg_run_cadence] = (__to_int,)
+    data_type_map[lang.data__avg_stride_length] = (__to_float,)
+    data_type_map[lang.data__calories] = (__to_int,)
+    data_type_map[lang.data__time] = (__to_time_min,)
 
     for row in raw_data:    
         __handle_data_row(row, data_type_map)

@@ -8,7 +8,7 @@ class ActivityGroupBy(GroupBy):
         self.create_groups([lang.running, lang.swimming, lang.cycling])
 
     def map_group(self, val) -> int:
-        keywords = [lang.running, lang.swimming, lang.cycling_keyword]
+        keywords = [lang.data__keyword_running, lang.data__keyword_swimming, lang.data__keyword_cycling]
         i = 0
         for key in keywords:
             if val.find(key) >= 0:
@@ -25,7 +25,7 @@ def __basic_group_set(title, column, agg_func, filter_func = None):
 @check_data(lambda ctx, total: total == ctx['data_rows_count'])
 def __activity_type_count_group_set():
     title = lang.activities
-    column = lang.col_activity_type
+    column = lang.data__activity_type
 
     agg_func = get_agg_func("count")
 
@@ -33,10 +33,10 @@ def __activity_type_count_group_set():
 
 def __activity_type_distance_group_set():
     title = lang.total_distance
-    column = lang.col_activity_type
+    column = lang.data__activity_type
 
     def agg_func(group, group_row):
-        val = sum(r[lang.col_distance] for r in group_row.data_rows)
+        val = sum(r[lang.data__distance] for r in group_row.data_rows)
         if group_row.label == lang.swimming:
             #swimming unit is meter
             val = val / 1000
@@ -46,24 +46,24 @@ def __activity_type_distance_group_set():
 
 def __activity_type_calory_group_set():
     title = lang.activity_calories
-    column = lang.col_activity_type
+    column = lang.data__activity_type
 
     agg_func = get_agg_func('sum')
 
     group_set = __basic_group_set(title, column, agg_func)
-    group_set.sum_column = lang.col_calories
+    group_set.sum_column = lang.data__calories
     group_set.set_ytitle(lang.kcal)
 
     return group_set
 
 def __activity_type_time_group_set():
     title = lang.total_activity_time
-    column = lang.col_activity_type
+    column = lang.data__activity_type
 
     agg_func = get_agg_func('sum')
 
     group_set = __basic_group_set(title, column, agg_func)
-    group_set.sum_column = lang.col_time
+    group_set.sum_column = lang.data__time
 
     return group_set
 

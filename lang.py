@@ -1,18 +1,19 @@
 # encoding:utf-8
-__cur_lang = 0
 __lang_dict = {
     # col is short for column
-    'col_activity_type':('Activity Type', '活动类型'),
-    'col_avg_pace':('Avg Pace', '平均配速'),
-    'col_date':('Date', '日期'),
-    'col_distance':('Distance', '距离'),
-    'col_avg_run_cadence':('Avg Run Cadence', '平均步频'),
-    'col_avg_stride_length':('Avg Stride Length', '平均步长'),
-    'col_calories':('Calories', '卡路里'),
-    'col_time':('Time', '时间'),
+    'data__activity_type':('Activity Type', '活动类型'),
+    'data__avg_pace':('Avg Pace', '平均配速'),
+    'data__date':('Date', '日期'),
+    'data__distance':('Distance', '距离'),
+    'data__avg_run_cadence':('Avg Run Cadence', '平均步频'),
+    'data__avg_stride_length':('Avg Stride Length', '平均步长'),
+    'data__calories':('Calories', '卡路里'),
+    'data__time':('Time', '时间'),
+    'data__keyword_running':('Running', '跑步'),
+    'data__keyword_swimming':('Swimming','游泳'),
+    'data__keyword_cycling':('Cycling','骑行'),
     'running':('Running', '跑步'),
     'swimming':('Swimming','游泳'),
-    'cycling_keyword':('Cycling','骑行'),
     'cycling':('Cycling','自行车'),
     'hour_short':('h', '小时'),
     'min_short':('m', '分'),
@@ -51,8 +52,7 @@ class Lang(object):
 
 lang = Lang()
 
-def set_lang(lang_index):
-    global __cur_lang
-    __cur_lang = lang_index
+def set_lang(data_lang_index, display_lang_index):
     for key in __lang_dict:
-         setattr(lang, key, __lang_dict[key][__cur_lang])
+        lang_index = data_lang_index if key.startswith('data__') else display_lang_index
+        setattr(lang, key, __lang_dict[key][lang_index])
