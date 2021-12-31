@@ -27,8 +27,6 @@ add_chart(charts.marathon, st.full_marathon(df))
 
 add_chart(charts.distance, st.distance(df))
 
-st.every_week(df)
-
 add_chart(charts.pace, st.pace(df))
 
 add_chart(charts.time, st.total_time(df))
@@ -42,6 +40,8 @@ add_chart(charts.stride, st.top_stride_len(df))
 add_chart(charts.month_distance_std, st.month_distance_std(df))
 
 add_chart(charts.pace_std, st.pace_std(df))
+
+add_chart(charts.every_week, st.every_week(df))
 
 #print(df.info())
 

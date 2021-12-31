@@ -24,15 +24,16 @@ __to_ms_formatter = utils.JsCode("""function (params) {
 """)
 
 __chart_config = {
-    'marathon':('全程马拉松', 'distance', None, '{c} 次'),
-    'distance':('跑量', 'distance', lambda x : int(x), '{c} 公里'),
-    'pace':('配速', 'avg_pace', lambda x : x.total_seconds(), __to_ms_formatter),
-    'time':('跑步总时间', 'time', lambda x : x.total_seconds(), __to_hms_formatter),  
-    'days':('跑步频次（天）', 'days', lambda x : int(x), '{c} 次'),
-    'cadence':('步频', 'cadence', lambda x : int(x), '{c} 步/分'),
-    'stride':('步幅', 'stride_len', lambda x : round(x, 2), '{c} 米'),
-    'month_distance_std':('月跑量波动', 'distance', lambda x : round(x * 100, 2), '{c} %'),
-    'pace_std':('配速波动', 'pace_secs', lambda x : round(x * 100, 2), '{c} %')
+    'marathon':('全程马拉松', 'distance', None, '{c} 次', None),
+    'distance':('跑量', 'distance', lambda x : int(x), '{c} 公里', None),
+    'pace':('配速', 'avg_pace', lambda x : x.total_seconds(), __to_ms_formatter, None),
+    'time':('跑步总时间', 'time', lambda x : x.total_seconds(), __to_hms_formatter, None),  
+    'days':('跑步频次（天）', 'days', lambda x : int(x), '{c} 次', None),
+    'cadence':('步频', 'cadence', lambda x : int(x), '{c} 步/分', None),
+    'stride':('步幅', 'stride_len', lambda x : round(x, 2), '{c} 米', None),
+    'month_distance_std':('月跑量波动', 'distance', lambda x : round(x * 100, 2), '{c} %', None),
+    'pace_std':('配速波动', 'pace_secs', lambda x : round(x * 100, 2), '{c} %', None),
+    'every_week':('每周坚持', 'distance', lambda x : int(x), '', 'word_cloud')
 }
 
 class __Charts(object):
@@ -50,4 +51,5 @@ for key in __chart_config:
     c.value_column = items[1]
     c.value_func = items[2]
     c.formatter = items[3]
+    c.chart_type = 'default' if items[4] is None else items[4]
     setattr(charts, key, c)

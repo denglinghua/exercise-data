@@ -1,12 +1,13 @@
 import pandas as pd
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Page
-from pyecharts.globals import ThemeType
+from pyecharts.charts import Bar, WordCloud, Page
+from pyecharts.globals import ThemeType, SymbolType
 
 class ChartData(object):
-    def __init__(self, title, formatter):
+    def __init__(self, title, formatter, chart_type='default'):
         self.title = title
         self.formatter = formatter
+        self.chart_type = chart_type
         self.xvalues = []
         self.yvalues = []
         
@@ -17,7 +18,7 @@ class ChartData(object):
 chart_data_list = []
 
 def create_chart_data(df : pd.DataFrame, id_name, chart_config):
-    chart_data = ChartData(chart_config.title, chart_config.formatter)
+    chart_data = ChartData(chart_config.title, chart_config.formatter, chart_config.chart_type)
     for index, row in df.iterrows():
         #print(type(row[value_col].item()))
         val_col = chart_config.value_column
@@ -46,9 +47,27 @@ def draw_chart(chart_data : ChartData):
     
     return c
 
+def draw_word_cloud_chart(chart_data : ChartData):
+    words = []
+    for w, c in zip(chart_data.xvalues, chart_data.yvalues):
+        words.append((w, c))
+
+    wc = (WordCloud()
+        .add("", words, shape=SymbolType.DIAMOND)
+        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.title, subtitle="", pos_left='center'))
+    )
+
+    return wc
+
+chart_drawers = {
+    'default' : draw_chart,
+    'word_cloud' : draw_word_cloud_chart
+}
+
 def draw_charts():
     page = Page()
     page.page_title = 'Joyrun team run data stat'
     for chart_data in chart_data_list:
-        page.add(draw_chart(chart_data))
+        draw_func = chart_drawers[chart_data.chart_type]
+        page.add(draw_func(chart_data))
     page.render('chart_html/all.html')

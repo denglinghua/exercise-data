@@ -46,12 +46,12 @@ def distance(df:pd.DataFrame):
     return print_df(data, 'top distance')
 
 def every_week(df:pd.DataFrame):
-    data = df[['joy_run_id', 'week_no']]
-    data = data.groupby("joy_run_id")['week_no'].nunique()
-    data = data.reset_index(name='weeks')
-    data = top_n(data, 'weeks', 1)
+    data = df[['joy_run_id', 'week_no', 'distance']]
+    data = data.groupby("joy_run_id").agg({'week_no':'nunique','distance':'sum'})
+    data = data.reset_index()
+    data = top_n(data, 'week_no', 1)
         
-    print_df(data, 'every week run')
+    return print_df(data, 'every week run')
 
 def __regular_pace_run(df:pd.DataFrame):
     slowest_pace = timedelta(minutes=10)
