@@ -93,15 +93,18 @@ def load_data(data_dir, debug = False):
 
     return df
 
-def user_id_name_map(df:pd.DataFrame):
+__id_name = {}
+
+def init_user_id_name_map(df:pd.DataFrame):
     data = df.groupby(['joy_run_id', 'name']).count()
     data = data.reset_index()
     data = data[['joy_run_id', 'name']]
 
-    id_name = {}
+    global __id_name 
 
     for index, row in data.iterrows():
-        id_name[row['joy_run_id']] = row['name']
+        __id_name[row['joy_run_id']] = row['name']
 
-
-    return id_name
+def user_id_to_name(id):
+    global __id_name
+    return __id_name[id]

@@ -37,13 +37,10 @@ __chart_config = {
     'pace_progress':('越跑越快的', '每年平均配速都有进步', 'pace_diff', lambda x : int(x), '{c} 秒', None)
 }
 
-class __Charts(object):
-    pass
-
 class __Chart(object):
     pass
 
-charts = __Charts()
+charts = {}
 
 for key in __chart_config:
     items = __chart_config[key]
@@ -54,4 +51,5 @@ for key in __chart_config:
     c.value_func = items[3]
     c.formatter = items[4]
     c.chart_type = 'default' if items[5] is None else items[5]
-    setattr(charts, key, c)
+    
+    charts[key] = c

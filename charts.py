@@ -3,6 +3,9 @@ from pyecharts import options as opts
 from pyecharts.charts import Bar, WordCloud, Grid, Page
 from pyecharts.globals import ThemeType, SymbolType
 
+from chart_config import charts
+from datasource import user_id_to_name
+
 class ChartData(object):
     def __init__(self, chart_confg):
         self.config = chart_confg
@@ -15,14 +18,15 @@ class ChartData(object):
 
 chart_data_list = []
 
-def create_chart_data(df : pd.DataFrame, id_name, chart_config):
+def create_chart_data(chart_name, df : pd.DataFrame):
+    chart_config = charts[chart_name]
     chart_data = ChartData(chart_config)
     for index, row in df.iterrows():
         #print(type(row[value_col].item()))
         val_col = chart_config.value_column
         val_func = chart_config.value_func
         yvalue = val_func(row[val_col]) if val_func else row[val_col].item()
-        chart_data.add_axis(id_name[row['joy_run_id']], yvalue)
+        chart_data.add_axis(user_id_to_name(row['joy_run_id']), yvalue)
     
     chart_data_list.append(chart_data)
 

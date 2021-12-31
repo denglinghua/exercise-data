@@ -1,9 +1,8 @@
 import sys
 
-from datasource import load_data, user_id_name_map
+import datasource
 import statistic as st
-from charts import create_chart_data, draw_charts
-from chart_config import charts
+import charts
 
 debug = False
 
@@ -14,39 +13,35 @@ if len(sys.argv) > 2 :
 print('data dir :' + data_dir)
 print('debug :' + str(debug))
 
-df = load_data(data_dir, debug)
-
-id_name = user_id_name_map(df)
-
-def add_chart(chart_config, df):
-    create_chart_data(df, id_name, chart_config)
+df = datasource.load_data(data_dir, debug)
+datasource.init_user_id_name_map(df)
 
 # st.test(df)
 
-add_chart(charts.marathon, st.full_marathon(df))
+st.marathon(df)
 
-add_chart(charts.distance, st.distance(df))
+st.distance(df)
 
-add_chart(charts.pace, st.pace(df))
+st.pace(df)
 
-add_chart(charts.time, st.total_time(df))
+st.time(df)
 
-add_chart(charts.days, st.total_days(df))
+st.days(df)
 
-add_chart(charts.cadence, st.top_cadence(df))
+st.cadence(df)
 
-add_chart(charts.stride, st.top_stride_len(df))
+st.stride(df)
 
-add_chart(charts.month_distance_std, st.month_distance_std(df))
+st.month_distance_std(df)
 
-add_chart(charts.pace_std, st.pace_std(df))
+st.pace_std(df)
 
-add_chart(charts.every_week, st.every_week(df))
+st.every_week(df)
 
-add_chart(charts.pace_progress, st.pace_progress(df))
+st.pace_progress(df)
 
 #print(df.info())
 
-draw_charts()
+charts.draw_charts()
 
 

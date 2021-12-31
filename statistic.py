@@ -1,6 +1,9 @@
 from datetime import timedelta
+from functools import wraps
 
 import pandas as pd
+
+from charts import create_chart_data
 
 def __print_df(df, message=''):
     print('\n')
@@ -12,6 +15,18 @@ def __top_n(df, column, n, ascending=True):
     data = df.nlargest(n, column, 'all')
     data = data.sort_values(column, ascending=ascending)
     return data
+
+def to_chart():
+    def to_chart_decorator(func):
+        @wraps(func)
+        def wrapped_function(*args, **kwargs):            
+            df = func(*args, **kwargs)
+            func_name = func.__name__
+            __print_df(df, func_name)
+            create_chart_data(func_name, df)
+            return df
+        return wrapped_function
+    return to_chart_decorator
 
 def test(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']]
@@ -29,29 +44,32 @@ def test(df:pd.DataFrame):
     data = data.head(10)
     __print_df(data, 'head')
 
-def full_marathon(df:pd.DataFrame):
+@to_chart()
+def marathon(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']].query('distance > 42')
     data = data.groupby("joy_run_id").count()
     data = data.reset_index()
     data = __top_n(data, 'distance', 10)
         
-    return __print_df(data, 'full marathon')
+    return data
 
+@to_chart()
 def distance(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']]
     data = data.groupby("joy_run_id").sum('distance')
     data = data.reset_index()
     data = __top_n(data, 'distance', 10)
     
-    return __print_df(data, 'top distance')
+    return data
 
+@to_chart()
 def every_week(df:pd.DataFrame):
     data = df[['joy_run_id', 'week_no', 'distance']]
     data = data.groupby("joy_run_id").agg({'week_no':'nunique','distance':'sum'})
     data = data.reset_index()
     data = __top_n(data, 'week_no', 1)
         
-    return __print_df(data, 'every week run')
+    return data
 
 def __regular_pace_run(df:pd.DataFrame):
     slowest_pace = timedelta(minutes=10)
@@ -68,6 +86,7 @@ def __avg_pace(row):
 
     return avg_pace
 
+@to_chart()
 def pace(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'time', 'distance']]
@@ -83,9 +102,10 @@ def pace(df:pd.DataFrame):
     data = data.nsmallest(10, 'avg_pace', 'all')
     data = data.sort_values('avg_pace', ascending=False)
 
-    return __print_df(data, 'top pace')
+    return data
 
-def total_time(df:pd.DataFrame):
+@to_chart()
+def time(df:pd.DataFrame):
     data = df[['joy_run_id', 'time']]
     #data = data.groupby("joy_run_id").sum('time')
     # timedelta can't be summed in this way 'sum()'
@@ -93,9 +113,10 @@ def total_time(df:pd.DataFrame):
     data = data.reset_index()
     data = __top_n(data, 'time', 10)
     
-    return __print_df(data, 'top total time')
+    return data
 
-def total_days(df:pd.DataFrame):
+@to_chart()
+def days(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time']]
     data['end_date'] = data['end_time'].transform(lambda x : x.date())
     data = data[['joy_run_id', 'end_date']]
@@ -103,9 +124,10 @@ def total_days(df:pd.DataFrame):
     data = data.reset_index(name='days')
     data = __top_n(data, 'days', 10)
 
-    return __print_df(data, 'top total days')
+    return data
 
-def top_cadence(df:pd.DataFrame):
+@to_chart()
+def cadence(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data.query('cadence > 0 and cadence < 250')
     data = data[['joy_run_id', 'cadence', 'distance']]
@@ -114,9 +136,10 @@ def top_cadence(df:pd.DataFrame):
     data = data.query('distance > 1000')
     data = __top_n(data, 'cadence', 10)
 
-    return __print_df(data, 'top cadence')
+    return data
 
-def top_stride_len(df:pd.DataFrame):
+@to_chart()
+def stride(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data.query('stride_len > 0 and stride_len < 1.8')
     data = data[['joy_run_id', 'stride_len', 'distance']]
@@ -125,7 +148,7 @@ def top_stride_len(df:pd.DataFrame):
     data = data.query('distance > 1000')
     data = __top_n(data, 'stride_len', 10)
 
-    return __print_df(data, 'top stride len')
+    return data
 
 def __month_distance_sum(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time', 'distance']]
@@ -136,6 +159,7 @@ def __month_distance_sum(df:pd.DataFrame):
 
     return data
     
+@to_chart()
 def month_distance_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
@@ -147,8 +171,9 @@ def month_distance_std(df:pd.DataFrame):
     data = data.nsmallest(10, 'distance', 'all')
     data = data.sort_values('distance', ascending=False)
         
-    return __print_df(data, 'month distance std')
+    return data
 
+@to_chart()
 def pace_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data['pace_secs'] = data['pace'].dt.total_seconds()
@@ -161,7 +186,7 @@ def pace_std(df:pd.DataFrame):
     data = data.nsmallest(10, 'pace_secs', 'all')
     data = data.sort_values('pace_secs', ascending=False)
         
-    return __print_df(data, 'pace std')
+    return data
 
 def _agg_pace_by_year(df:pd.DataFrame, start_year, end_year):
     years = list(range(start_year, end_year + 1))
@@ -200,6 +225,7 @@ def _pace_diff(row, start_year, end_year):
     return total_diff
 
 
+@to_chart()
 def pace_progress(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'end_time', 'time', 'distance']]
@@ -212,5 +238,5 @@ def pace_progress(df:pd.DataFrame):
     data = data.query('pace_diff > 0')
     data = __top_n(data, 'pace_diff', 10)
     
-    return __print_df(data, 'top pace progress')
+    return data
 
