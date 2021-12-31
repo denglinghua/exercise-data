@@ -33,7 +33,7 @@ __chart_config = {
     'stride':('步子跨得大的', '步幅', 'stride_len', lambda x : round(x, 2), '{c} 米', None),
     'month_distance_std':('跑量稳定', '月跑量标准差 / 平均月跑量', 'distance', lambda x : round(x * 100, 2), '{c} %', None),
     'pace_std':('配速稳健', '配速标准差 / 平均配速', 'pace_secs', lambda x : round(x * 100, 2), '{c} %', None),
-    'every_week':('坚持得最好的', '没有一周不跑步的', 'distance', lambda x : int(x), '', 'word_cloud'),
+    'every_week':('坚持得最好的', '没有哪一周不跑步的', 'distance', lambda x : int(x), '', 'word_cloud'),
     'pace_progress':('越跑越快的', '每年平均配速都有进步', 'pace_diff', lambda x : int(x), '{c} 秒', None)
 }
 
