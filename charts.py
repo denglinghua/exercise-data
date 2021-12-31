@@ -1,6 +1,6 @@
 import pandas as pd
 from pyecharts import options as opts
-from pyecharts.charts import Bar, WordCloud, Page
+from pyecharts.charts import Bar, WordCloud, Grid, Page
 from pyecharts.globals import ThemeType, SymbolType
 
 class ChartData(object):
@@ -33,17 +33,22 @@ def draw_chart(chart_data : ChartData):
     xtitle = ''
     ytitle = ''
     height = len(chart_data.yvalues) * 20
-    height = height if height > 500 else 500
-    c = (Bar(init_opts=opts.InitOpts(bg_color='white', width='1200px', height='%spx' % height))
+    height = height if height > 480 else 480
+    c = (Bar(init_opts=opts.InitOpts(bg_color='white', width='640px', height='%spx' % height, renderer= "svg"))
         .add_xaxis(chart_data.xvalues)
         .add_yaxis(ytitle, chart_data.yvalues)
         .reversal_axis()
         .set_series_opts(label_opts=opts.LabelOpts(position='right', formatter=chart_data.config.formatter))
         .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.config.title, subtitle=chart_data.config.sub_title, pos_left='center'),
-                        xaxis_opts=opts.AxisOpts(name=xtitle, is_show=False))
+                        xaxis_opts=opts.AxisOpts(name=xtitle, is_show=False),
+                        yaxis_opts=opts.AxisOpts())
     )
+
+    grid = Grid()
+    grid.add(c, grid_opts=opts.GridOpts(pos_left="15%"))
     
-    return c
+    return grid
+    #return c
 
 def draw_word_cloud_chart(chart_data : ChartData):
     words = []
