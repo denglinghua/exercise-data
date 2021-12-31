@@ -1,5 +1,5 @@
 import sys
-import csv
+import csv_reader
 from lang import set_lang
 from group import do_group, print_group_sets
 from group_basic import get_basic_group_sets
@@ -11,22 +11,22 @@ from datasource import prehandle_data
 data_file = sys.argv[1]
 set_lang(int(sys.argv[2]), int(sys.argv[3]))
 
-with open(data_file, 'rt', encoding="utf-8") as f:
-    rows = list(csv.DictReader(f))
-    prehandle_data(rows)
-    group_sets = get_basic_group_sets() + get_range_group_sets()
-    do_group(rows, group_sets)
-    print_group_sets(group_sets)    
-    draw_groups_chart("Triathlon execise data review", group_sets)
-    draw_test_chart("Percent charts", group_sets)
+rows = csv_reader.read_dict(data_file)
+prehandle_data(rows)
+group_sets = get_basic_group_sets() + get_range_group_sets()
+do_group(rows, group_sets)
+print_group_sets(group_sets)    
+draw_groups_chart("Triathlon execise data review", group_sets)
+draw_test_chart("Percent charts", group_sets)
 
-    # check group data is correct?
-    check_context = {}
-    check_context["data_rows_count"] = len(rows)
-    sum_group_set = group_sets[0]
-    check_context["activity_times"] = sum(map(lambda r : r.value, sum_group_set.groups))
-    check_context["run_times"] = sum_group_set.groups[0].value
-    check_context["swim_times"] = sum_group_set.groups[1].value
-    check_context["cycle_times"] = sum_group_set.groups[2].value
-    for group_set in group_sets:
-        group_set.check_data(check_context)
+# check group data is correct?
+check_context = {}
+check_context["data_rows_count"] = len(rows)
+sum_group_set = group_sets[0]
+check_context["activity_times"] = sum(map(lambda r : r.value, sum_group_set.groups))
+check_context["run_times"] = sum_group_set.groups[0].value
+check_context["swim_times"] = sum_group_set.groups[1].value
+check_context["cycle_times"] = sum_group_set.groups[2].value
+
+for group_set in group_sets:
+    group_set.check_data(check_context)

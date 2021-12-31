@@ -130,4 +130,5 @@ dmypy.json
 
 # output
 chart_html/
+.vscode/
 *.csv
