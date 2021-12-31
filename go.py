@@ -43,6 +43,8 @@ add_chart(charts.pace_std, st.pace_std(df))
 
 add_chart(charts.every_week, st.every_week(df))
 
+add_chart(charts.pace_progress, st.pace_progress(df))
+
 #print(df.info())
 
 draw_charts()

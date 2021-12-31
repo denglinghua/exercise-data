@@ -33,7 +33,8 @@ __chart_config = {
     'stride':('步幅', 'stride_len', lambda x : round(x, 2), '{c} 米', None),
     'month_distance_std':('月跑量波动', 'distance', lambda x : round(x * 100, 2), '{c} %', None),
     'pace_std':('配速波动', 'pace_secs', lambda x : round(x * 100, 2), '{c} %', None),
-    'every_week':('每周坚持', 'distance', lambda x : int(x), '', 'word_cloud')
+    'every_week':('每周坚持', 'distance', lambda x : int(x), '', 'word_cloud'),
+    'pace_progress':('配速进步', 'pace_diff', lambda x : int(x), '{c} 秒', None)
 }
 
 class __Charts(object):

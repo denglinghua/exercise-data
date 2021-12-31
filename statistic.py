@@ -163,3 +163,54 @@ def pace_std(df:pd.DataFrame):
         
     return __print_df(data, 'pace std')
 
+def _agg_pace_by_year(df:pd.DataFrame, start_year, end_year):
+    years = list(range(start_year, end_year + 1))
+    paces = []
+    for y in years:
+        data = df.query('end_time.dt.year == @y')
+        if data.empty:
+            paces.append(0)
+        else:
+            pace = int(data['time'].sum().total_seconds() / data['distance'].sum())
+            paces.append(pace)
+    
+    values = paces
+    values.append(df['distance'].sum())
+    
+    cols = years
+    cols.append('distance')
+    
+    return pd.Series(values, index=cols)
+
+def _pace_diff(row, start_year, end_year):
+    for y in range(start_year, end_year + 1):
+        # no run in this year
+        if row[y] < 1:
+            return 0
+    
+    total_diff = 0
+    for y in range(start_year, end_year):
+        # every year pace goes up
+        year_diff = row[y] - row[y + 1]
+        if year_diff <= 0:
+            return -1
+        else:
+            total_diff = total_diff + year_diff
+    
+    return total_diff
+
+
+def pace_progress(df:pd.DataFrame):
+    data = __regular_pace_run(df)
+    data = data[['joy_run_id', 'end_time', 'time', 'distance']]
+    start = data['end_time'].min().year
+    end = data['end_time'].max().year
+    data = data.groupby('joy_run_id').apply(_agg_pace_by_year, start, end)
+    data = data.reset_index()
+    data = data.query('distance > 1500')
+    data['pace_diff'] = data.apply(_pace_diff, axis = 1, args = (start, end))
+    data = data.query('pace_diff > 0')
+    data = __top_n(data, 'pace_diff', 10)
+    
+    return __print_df(data, 'top pace progress')
+
