@@ -49,7 +49,7 @@ def __col_converts():
 
     return ct
 
-def calendar_table(from_date, years):
+def __calendar_table(from_date, years):
     t = {}
     week_no = 1
     d = from_date
@@ -62,9 +62,9 @@ def calendar_table(from_date, years):
     
     return t
 
-def add_week_no_column(df:pd.DataFrame):
+def __add_week_no_column(df:pd.DataFrame):
     earliest_date = df.at[0,'end_time']
-    calendar = calendar_table(earliest_date, 30)
+    calendar = __calendar_table(earliest_date, 30)
     df["week_no"] = df.apply(lambda row: calendar[row['end_time'].strftime('%Y-%m-%d')], axis=1)
 
 def load_data(data_dir, debug = False):
@@ -86,7 +86,7 @@ def load_data(data_dir, debug = False):
         # print(one_file_df)
         df = df.append(one_file_df, ignore_index=True)
     
-    add_week_no_column(df)
+    __add_week_no_column(df)
 
     print(df.info())
     print(df.describe())
