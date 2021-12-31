@@ -174,10 +174,23 @@ def month_distance_std(df:pd.DataFrame):
     return data
 
 @to_chart()
+def distance_std(df:pd.DataFrame):
+    data = __regular_pace_run(df)
+    data = data.groupby('joy_run_id').agg({'distance':['sum', 'std', 'mean']})
+    data = data.reset_index()
+    data.columns = ['joy_run_id', 'distance_sum', 'distance_std', 'distance_mean']
+    data['distance'] = data.apply(lambda x : x['distance_std'] / x['distance_mean'], axis=1)
+    data = data.query('distance_sum > 1000')
+    data = data.nsmallest(10, 'distance', 'all')
+    data = data.sort_values('distance', ascending=False)
+        
+    return data
+
+@to_chart()
 def pace_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data['pace_secs'] = data['pace'].dt.total_seconds()
-    # std ddof=1
+    # std ddof=0
     data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':['std', 'mean']})
     data = data.reset_index()
     data.columns = ['joy_run_id', 'distance', 'pace_std', 'pace_mean']

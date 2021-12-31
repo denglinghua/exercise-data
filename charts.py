@@ -31,14 +31,11 @@ def create_chart_data(chart_name, df : pd.DataFrame):
     chart_data_list.append(chart_data)
 
 def draw_chart(chart_data : ChartData):
-    #__init_formatter()
-    print(chart_data.xvalues)
-    print(chart_data.yvalues)
     xtitle = ''
     ytitle = ''
     height = len(chart_data.yvalues) * 20
     height = height if height > 480 else 480
-    c = (Bar(init_opts=opts.InitOpts(bg_color='white', width='640px', height='%spx' % height, renderer= "svg"))
+    c = (Bar(init_opts=opts.InitOpts(bg_color='white', width='640px', height='%spx' % height))
         .add_xaxis(chart_data.xvalues)
         .add_yaxis(ytitle, chart_data.yvalues)
         .reversal_axis()
@@ -75,6 +72,8 @@ def draw_charts():
     page = Page()
     page.page_title = 'Joyrun team run data stat'
     for chart_data in chart_data_list:
+        print(chart_data.xvalues)
+        print(chart_data.yvalues)
         draw_func = chart_drawers[chart_data.config.chart_type]
         page.add(draw_func(chart_data))
     page.render('chart_html/all.html')

@@ -34,11 +34,13 @@ st.stride(df)
 
 st.month_distance_std(df)
 
+st.distance_std(df)
+
 st.pace_std(df)
 
-st.every_week(df)
-
 st.pace_progress(df)
+
+st.every_week(df)
 
 #print(df.info())
 
