@@ -24,17 +24,17 @@ __to_ms_formatter = utils.JsCode("""function (params) {
 """)
 
 __chart_config = {
-    'marathon':('全程马拉松', 'distance', None, '{c} 次', None),
-    'distance':('跑量', 'distance', lambda x : int(x), '{c} 公里', None),
-    'pace':('配速', 'avg_pace', lambda x : x.total_seconds(), __to_ms_formatter, None),
-    'time':('跑步总时间', 'time', lambda x : x.total_seconds(), __to_hms_formatter, None),  
-    'days':('跑步频次（天）', 'days', lambda x : int(x), '{c} 次', None),
-    'cadence':('步频', 'cadence', lambda x : int(x), '{c} 步/分', None),
-    'stride':('步幅', 'stride_len', lambda x : round(x, 2), '{c} 米', None),
-    'month_distance_std':('月跑量波动', 'distance', lambda x : round(x * 100, 2), '{c} %', None),
-    'pace_std':('配速波动', 'pace_secs', lambda x : round(x * 100, 2), '{c} %', None),
-    'every_week':('每周坚持', 'distance', lambda x : int(x), '', 'word_cloud'),
-    'pace_progress':('配速进步', 'pace_diff', lambda x : int(x), '{c} 秒', None)
+    'marathon':('全程马拉松', '>42公里的记录数量', 'distance', None, '{c} 次', None),
+    'distance':('跑得远的', '累计跑量', 'distance', lambda x : int(x), '{c} 公里', None),
+    'pace':('跑得快的', '总时间 / 总距离，不包含越野', 'avg_pace', lambda x : x.total_seconds(), __to_ms_formatter, None),
+    'time':('勤奋跑者 - 时间长', '累计时间', 'time', lambda x : x.total_seconds(), __to_hms_formatter, None),  
+    'days':('勤奋跑者 - 频率高', '有跑过步的天数', 'days', lambda x : int(x), '{c} 天', None),
+    'cadence':('步子迈得快的', '步频', 'cadence', lambda x : int(x), '{c} 步/分', None),
+    'stride':('步子跨得大的', '步幅', 'stride_len', lambda x : round(x, 2), '{c} 米', None),
+    'month_distance_std':('跑量稳定', '月跑量标准差 / 平均月跑量', 'distance', lambda x : round(x * 100, 2), '{c} %', None),
+    'pace_std':('配速稳健', '配速标准差 / 平均配速', 'pace_secs', lambda x : round(x * 100, 2), '{c} %', None),
+    'every_week':('坚持得最好的', '没有一周不跑步的', 'distance', lambda x : int(x), '', 'word_cloud'),
+    'pace_progress':('越跑越快的', '每年平均配速都有进步', 'pace_diff', lambda x : int(x), '{c} 秒', None)
 }
 
 class __Charts(object):
@@ -49,8 +49,9 @@ for key in __chart_config:
     items = __chart_config[key]
     c = __Chart()
     c.title = items[0]
-    c.value_column = items[1]
-    c.value_func = items[2]
-    c.formatter = items[3]
-    c.chart_type = 'default' if items[4] is None else items[4]
+    c.sub_title = items[1]
+    c.value_column = items[2]
+    c.value_func = items[3]
+    c.formatter = items[4]
+    c.chart_type = 'default' if items[5] is None else items[5]
     setattr(charts, key, c)

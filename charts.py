@@ -4,10 +4,8 @@ from pyecharts.charts import Bar, WordCloud, Page
 from pyecharts.globals import ThemeType, SymbolType
 
 class ChartData(object):
-    def __init__(self, title, formatter, chart_type='default'):
-        self.title = title
-        self.formatter = formatter
-        self.chart_type = chart_type
+    def __init__(self, chart_confg):
+        self.config = chart_confg
         self.xvalues = []
         self.yvalues = []
         
@@ -18,7 +16,7 @@ class ChartData(object):
 chart_data_list = []
 
 def create_chart_data(df : pd.DataFrame, id_name, chart_config):
-    chart_data = ChartData(chart_config.title, chart_config.formatter, chart_config.chart_type)
+    chart_data = ChartData(chart_config)
     for index, row in df.iterrows():
         #print(type(row[value_col].item()))
         val_col = chart_config.value_column
@@ -40,8 +38,8 @@ def draw_chart(chart_data : ChartData):
         .add_xaxis(chart_data.xvalues)
         .add_yaxis(ytitle, chart_data.yvalues)
         .reversal_axis()
-        .set_series_opts(label_opts=opts.LabelOpts(position='right', formatter=chart_data.formatter))
-        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.title, subtitle="", pos_left='center'),
+        .set_series_opts(label_opts=opts.LabelOpts(position='right', formatter=chart_data.config.formatter))
+        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.config.title, subtitle=chart_data.config.sub_title, pos_left='center'),
                         xaxis_opts=opts.AxisOpts(name=xtitle, is_show=False))
     )
     
@@ -52,9 +50,9 @@ def draw_word_cloud_chart(chart_data : ChartData):
     for w, c in zip(chart_data.xvalues, chart_data.yvalues):
         words.append((w, c))
 
-    wc = (WordCloud()
+    wc = (WordCloud(init_opts=opts.InitOpts(bg_color='white'))
         .add("", words, shape=SymbolType.DIAMOND)
-        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.title, subtitle="", pos_left='center'))
+        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.config.title, subtitle=chart_data.config.sub_title, pos_left='center'))
     )
 
     return wc
@@ -68,6 +66,6 @@ def draw_charts():
     page = Page()
     page.page_title = 'Joyrun team run data stat'
     for chart_data in chart_data_list:
-        draw_func = chart_drawers[chart_data.chart_type]
+        draw_func = chart_drawers[chart_data.config.chart_type]
         page.add(draw_func(chart_data))
     page.render('chart_html/all.html')
