@@ -14,6 +14,10 @@ print('data dir :' + data_dir)
 print('debug :' + str(debug))
 
 df = datasource.load_data(data_dir, debug)
+#df.to_pickle('data.pkl')
+print(df.info())
+print(df.describe())
+
 datasource.init_user_id_name_map(df)
 
 # st.test(df)

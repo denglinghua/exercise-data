@@ -68,6 +68,9 @@ def __add_week_no_column(df:pd.DataFrame):
     df["week_no"] = df.apply(lambda row: calendar[row['end_time'].strftime('%Y-%m-%d')], axis=1)
 
 def load_data(data_dir, debug = False):
+    if data_dir.endswith('.pkl'):
+        return pd.read_pickle(data_dir)
+
     cols = ['end_time', 'status', 'joy_run_id', 'name', 'gender', 'distance', 'time', 'run_type',
                 'pace', 'cadence', 'stride_len']
     df = pd.DataFrame(columns=cols)
@@ -87,9 +90,6 @@ def load_data(data_dir, debug = False):
         df = df.append(one_file_df, ignore_index=True)
     
     __add_week_no_column(df)
-
-    print(df.info())
-    print(df.describe())
 
     return df
 
