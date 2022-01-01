@@ -24,6 +24,8 @@ datasource.init_user_id_name_map(df)
 
 st.marathon(df)
 
+st.half_marathon(df)
+
 st.distance(df)
 
 st.pace(df)

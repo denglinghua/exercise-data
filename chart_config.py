@@ -25,6 +25,7 @@ __to_ms_formatter = utils.JsCode("""function (params) {
 
 __chart_config = {
     'marathon':('全程马拉松', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', 'distance', None, '{c} 次', None),
+    'half_marathon':('半马王子', '>21公里的记录数量，统计范围2019-01-01～2021-12-31', 'distance', None, '{c} 次', None),
     'distance':('跑得远的', '3年累计跑量', 'distance', lambda x : int(x), '{c} 公里', None),
     'pace':('跑得快的', '平均配速 = 总时间 / 总距离，不包含越野', 'avg_pace', lambda x : x.total_seconds(), __to_ms_formatter, None),
     'time':('勤奋跑者 - 时间长', '3年累计跑步时长', 'time', lambda x : x.total_seconds(), __to_hms_formatter, None),  

@@ -50,6 +50,15 @@ def marathon(df:pd.DataFrame):
     data = data.groupby("joy_run_id").count()
     data = data.reset_index()
     data = __top_n(data, 'distance', 10)
+
+    return data
+
+@to_chart()
+def half_marathon(df:pd.DataFrame):
+    data = df[['joy_run_id', 'distance']].query('distance > 21')
+    data = data.groupby("joy_run_id").count()
+    data = data.reset_index()
+    data = __top_n(data, 'distance', 10)
         
     return data
 
