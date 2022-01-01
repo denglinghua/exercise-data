@@ -56,7 +56,7 @@ def draw_word_cloud_chart(chart_data : ChartData):
     for w, c in zip(chart_data.xvalues, chart_data.yvalues):
         words.append((w, c))
 
-    wc = (WordCloud(init_opts=opts.InitOpts(bg_color='white'))
+    wc = (WordCloud(init_opts=opts.InitOpts(bg_color='white', height='720px'))
         .add("", words, shape=SymbolType.DIAMOND)
         .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.config.title, subtitle=chart_data.config.sub_title, pos_left='center'))
     )
