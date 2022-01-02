@@ -2,13 +2,19 @@ import pandas as pd
 from pyecharts import options as opts
 from pyecharts.charts import Bar, WordCloud, Grid, Page
 from pyecharts.globals import ThemeType, SymbolType
+from pyecharts.commons import utils
 
-from chart_config import charts
 from datasource import user_id_to_name
 
 class ChartData(object):
-    def __init__(self, chart_confg):
-        self.config = chart_confg
+    def __init__(self, items):
+        self.title = items[0]
+        self.sub_title = items[1]
+        self.value_column = items[2]
+        self.value_func = items[3]
+        self.formatter = items[4]
+        self.chart_type = 'default' if items[5] is None else items[5]
+        
         self.xvalues = []
         self.yvalues = []
         
@@ -18,13 +24,12 @@ class ChartData(object):
 
 chart_data_list = []
 
-def create_chart_data(chart_name, df : pd.DataFrame):
-    chart_config = charts[chart_name]
-    chart_data = ChartData(chart_config)
+def create_chart_data(df : pd.DataFrame, config_items):
+    chart_data = ChartData(config_items)
     for index, row in df.iterrows():
         #print(type(row[value_col].item()))
-        val_col = chart_config.value_column
-        val_func = chart_config.value_func
+        val_col = chart_data.value_column
+        val_func = chart_data.value_func
         yvalue = val_func(row[val_col]) if val_func else row[val_col].item()
         chart_data.add_axis(user_id_to_name(row['joy_run_id']), yvalue)
     
@@ -39,8 +44,8 @@ def draw_chart(chart_data : ChartData):
         .add_xaxis(chart_data.xvalues)
         .add_yaxis(ytitle, chart_data.yvalues)
         .reversal_axis()
-        .set_series_opts(label_opts=opts.LabelOpts(position='right', formatter=chart_data.config.formatter))
-        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.config.title, subtitle=chart_data.config.sub_title, pos_left='center'),
+        .set_series_opts(label_opts=opts.LabelOpts(position='right', formatter=chart_data.formatter))
+        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'),
                         xaxis_opts=opts.AxisOpts(name=xtitle, is_show=False),
                         yaxis_opts=opts.AxisOpts())
     )
@@ -58,7 +63,7 @@ def draw_word_cloud_chart(chart_data : ChartData):
 
     wc = (WordCloud(init_opts=opts.InitOpts(bg_color='white', height='720px'))
         .add("", words, shape=SymbolType.DIAMOND)
-        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.config.title, subtitle=chart_data.config.sub_title, pos_left='center'))
+        .set_global_opts(title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'))
     )
 
     return wc
@@ -74,6 +79,28 @@ def draw_charts():
     for chart_data in chart_data_list:
         print(chart_data.xvalues)
         print(chart_data.yvalues)
-        draw_func = chart_drawers[chart_data.config.chart_type]
+        draw_func = chart_drawers[chart_data.chart_type]
         page.add(draw_func(chart_data))
     page.render('chart_html/all.html')
+
+to_hms_formatter = utils.JsCode("""function (params) {
+        seconds = params.value;
+        arr = [0,0,0];
+        arr[0] = Math.floor(seconds/3600);
+        seconds %= 3600;
+        arr[1] = Math.floor(seconds/60);
+        arr[1] = ('0' + arr[1]).slice(-2);
+        arr[2] = seconds % 60;
+        arr[2] = ('0' + arr[2]).slice(-2);
+        return arr.join(':')
+    }
+""")
+
+to_ms_formatter = utils.JsCode("""function (params) {
+        seconds = params.value;
+        mins = Math.floor(seconds/60);
+        seconds = seconds % 60;
+        seconds = ('0' + seconds).slice(-2);
+        return mins + ':' + seconds
+    }
+""")
