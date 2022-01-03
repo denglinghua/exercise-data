@@ -4,7 +4,7 @@ from datetime import timedelta
 
 import pandas as pd
 
-from chart_data import to_chart, name_value_pair_data
+from chart_data import to_chart, name_value_pair_data, month_pace_detail, month_distance_detail
 import charts
 
 def __print_df(df, message=''):
@@ -150,9 +150,7 @@ def stride(df:pd.DataFrame):
     return data
 
 def __month_distance_sum(df:pd.DataFrame):
-    data = df[['joy_run_id', 'end_time', 'distance']]
-    data['month'] = data['end_time'].dt.to_period('M')
-    data = data[['joy_run_id', 'month', 'distance']]  
+    data = df[['joy_run_id', 'month', 'distance']]
     data = data.groupby(['joy_run_id', 'month'])['distance'].sum()
     data = data.reset_index()
 
@@ -173,16 +171,16 @@ def month_distance_std(df:pd.DataFrame):
 
     return data
 
-#@to_chart(('rank_bar', '月跑量变化', '每月跑量', '{c} %'),
-#    (name_value_pair_data, ('distance', lambda x : round(x * 100, 2))))
+@to_chart(('line', '月跑量曲线', '', '{value}'),
+    (month_distance_detail, None))
 def month_distance_detail(df:pd.DataFrame):
     data = month_distance_std(df)
     top_id_list = data = data['joy_run_id'].to_list()
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
     data = data.query('joy_run_id == @top_id_list')
-    __print_df(data.groupby('joy_run_id'))
-    return
+    
+    return data
 
 @to_chart(('rank_bar', '跑量平稳', '跑步距离波动 = 距离标准差 / 平均距离', '{c} %'),
     (name_value_pair_data, ('distance', lambda x : round(x * 100, 2))))
@@ -218,7 +216,7 @@ def _agg_pace_by_year(df:pd.DataFrame, start_year, end_year):
     years = list(range(start_year, end_year + 1))
     paces = []
     for y in years:
-        data = df.query('end_time.dt.year == @y')
+        data = df.query('year == @y')
         if data.empty:
             paces.append(0)
         else:
@@ -255,15 +253,29 @@ def _pace_diff(row, start_year, end_year):
     (name_value_pair_data, ('pace_diff', lambda x : int(x))))
 def pace_progress(df:pd.DataFrame):
     data = __regular_pace_run(df)
-    data = data[['joy_run_id', 'end_time', 'time', 'distance']]
-    start = data['end_time'].min().year
-    end = data['end_time'].max().year
+    data = data[['joy_run_id', 'year', 'time', 'distance']]
+    start = data['year'].min()
+    end = data['year'].max()
     data = data.groupby('joy_run_id').apply(_agg_pace_by_year, start, end)
     data = data.reset_index()
     data = data.query('distance > 1000')
     data['pace_diff'] = data.apply(_pace_diff, axis = 1, args = (start, end))
     data = data.query('pace_diff > 0')
     data = __top_n(data, 'pace_diff', 10)
+    
+    return data
+
+@to_chart(('line', '月平均配速曲线', '', charts.to_ms_formatter),
+    (month_pace_detail, None))
+def month_pace_detail(df:pd.DataFrame):
+    data = __regular_pace_run(df)
+    data = data[['joy_run_id', 'month', 'time', 'distance']]
+    data = data.groupby(['joy_run_id', 'month']).agg({'time':'sum','distance':'sum'})
+    data = data.reset_index() 
+    data['avg_pace'] = data.apply(__avg_pace, axis=1)
+
+    top_id_list = pace_progress(df)['joy_run_id'].to_list()
+    data = data.query('joy_run_id == @top_id_list')
     
     return data
 

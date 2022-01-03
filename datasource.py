@@ -89,6 +89,10 @@ def load_data(data_dir, debug = False):
         # print(one_file_df)
         df = df.append(one_file_df, ignore_index=True)
     
+
+    df['year'] = df['end_time'].dt.year
+    df['month'] = df['end_time'].dt.to_period('M')
+
     __add_week_no_column(df)
 
     return df

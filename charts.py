@@ -1,7 +1,8 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, WordCloud, Grid, Page
+from pyecharts.charts import Bar, WordCloud, Line, Grid, Page
 from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
+from pyecharts.types import Tooltip
 
 from chart_data import ChartData, chart_data_list
 
@@ -38,9 +39,29 @@ def draw_word_cloud_chart(chart_data : ChartData):
 
     return wc
 
+def draw_line_chart(chart_data : ChartData):
+    c = Line(init_opts=opts.InitOpts(bg_color='white', width='1080px', height='400px'))
+    c.set_global_opts(
+        title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'),
+        tooltip_opts=opts.TooltipOpts(is_show=False), #trigger="axis", 
+        legend_opts = opts.LegendOpts(orient='vertical', pos_right='1px', pos_top="60px"),
+        yaxis_opts=opts.AxisOpts(
+            type_="value",
+            axistick_opts=opts.AxisTickOpts(is_show=False),
+            splitline_opts=opts.SplitLineOpts(is_show=True),
+            axislabel_opts=opts.LabelOpts(formatter=chart_data.formatter),
+        ),
+        xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False))
+    c.add_xaxis(xaxis_data=chart_data.xvalues)
+    for y in chart_data.yvalues:
+        c.add_yaxis(y[0], y[1], label_opts=opts.LabelOpts(is_show=False), is_symbol_show=False, is_smooth=True)
+
+    return c
+
 chart_drawers = {
     'rank_bar' : draw_rank_bar_chart,
-    'word_cloud' : draw_word_cloud_chart
+    'word_cloud' : draw_word_cloud_chart,
+    'line' : draw_line_chart
 }
 
 def draw_charts():
@@ -54,7 +75,7 @@ def draw_charts():
     page.render('chart_html/all.html')
 
 to_hms_formatter = utils.JsCode("""function (params) {
-        seconds = params.value;
+        seconds =  isNaN(params) ? params.value : params;
         arr = [0,0,0];
         arr[0] = Math.floor(seconds/3600);
         seconds %= 3600;
@@ -67,7 +88,7 @@ to_hms_formatter = utils.JsCode("""function (params) {
 """)
 
 to_ms_formatter = utils.JsCode("""function (params) {
-        seconds = params.value;
+        seconds =  isNaN(params) ? params.value : params;
         mins = Math.floor(seconds/60);
         seconds = seconds % 60;
         seconds = ('0' + seconds).slice(-2);

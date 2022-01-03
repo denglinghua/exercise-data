@@ -54,3 +54,28 @@ def name_value_pair_data(df, params):
     
     return (xvalues, yvalues)
 
+def month_distance_detail(df, params):
+    xvalues = []
+    yvalues = []
+    for g, data in df.groupby('joy_run_id'):
+        xs = [m.strftime('%y-%m') for m in data['month'].to_list()]
+        
+        if (len(xs) > len(xvalues)):
+            xvalues = xs
+        
+        yvalues.append((user_id_to_name(g), data['distance'].to_list()))
+    
+    return (xvalues, yvalues)
+
+def month_pace_detail(df, params):
+    xvalues = []
+    yvalues = []
+    for g, data in df.groupby('joy_run_id'):
+        xs = [m.strftime('%y-%m') for m in data['month'].to_list()]
+        
+        if (len(xs) > len(xvalues)):
+            xvalues = xs
+        
+        yvalues.append((user_id_to_name(g), [p.total_seconds() for p in data['avg_pace'].to_list()]))
+    
+    return (xvalues, yvalues)

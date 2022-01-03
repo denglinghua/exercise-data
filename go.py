@@ -49,6 +49,8 @@ st.pace_std(df)
 
 st.pace_progress(df)
 
+st.month_pace_detail(df)
+
 st.every_week(df)
 
 #print(df.info())
