@@ -1,41 +1,11 @@
-import pandas as pd
 from pyecharts import options as opts
 from pyecharts.charts import Bar, WordCloud, Grid, Page
 from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
 
-from datasource import user_id_to_name
+from chart_data import ChartData, chart_data_list
 
-class ChartData(object):
-    def __init__(self, items):
-        self.title = items[0]
-        self.sub_title = items[1]
-        self.value_column = items[2]
-        self.value_func = items[3]
-        self.formatter = items[4]
-        self.chart_type = 'default' if items[5] is None else items[5]
-        
-        self.xvalues = []
-        self.yvalues = []
-        
-    def add_axis(self, x, y):
-        self.xvalues.append(x)
-        self.yvalues.append(y)
-
-chart_data_list = []
-
-def create_chart_data(df : pd.DataFrame, config_items):
-    chart_data = ChartData(config_items)
-    for index, row in df.iterrows():
-        #print(type(row[value_col].item()))
-        val_col = chart_data.value_column
-        val_func = chart_data.value_func
-        yvalue = val_func(row[val_col]) if val_func else row[val_col].item()
-        chart_data.add_axis(user_id_to_name(row['joy_run_id']), yvalue)
-    
-    chart_data_list.append(chart_data)
-
-def draw_chart(chart_data : ChartData):
+def draw_rank_bar_chart(chart_data : ChartData):
     xtitle = ''
     ytitle = ''
     height = len(chart_data.yvalues) * 20
@@ -69,7 +39,7 @@ def draw_word_cloud_chart(chart_data : ChartData):
     return wc
 
 chart_drawers = {
-    'default' : draw_chart,
+    'rank_bar' : draw_rank_bar_chart,
     'word_cloud' : draw_word_cloud_chart
 }
 

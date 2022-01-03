@@ -20,7 +20,8 @@ print(df.describe())
 
 datasource.init_user_id_name_map(df)
 
-# st.test(df)
+#st.test(df)
+#sys.exit(0)
 
 st.marathon(df)
 
@@ -39,6 +40,8 @@ st.cadence(df)
 st.stride(df)
 
 st.month_distance_std(df)
+
+st.month_distance_detail(df)
 
 st.distance_std(df)
 
