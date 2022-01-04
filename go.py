@@ -53,6 +53,10 @@ st.month_pace_detail(df)
 
 st.every_week(df)
 
+st.morning_run(df)
+
+st.night_run(df)
+
 #print(df.info())
 
 charts.draw_charts()
