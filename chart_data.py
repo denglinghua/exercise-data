@@ -13,34 +13,23 @@ def __print_df(df, message=''):
     return df
 
 class ChartData(object):
-    def __init__(self, items, xvalues, yvalues):
-        self.chart_type = items[0]
-        self.title = items[1]
-        self.sub_title = items[2]
-        self.formatter = items[3]
+    def __init__(self, title, sub_title, formatter, chart_type, chart_props, xvalues, yvalues):
+        self.chart_type = chart_type
+        self.title = title
+        self.sub_title = sub_title
+        self.formatter = formatter
         
         self.xvalues = xvalues
         self.yvalues = yvalues
 
+        for key in chart_props:
+            setattr(self, key, chart_props[key])
 
-def create_chart_data(df : pd.DataFrame, config_items, value_creator):
-    val_func = value_creator[0]
-    params = value_creator[1]
-    values = val_func(df, params)
-    chart_data = ChartData(config_items, values[0], values[1])
+def create_chart_data(df : pd.DataFrame, title, sub_title, formatter, chart_type, 
+                values_func, value_func_params, chart_props):
+    values = values_func(df, value_func_params)
+    chart_data = ChartData(title, sub_title, formatter, chart_type, chart_props, values[0], values[1])
     chart_data_list.append(chart_data)
-
-def to_chart(chart_config, value_creator):
-    def to_chart_decorator(func):
-        @wraps(func)
-        def wrapped_function(*args, **kwargs):            
-            df = func(*args, **kwargs)
-            func_name = func.__name__
-            __print_df(df, func_name)
-            create_chart_data(df, chart_config, value_creator)
-            return df
-        return wrapped_function
-    return to_chart_decorator
 
 def name_value_pair_data(df, params):
     value_column = params[0]
@@ -53,6 +42,22 @@ def name_value_pair_data(df, params):
         yvalues.append(yvalue)
     
     return (xvalues, yvalues)
+
+def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar',
+    values_func:callable = name_value_pair_data, value_func_params : tuple = (),
+    chart_props : dict = {}
+    ):
+    def to_chart_decorator(func):
+        @wraps(func)
+        def wrapped_function(*args, **kwargs):            
+            df = func(*args, **kwargs)
+            func_name = func.__name__
+            __print_df(df, func_name)
+            create_chart_data(df, title, sub_title, formatter, chart_type, 
+                values_func, value_func_params, chart_props)
+            return df
+        return wrapped_function
+    return to_chart_decorator
 
 def month_distance_detail(df, params):
     xvalues = []

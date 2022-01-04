@@ -25,8 +25,8 @@ def test(df:pd.DataFrame):
     __print_df(data, 'qu')
 
 
-@to_chart(('rank_bar', '全程马拉松', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次'),
-    (name_value_pair_data, ('distance', None)))
+@to_chart('全程马拉松', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
+    value_func_params= ('distance', None))
 def marathon(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']].query('distance > 42')
     data = data.groupby("joy_run_id").count()
@@ -35,8 +35,8 @@ def marathon(df:pd.DataFrame):
 
     return data
 
-@to_chart(('rank_bar', '半马王子', '>21公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次'),
-    (name_value_pair_data, ('distance', None)))
+@to_chart('半马王子', '>21公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
+    value_func_params= ('distance', None))
 def half_marathon(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']].query('distance > 21')
     data = data.groupby("joy_run_id").count()
@@ -45,8 +45,8 @@ def half_marathon(df:pd.DataFrame):
         
     return data
 
-@to_chart(('rank_bar', '跑得远的', '3年累计跑量', '{c} 公里'),
-    (name_value_pair_data, ('distance', lambda x : int(x))))
+@to_chart('跑得远的', '3年累计跑量', '{c} 公里',
+    value_func_params= ('distance', lambda x : int(x)))
 def distance(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']]
     data = data.groupby("joy_run_id").sum('distance')
@@ -55,8 +55,8 @@ def distance(df:pd.DataFrame):
     
     return data
 
-@to_chart(('word_cloud', '坚持得最好的', '没有哪一周不跑步的', ''),
-    (name_value_pair_data, ('distance', lambda x : int(x))))
+@to_chart('坚持得最好的', '没有哪一周不跑步的', '', 'word_cloud',
+    value_func_params= ('distance', lambda x : int(x)))
 def every_week(df:pd.DataFrame):
     data = df[['joy_run_id', 'week_no', 'distance']]
     data = data.groupby("joy_run_id").agg({'week_no':'nunique','distance':'sum'})
@@ -80,8 +80,8 @@ def __avg_pace(row):
 
     return avg_pace
 
-@to_chart(('rank_bar', '跑得快的', '平均配速 = 总时间 / 总距离，不包含越野', charts.to_ms_formatter),
-    (name_value_pair_data, ('avg_pace', lambda x : x.total_seconds())))
+@to_chart('跑得快的', '平均配速 = 总时间 / 总距离，不包含越野', charts.to_ms_formatter,
+    value_func_params= ('avg_pace', lambda x : x.total_seconds()))
 def pace(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'time', 'distance']]
@@ -99,8 +99,8 @@ def pace(df:pd.DataFrame):
 
     return data
 
-@to_chart(('rank_bar', '勤奋跑者 - 时间长', '3年累计跑步时长', charts.to_hms_formatter),
-    (name_value_pair_data, ('time', lambda x : x.total_seconds())))
+@to_chart('勤奋跑者 - 时间长', '3年累计跑步时长', charts.to_hms_formatter,
+    value_func_params= ('time', lambda x : x.total_seconds()))
 def time(df:pd.DataFrame):
     data = df[['joy_run_id', 'time']]
     #data = data.groupby("joy_run_id").sum('time')
@@ -111,8 +111,8 @@ def time(df:pd.DataFrame):
     
     return data
 
-@to_chart(('rank_bar', '勤奋跑者 - 频率高', '有跑过步的天数', '{c} 天'),
-    (name_value_pair_data, ('days', lambda x : int(x))))
+@to_chart('勤奋跑者 - 频率高', '有跑过步的天数', '{c} 天',
+    value_func_params= ('days', lambda x : int(x)))
 def days(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time']]
     data['end_date'] = data['end_time'].transform(lambda x : x.date())
@@ -123,8 +123,8 @@ def days(df:pd.DataFrame):
 
     return data
 
-@to_chart(('rank_bar', '步子迈得快的', '平均步频', '{c} 步/分'),
-    (name_value_pair_data, ('cadence', lambda x : int(x))))
+@to_chart('步子迈得快的', '平均步频', '{c} 步/分',
+    value_func_params= ('cadence', lambda x : int(x)))
 def cadence(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data.query('cadence > 0 and cadence < 250')
@@ -136,8 +136,8 @@ def cadence(df:pd.DataFrame):
 
     return data
 
-@to_chart(('rank_bar', '步子跨得大的', '平均步幅', '{c} 米'),
-    (name_value_pair_data,  ('stride_len', lambda x : round(x, 2))))
+@to_chart('步子跨得大的', '平均步幅', '{c} 米',
+    value_func_params= ('stride_len', lambda x : round(x, 2)))
 def stride(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data.query('stride_len > 0 and stride_len < 1.8')
@@ -156,8 +156,8 @@ def __month_distance_sum(df:pd.DataFrame):
 
     return data
     
-@to_chart(('rank_bar', '月跑量平稳', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %'),
-    (name_value_pair_data, ('distance', lambda x : round(x * 100, 2))))
+@to_chart('月跑量平稳', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %',
+    value_func_params= ('distance', lambda x : round(x * 100, 2)))
 def month_distance_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
@@ -171,8 +171,8 @@ def month_distance_std(df:pd.DataFrame):
 
     return data
 
-@to_chart(('line', '月跑量曲线', '', '{value}'),
-    (month_distance_detail, None))
+@to_chart('月跑量曲线', '', '{value}', 'line',
+    values_func = month_distance_detail,chart_props={'height':'400px'})
 def month_distance_detail(df:pd.DataFrame):
     data = month_distance_std(df)
     top_id_list = data = data['joy_run_id'].to_list()
@@ -182,8 +182,8 @@ def month_distance_detail(df:pd.DataFrame):
     
     return data
 
-@to_chart(('rank_bar', '跑量平稳', '跑步距离波动 = 距离标准差 / 平均距离', '{c} %'),
-    (name_value_pair_data, ('distance', lambda x : round(x * 100, 2))))
+@to_chart('跑量平稳', '跑步距离波动 = 距离标准差 / 平均距离', '{c} %',
+    value_func_params= ('distance', lambda x : round(x * 100, 2)))
 def distance_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data.groupby('joy_run_id').agg({'distance':['sum', 'std', 'mean']})
@@ -196,8 +196,8 @@ def distance_std(df:pd.DataFrame):
         
     return data
 
-@to_chart(('rank_bar', '配速平稳', '配速波动 = 配速标准差 / 平均配速', '{c} %'),
-    (name_value_pair_data, ('pace_secs', lambda x : round(x * 100, 2))))
+@to_chart('配速平稳', '配速波动 = 配速标准差 / 平均配速', '{c} %',
+    value_func_params= ('pace_secs', lambda x : round(x * 100, 2)))
 def pace_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data['pace_secs'] = data['pace'].dt.total_seconds()
@@ -249,8 +249,8 @@ def _pace_diff(row, start_year, end_year):
     return total_diff
 
 
-@to_chart(('rank_bar', '越跑越快的', '每年平均配速都有进步，年平均配速增长累计', '{c} 秒'),
-    (name_value_pair_data, ('pace_diff', lambda x : int(x))))
+@to_chart('越跑越快的', '每年平均配速都有进步，年平均配速增长累计', '{c} 秒',
+    value_func_params= ('pace_diff', lambda x : int(x)))
 def pace_progress(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'year', 'time', 'distance']]
@@ -265,8 +265,8 @@ def pace_progress(df:pd.DataFrame):
     
     return data
 
-@to_chart(('line', '月平均配速曲线', '', charts.to_ms_formatter),
-    (month_pace_detail, None))
+@to_chart('月平均配速曲线', '', charts.to_ms_formatter, 'line',
+    values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':180})
 def month_pace_detail(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'month', 'time', 'distance']]

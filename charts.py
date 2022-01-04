@@ -40,13 +40,17 @@ def draw_word_cloud_chart(chart_data : ChartData):
     return wc
 
 def draw_line_chart(chart_data : ChartData):
-    c = Line(init_opts=opts.InitOpts(bg_color='white', width='1080px', height='400px'))
+    h = chart_data.height if hasattr(chart_data, 'height') else '500px'
+    min_ = chart_data.y_min if hasattr(chart_data, 'y_min') else 0
+    print(min_)
+    c = Line(init_opts=opts.InitOpts(bg_color='white', width='1080px', height=h))
     c.set_global_opts(
         title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'),
         tooltip_opts=opts.TooltipOpts(is_show=False), #trigger="axis", 
         legend_opts = opts.LegendOpts(orient='vertical', pos_right='1px', pos_top="60px"),
         yaxis_opts=opts.AxisOpts(
             type_="value",
+            min_ = min_,
             axistick_opts=opts.AxisTickOpts(is_show=False),
             splitline_opts=opts.SplitLineOpts(is_show=True),
             axislabel_opts=opts.LabelOpts(formatter=chart_data.formatter),
