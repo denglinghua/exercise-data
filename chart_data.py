@@ -75,12 +75,33 @@ def month_distance_detail(df, params):
 def month_pace_detail(df, params):
     xvalues = []
     yvalues = []
+    missed_ys = []
     for g, data in df.groupby('joy_run_id'):
         xs = [m.strftime('%y-%m') for m in data['month'].to_list()]
         
         if (len(xs) > len(xvalues)):
             xvalues = xs
         
-        yvalues.append((user_id_to_name(g), [p.total_seconds() for p in data['avg_pace'].to_list()]))
+        name = user_id_to_name(g)
+        ys = {}
+        for index, row in data.iterrows():
+            ys[row['month'].strftime('%y-%m')] = row['avg_pace'].total_seconds()
+        missed_ys.append((name, ys))
+        #yvalues.append((user_id_to_name(g), [p.total_seconds() for p in data['avg_pace'].to_list()]))
+    
+    for my in missed_ys:
+        values = my[1]
+        # some month value missed
+        if len(values) != len(xvalues):
+            for xv in xvalues:
+                if xv not in values:
+                    values[xv] = None
+            
+    for my in missed_ys:
+        name = my[0]
+        values = []
+        for xv in xvalues:
+            values.append(my[1][xv])
+        yvalues.append((name, values))
     
     return (xvalues, yvalues)

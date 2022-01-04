@@ -42,7 +42,6 @@ def draw_word_cloud_chart(chart_data : ChartData):
 def draw_line_chart(chart_data : ChartData):
     h = chart_data.height if hasattr(chart_data, 'height') else '500px'
     min_ = chart_data.y_min if hasattr(chart_data, 'y_min') else 0
-    print(min_)
     c = Line(init_opts=opts.InitOpts(bg_color='white', width='1080px', height=h))
     c.set_global_opts(
         title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'),

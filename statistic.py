@@ -175,7 +175,7 @@ def month_distance_std(df:pd.DataFrame):
     values_func = month_distance_detail,chart_props={'height':'400px'})
 def month_distance_detail(df:pd.DataFrame):
     data = month_distance_std(df)
-    top_id_list = data = data['joy_run_id'].to_list()
+    top_id_list = data['joy_run_id'].to_list()
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
     data = data.query('joy_run_id == @top_id_list')
@@ -247,7 +247,6 @@ def _pace_diff(row, start_year, end_year):
             total_diff = total_diff + year_diff
     
     return total_diff
-
 
 @to_chart('越跑越快的', '每年平均配速都有进步，年平均配速增长累计', '{c} 秒',
     value_func_params= ('pace_diff', lambda x : int(x)))
