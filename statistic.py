@@ -56,7 +56,7 @@ def distance(df:pd.DataFrame):
     return data
 
 @to_chart('坚持得最好的', '没有哪一周不跑步的', '', 'word_cloud',
-    value_func_params= ('distance', lambda x : int(x)))
+    value_func_params= ('distance', lambda x : int(x)), chart_props={'height':'720px'})
 def every_week(df:pd.DataFrame):
     data = df[['joy_run_id', 'week_no', 'distance']]
     data = data.groupby("joy_run_id").agg({'week_no':'nunique','distance':'sum'})
@@ -278,19 +278,18 @@ def month_pace_detail(df:pd.DataFrame):
     
     return data
 
-@to_chart('晨跑达人', '7:00之前开始，字越大，次数越多', '', 'word_cloud',
-    value_func_params= ('time', None))
+@to_chart('晨跑达人', '7:00之前跑完，字越大，次数越多', '', 'word_cloud',
+    value_func_params= ('time', None), chart_props={'height':'600px'})
 def morning_run(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time', 'time']]
-    data['start_date'] = df['end_time'] - df['time']
-    data = data[data.start_date.dt.hour < 7]
+    data = data[data.end_time.dt.hour <= 7]
     data = data.groupby('joy_run_id').count()
     data = data.reset_index()
     data = __top_n(data, 'time', 50)
 
     return data
 
-@to_chart('夜跑达人', '21:00之后开始，字越大，次数越多', '', 'word_cloud',
+@to_chart('夜跑达人', '21:00之后开始跑，字越大，次数越多', '', 'word_cloud',
     value_func_params= ('time', None))
 def night_run(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time', 'time']]
