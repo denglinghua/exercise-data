@@ -284,11 +284,13 @@ def month_pace_detail(df:pd.DataFrame):
     
     return data
 
-@to_chart('晨跑达人', '7:00之前跑完，字越大，次数越多', '', 'word_cloud',
+@to_chart('晨跑达人', '6:30之前开始跑，字越大，次数越多', '', 'word_cloud',
     value_func_params= ('time', None), chart_props={'height':'600px'})
 def morning_run(df:pd.DataFrame):
+    the_time = pd.to_datetime(['06:30:00'])[0].time()
     data = df[['joy_run_id', 'end_time', 'time']]
-    data = data[data.end_time.dt.hour <= 7]
+    data['start_date'] = df['end_time'] - df['time']
+    data = data[data.start_date.dt.time <= the_time]
     data = data.groupby('joy_run_id').count()
     data = data.reset_index()
     data = __top_n(data, 'time', 50)
