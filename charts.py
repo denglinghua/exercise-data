@@ -21,7 +21,7 @@ def draw_rank_bar_chart(chart_data : ChartData):
                         yaxis_opts=opts.AxisOpts())
     )
 
-    grid = Grid()
+    grid = Grid(init_opts=opts.InitOpts(bg_color='white'))
     grid.add(c, grid_opts=opts.GridOpts(pos_left="15%"))
     
     return grid
@@ -59,7 +59,7 @@ def draw_line_chart(chart_data : ChartData):
     for y in chart_data.yvalues:
         c.add_yaxis(y[0], y[1], label_opts=opts.LabelOpts(is_show=False), is_symbol_show=False, is_smooth=True)
 
-    grid=Grid()
+    grid=Grid(init_opts=opts.InitOpts(bg_color='white'))
     grid.add(c,grid_opts=opts.GridOpts(pos_right="14%"))
     
     return grid
