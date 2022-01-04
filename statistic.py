@@ -156,9 +156,7 @@ def __month_distance_sum(df:pd.DataFrame):
 
     return data
     
-@to_chart('月跑量平稳', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %',
-    value_func_params= ('distance', lambda x : round(x * 100, 2)))
-def month_distance_std(df:pd.DataFrame):
+def __month_distance_std(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
     data = data.groupby('joy_run_id').agg({'month':'count','distance':['std', 'mean']})
@@ -171,10 +169,15 @@ def month_distance_std(df:pd.DataFrame):
 
     return data
 
+@to_chart('月跑量平稳', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %',
+    value_func_params= ('distance', lambda x : round(x * 100, 2)))
+def month_distance_std(df:pd.DataFrame):
+    return __month_distance_std(df)
+
 @to_chart('月跑量曲线', '', '{value}', 'line',
     values_func = month_distance_detail,chart_props={'height':'400px'})
 def month_distance_detail(df:pd.DataFrame):
-    data = month_distance_std(df)
+    data = __month_distance_std(df)
     top_id_list = data['joy_run_id'].to_list()
     data = __regular_pace_run(df)
     data = __month_distance_sum(data)
@@ -248,9 +251,7 @@ def _pace_diff(row, start_year, end_year):
     
     return total_diff
 
-@to_chart('越跑越快的', '每年平均配速都有进步，年平均配速增长累计', '{c} 秒',
-    value_func_params= ('pace_diff', lambda x : int(x)))
-def pace_progress(df:pd.DataFrame):
+def __pace_progress(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'year', 'time', 'distance']]
     start = data['year'].min()
@@ -264,6 +265,11 @@ def pace_progress(df:pd.DataFrame):
     
     return data
 
+@to_chart('越跑越快的', '每年平均配速都有进步，年平均配速增长累计', '{c} 秒',
+    value_func_params= ('pace_diff', lambda x : int(x)))
+def pace_progress(df:pd.DataFrame):
+    return __pace_progress(df)
+
 @to_chart('月平均配速曲线', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':180})
 def month_pace_detail(df:pd.DataFrame):
@@ -273,7 +279,7 @@ def month_pace_detail(df:pd.DataFrame):
     data = data.reset_index() 
     data['avg_pace'] = data.apply(__avg_pace, axis=1)
 
-    top_id_list = pace_progress(df)['joy_run_id'].to_list()
+    top_id_list = __pace_progress(df)['joy_run_id'].to_list()
     data = data.query('joy_run_id == @top_id_list')
     
     return data
