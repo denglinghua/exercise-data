@@ -47,7 +47,7 @@ def draw_line_chart(chart_data : ChartData):
     c.set_global_opts(
         title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'),
         tooltip_opts=opts.TooltipOpts(is_show=False), #trigger="axis", 
-        legend_opts = opts.LegendOpts(orient='vertical', pos_right='1px', pos_top="60px"),
+        legend_opts = opts.LegendOpts(orient='vertical', pos_right='1px', pos_top="50px"),
         yaxis_opts=opts.AxisOpts(
             type_="value",
             min_ = min_,
@@ -60,7 +60,10 @@ def draw_line_chart(chart_data : ChartData):
     for y in chart_data.yvalues:
         c.add_yaxis(y[0], y[1], label_opts=opts.LabelOpts(is_show=False), is_symbol_show=False, is_smooth=True)
 
-    return c
+    grid=Grid()
+    grid.add(c,grid_opts=opts.GridOpts(pos_right="14%"))
+    
+    return grid
 
 chart_drawers = {
     'rank_bar' : draw_rank_bar_chart,
