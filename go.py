@@ -47,9 +47,11 @@ st.distance_std(df)
 
 st.pace_std(df)
 
+st.month_pace_even_detail(df)
+
 st.pace_progress(df)
 
-st.month_pace_detail(df)
+st.month_pace_progress_detail(df)
 
 st.every_week(df)
 

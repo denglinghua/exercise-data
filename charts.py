@@ -76,6 +76,7 @@ def draw_charts():
     page = Page()
     page.page_title = 'Joyrun team run data stat'
     for chart_data in chart_data_list:
+        print('\n' + chart_data.title)
         print(chart_data.xvalues)
         print(chart_data.yvalues)
         draw_func = chart_drawers[chart_data.chart_type]
