@@ -58,7 +58,8 @@ def draw_line_chart(chart_data : ChartData):
         xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False))
     c.add_xaxis(xaxis_data=chart_data.xvalues)
     for y in chart_data.yvalues:
-        c.add_yaxis(y[0], y[1], label_opts=opts.LabelOpts(is_show=False), is_symbol_show=False, is_smooth=True)
+        c.add_yaxis(y[0], y[1], label_opts=opts.LabelOpts(is_show=False), is_symbol_show=False, is_smooth=True,
+            linestyle_opts=opts.LineStyleOpts(width=2))
 
     grid=Grid(init_opts=opts.InitOpts(bg_color='white'))
     grid.add(c,grid_opts=opts.GridOpts(pos_right="14%"))
