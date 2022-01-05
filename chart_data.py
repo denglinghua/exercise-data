@@ -39,6 +39,7 @@ def name_value_pair_data(df, params):
     yvalues = []
     for index, row in df.iterrows():
         xvalues.append(user_id_to_name(row['joy_run_id']))
+        # pyecharts doesn't support numpy int64, so call item()
         yvalue = value_func(row[value_column]) if value_func else row[value_column].item()
         yvalues.append(yvalue)
     
