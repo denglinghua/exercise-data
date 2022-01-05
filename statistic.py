@@ -219,7 +219,7 @@ def pace_std(df:pd.DataFrame):
     return __pace_std(df)
 
 @to_chart('月平均配速曲线', '', charts.to_ms_formatter, 'line',
-    values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':180})
+    values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':180, 'inverse':True})
 def month_pace_even_detail(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'month', 'time', 'distance']]
@@ -288,7 +288,7 @@ def pace_progress(df:pd.DataFrame):
     return __pace_progress(df)
 
 @to_chart('月平均配速提升曲线', '', charts.to_ms_formatter, 'line',
-    values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':180})
+    values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':180, 'inverse':True})
 def month_pace_progress_detail(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'month', 'time', 'distance']]
