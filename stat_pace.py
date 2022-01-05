@@ -152,6 +152,8 @@ def __pace_progress(df:pd.DataFrame):
     data = data[['joy_run_id', 'year', 'time', 'distance']]
     start = data['year'].min()
     end = data['year'].max()
+    #start = data.loc[0,'year'] # first line
+    #end = data.loc[len(data.index), 'year'] # last line
     data = data.groupby('joy_run_id').apply(_agg_pace_by_year, start, end)
     data = data.reset_index()
     data = data.query('distance > 1000')
