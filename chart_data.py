@@ -1,3 +1,4 @@
+import time
 from functools import wraps
 
 import pandas as pd
@@ -49,10 +50,13 @@ def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar
     ):
     def to_chart_decorator(func):
         @wraps(func)
-        def wrapped_function(*args, **kwargs):            
+        def wrapped_function(*args, **kwargs):   
+            tic = time.perf_counter()
             df = func(*args, **kwargs)
+            toc = time.perf_counter()
             func_name = func.__name__
             __print_df(df, func_name)
+            print(f"\nexec {func_name} time : {toc - tic:0.4f} seconds")
             create_chart_data(df, title, sub_title, formatter, chart_type, 
                 values_func, value_func_params, chart_props)
             return df
