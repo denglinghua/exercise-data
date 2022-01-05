@@ -45,7 +45,7 @@ st.month_distance_detail(df)
 
 st.distance_std(df)
 
-st.pace_std(df)
+st.month_pace_std(df)
 
 st.month_pace_even_detail(df)
 

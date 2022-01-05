@@ -199,35 +199,47 @@ def distance_std(df:pd.DataFrame):
         
     return data
 
-def __pace_std(df:pd.DataFrame):
-    data = __regular_pace_run(df)
-    data['pace_secs'] = data['pace'].dt.total_seconds()
-    # std ddof=0
-    data = data.groupby('joy_run_id').agg({'distance':'sum','pace_secs':['std', 'mean']})
-    data = data.reset_index()
-    data.columns = ['joy_run_id', 'distance', 'pace_std', 'pace_mean']
-    data = data.query('distance > 1000')
-    data['pace_secs'] = data.apply(lambda x : x['pace_std'] / x['pace_mean'], axis=1)
-    data = data.nsmallest(10, 'pace_secs', 'all')
-    data = data.sort_values('pace_secs', ascending=False)
-        
-    return data
-
-@to_chart('配速平稳', '配速波动 = 配速标准差 / 平均配速', '{c} %',
-    value_func_params= ('pace_secs', lambda x : round(x * 100, 2)))
-def pace_std(df:pd.DataFrame):
-    return __pace_std(df)
-
-@to_chart('月平均配速曲线', '', charts.to_ms_formatter, 'line',
-    values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':180, 'inverse':True})
-def month_pace_even_detail(df:pd.DataFrame):
+def __month_pace_sum(df:pd.DataFrame):
     data = __regular_pace_run(df)
     data = data[['joy_run_id', 'month', 'time', 'distance']]
     data = data.groupby(['joy_run_id', 'month']).agg({'time':'sum','distance':'sum'})
     data = data.reset_index() 
     data['avg_pace'] = data.apply(__avg_pace, axis=1)
 
-    top_id_list = __pace_std(df)['joy_run_id'].to_list()
+    filter_df = data[['joy_run_id', 'month']]
+    filter_df = filter_df.groupby('joy_run_id').agg({'month':'nunique'})
+    filter_df = filter_df.reset_index()
+    filter_df = filter_df.query('month >= 24') #24 months is data sample threshold
+    id_list = filter_df['joy_run_id'].to_list()
+
+    data = data.query('joy_run_id == @id_list')
+
+    return data
+
+def __month_pace_std(df:pd.DataFrame):
+    data = __month_pace_sum(df)
+    data['pace_secs'] = data['avg_pace'].dt.total_seconds()
+    data = data[['joy_run_id', 'pace_secs']]
+    # std ddof=0
+    data = data.groupby('joy_run_id').agg({'pace_secs':['std', 'mean']})
+    data = data.reset_index()
+    data.columns = ['joy_run_id', 'pace_std', 'pace_mean']
+    data['pace_secs'] = data.apply(lambda x : x['pace_std'] / x['pace_mean'], axis=1)
+    data = data.nsmallest(10, 'pace_secs', 'all')
+    data = data.sort_values('pace_secs', ascending=False)
+        
+    return data
+
+@to_chart('配速平稳', '配速波动 = 月均配速标准差 / 平均月配速', '{c} %',
+    value_func_params= ('pace_secs', lambda x : round(x * 100, 2)))
+def month_pace_std(df:pd.DataFrame):
+    return __month_pace_std(df)
+
+@to_chart('月平均配速曲线', '', charts.to_ms_formatter, 'line',
+    values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':180, 'inverse':False})
+def month_pace_even_detail(df:pd.DataFrame):
+    data = __month_pace_sum(df)
+    top_id_list = __month_pace_std(df)['joy_run_id'].to_list()
     data = data.query('joy_run_id == @top_id_list')
     
     return data
