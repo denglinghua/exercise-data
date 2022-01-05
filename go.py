@@ -1,7 +1,9 @@
 import sys
 
 import datasource
-import statistic as st
+import stat_distance as st_d
+import stat_pace as  st_p
+import stat_time as st_t
 import charts
 
 debug = False
@@ -23,43 +25,25 @@ datasource.init_user_id_name_map(df)
 #st.test(df)
 #sys.exit(0)
 
-st.marathon(df)
+st_d.marathon(df)
+st_d.half_marathon(df)
+st_d.distance(df)
+st_d.month_distance_std(df)
+st_d.month_distance_detail(df)
 
-st.half_marathon(df)
+st_p.pace(df)
+st_p.month_pace_std(df)
+st_p.month_pace_even_detail(df)
+st_p.pace_progress(df)
+st_p.month_pace_progress_detail(df)
+st_p.cadence(df)
+st_p.stride(df)
 
-st.distance(df)
-
-st.pace(df)
-
-st.time(df)
-
-st.days(df)
-
-st.cadence(df)
-
-st.stride(df)
-
-st.month_distance_std(df)
-
-st.month_distance_detail(df)
-
-st.distance_std(df)
-
-st.month_pace_std(df)
-
-st.month_pace_even_detail(df)
-
-st.pace_progress(df)
-
-st.month_pace_progress_detail(df)
-
-st.every_week(df)
-
-st.morning_run(df)
-
-st.night_run(df)
-
-#print(df.info())
+st_t.time(df)
+st_t.days(df)
+st_t.every_week(df)
+st_t.morning_run(df)
+st_t.night_run(df)
 
 charts.draw_charts()
 
