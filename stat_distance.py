@@ -4,7 +4,7 @@ import pandas as pd
 
 from chart_data import to_chart, month_distance_detail
 import charts
-from stat_utils import top_n
+from stat_utils import top_n, sort_data_by_id_list
 from stat_pace import regular_pace_run
 
 @to_chart('全程马拉松', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
@@ -62,7 +62,7 @@ def __month_distance_std(df:pd.DataFrame):
 def month_distance_std(df:pd.DataFrame):
     return __month_distance_std(df)
 
-@to_chart('月跑量曲线', '', '{value}', 'line',
+@to_chart('月跑量平稳曲线', '', '{value}', 'line',
     values_func = month_distance_detail,chart_props={'height':'400px'})
 def month_distance_detail(df:pd.DataFrame):
     data = __month_distance_std(df)
@@ -70,6 +70,7 @@ def month_distance_detail(df:pd.DataFrame):
     data = regular_pace_run(df)
     data = __month_distance_sum(data)
     data = data.query('joy_run_id == @top_id_list')
+    data = sort_data_by_id_list(data, top_id_list)
     
     return data
 

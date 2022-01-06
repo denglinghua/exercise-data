@@ -6,7 +6,7 @@ import pandas as pd
 
 from chart_data import to_chart, month_pace_detail
 import charts
-from stat_utils import top_n
+from stat_utils import top_n, sort_data_by_id_list
 
 def regular_pace_run(df:pd.DataFrame):
     slowest_pace = timedelta(minutes=10)
@@ -102,12 +102,13 @@ def __month_pace_std(df:pd.DataFrame):
 def month_pace_std(df:pd.DataFrame):
     return __month_pace_std(df)
 
-@to_chart('月平均配速曲线', '', charts.to_ms_formatter, 'line',
+@to_chart('月平均配速平稳曲线', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':180, 'inverse':False})
 def month_pace_even_detail(df:pd.DataFrame):
     data = __month_pace_sum(df)
     top_id_list = __month_pace_std(df)['joy_run_id'].to_list()
     data = data.query('joy_run_id == @top_id_list')
+    data = sort_data_by_id_list(data, top_id_list)
     
     return data
 
@@ -179,5 +180,6 @@ def month_pace_progress_detail(df:pd.DataFrame):
 
     top_id_list = __pace_progress(df)['joy_run_id'].to_list()
     data = data.query('joy_run_id == @top_id_list')
+    data = sort_data_by_id_list(data, top_id_list)
     
     return data
