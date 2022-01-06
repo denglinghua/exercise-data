@@ -99,7 +99,7 @@ def month_pace_detail(df, params):
         name = user_id_to_name(g)
         ys = {}
         for index, row in data.iterrows():
-            ys[row['month'].strftime('%y-%m')] = row['avg_pace'].total_seconds()
+            ys[row['month'].strftime('%y-%m')] = row['avg_pace']
         missed_ys.append((name, ys))
         #yvalues.append((user_id_to_name(g), [p.total_seconds() for p in data['avg_pace'].to_list()]))
     

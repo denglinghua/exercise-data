@@ -6,7 +6,7 @@ import pandas as pd
 
 from chart_data import to_chart, month_pace_detail
 import charts
-from stat_utils import top_n, sort_data_by_id_list
+from stat_utils import print_df, top_n, sort_data_by_id_list
 
 def regular_pace_run(df:pd.DataFrame):
     slowest_pace = timedelta(minutes=10)
@@ -17,12 +17,16 @@ def regular_pace_run(df:pd.DataFrame):
 def __avg_pace(row):
     total_time_secs = row['time'].total_seconds()
     total_distance = row['distance']
-    avg_pace = timedelta(seconds = int(total_time_secs / total_distance))
+    avg_pace = int(total_time_secs / total_distance)
 
     return avg_pace
 
+def _agg_group_pace(df:pd.DataFrame):
+    pace = int(df['time'].sum().total_seconds() / df['distance'].sum())
+    return pd.Series([pace], index=['avg_pace'])
+
 @to_chart('跑得快的', '平均配速 = 总时间 / 总距离，不包含越野', charts.to_ms_formatter,
-    value_func_params= ('avg_pace', lambda x : x.total_seconds()))
+    value_func_params= ('avg_pace', None))
 def pace(df:pd.DataFrame):
     data = regular_pace_run(df)
     data = data[['joy_run_id', 'time', 'distance']]
@@ -85,20 +89,18 @@ def __month_pace_sum(df:pd.DataFrame):
 
 def __month_pace_std(df:pd.DataFrame):
     data = __month_pace_sum(df)
-    data['pace_secs'] = data['avg_pace'].dt.total_seconds()
-    data = data[['joy_run_id', 'pace_secs']]
     # std ddof=0
-    data = data.groupby('joy_run_id').agg({'pace_secs':['std', 'mean']})
+    data = data.groupby('joy_run_id').agg({'avg_pace':['std', 'mean']})
     data = data.reset_index()
     data.columns = ['joy_run_id', 'pace_std', 'pace_mean']
-    data['pace_secs'] = data.apply(lambda x : x['pace_std'] / x['pace_mean'], axis=1)
-    data = data.nsmallest(10, 'pace_secs', 'all')
-    data = data.sort_values('pace_secs', ascending=False)
+    data['avg_pace'] = data.apply(lambda x : x['pace_std'] / x['pace_mean'], axis=1)
+    data = data.nsmallest(10, 'avg_pace', 'all')
+    data = data.sort_values('avg_pace', ascending=False)
         
     return data
 
 @to_chart('平稳跑者——配速', '配速波动 = 月均配速标准差 / 平均月配速', '{c} %',
-    value_func_params= ('pace_secs', lambda x : round(x * 100, 2)))
+    value_func_params= ('avg_pace', lambda x : round(x * 100, 2)))
 def month_pace_std(df:pd.DataFrame):
     return __month_pace_std(df)
 
@@ -120,14 +122,10 @@ def _agg_pace_by_year(df:pd.DataFrame, start_year, end_year):
         if data.empty:
             paces.append(0)
         else:
-            pace = int(data['time'].sum().total_seconds() / data['distance'].sum())
-            paces.append(pace)
+            paces.append(data.iloc[0, 2])
     
     values = paces
-    values.append(df['distance'].sum())
-    
     cols = years
-    cols.append('distance')
     
     return pd.Series(values, index=cols)
 
@@ -148,16 +146,26 @@ def _pace_diff(row, start_year, end_year):
     
     return total_diff
 
+def __distance_id_list(df:pd.DataFrame):
+    data = df[['joy_run_id', 'distance']]
+    data = data.groupby('joy_run_id').agg({'distance':'sum'})
+    data = data.reset_index()
+    data = data.query('distance > 1000')
+    
+    return data['joy_run_id'].to_list()
+
 def __pace_progress(df:pd.DataFrame):
     data = regular_pace_run(df)
-    data = data[['joy_run_id', 'year', 'time', 'distance']]
+    dis_id_list = __distance_id_list(data)
+    data = data[['joy_run_id', 'year', 'time', 'distance']].query('joy_run_id==@dis_id_list')
     start = data['year'].min()
     end = data['year'].max()
     #start = data.loc[0,'year'] # first line
     #end = data.loc[len(data.index), 'year'] # last line
+    data = data.groupby(['joy_run_id', 'year']).apply(_agg_group_pace)
+    data = data.reset_index()
     data = data.groupby('joy_run_id').apply(_agg_pace_by_year, start, end)
     data = data.reset_index()
-    data = data.query('distance > 1000')
     data['pace_diff'] = data.apply(_pace_diff, axis = 1, args = (start, end))
     data = data.query('pace_diff > 0')
     data = top_n(data, 'pace_diff', 10)
@@ -175,6 +183,7 @@ def month_pace_progress_detail(df:pd.DataFrame):
     data = regular_pace_run(df)
     data = data[['joy_run_id', 'month', 'time', 'distance']]
     data = data.groupby(['joy_run_id', 'month']).agg({'time':'sum','distance':'sum'})
+    #data = data.groupby(['joy_run_id', 'month']).apply(_agg_group_pace)
     data = data.reset_index() 
     data['avg_pace'] = data.apply(__avg_pace, axis=1)
 
