@@ -32,6 +32,15 @@ def create_chart_data(df : pd.DataFrame, title, sub_title, formatter, chart_type
     chart_data = ChartData(title, sub_title, formatter, chart_type, chart_props, values[0], values[1])
     chart_data_list.append(chart_data)
 
+def __item_value(x):
+    val = None
+    if type(x) in (int, float):
+        val = x
+    else:
+        # pyecharts doesn't support numpy.xxx, so call item()
+        val = x.item()
+    return val
+
 def name_value_pair_data(df, params):
     value_column = params[0]
     value_func = params[1]
@@ -39,8 +48,8 @@ def name_value_pair_data(df, params):
     yvalues = []
     for index, row in df.iterrows():
         xvalues.append(user_id_to_name(row['joy_run_id']))
-        # pyecharts doesn't support numpy int64, so call item()
-        yvalue = value_func(row[value_column]) if value_func else row[value_column].item()
+        
+        yvalue = value_func(row[value_column]) if value_func else __item_value(row[value_column])
         yvalues.append(yvalue)
     
     return (xvalues, yvalues)
