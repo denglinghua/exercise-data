@@ -7,7 +7,7 @@ import charts
 from stat_utils import top_n, sort_data_by_id_list
 from stat_pace import regular_pace_run
 
-@to_chart('全程马拉松', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
+@to_chart('42KM达人', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
     value_func_params= ('distance', None))
 def marathon(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']].query('distance > 42')
@@ -17,7 +17,7 @@ def marathon(df:pd.DataFrame):
 
     return data
 
-@to_chart('半马王子', '>21公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
+@to_chart('抬腿就是半马', '>21公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
     value_func_params= ('distance', None))
 def half_marathon(df:pd.DataFrame):
     data = df[['joy_run_id', 'distance']].query('distance > 21')
@@ -57,12 +57,12 @@ def __month_distance_std(df:pd.DataFrame):
 
     return data
 
-@to_chart('月跑量平稳', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %',
+@to_chart('平稳跑者——跑量', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %',
     value_func_params= ('distance', lambda x : round(x * 100, 2)))
 def month_distance_std(df:pd.DataFrame):
     return __month_distance_std(df)
 
-@to_chart('月跑量平稳曲线', '', '{value}', 'line',
+@to_chart('平稳跑者——跑量', '', '{value}', 'line',
     values_func = month_distance_detail,chart_props={'height':'400px'})
 def month_distance_detail(df:pd.DataFrame):
     data = __month_distance_std(df)
@@ -74,7 +74,7 @@ def month_distance_detail(df:pd.DataFrame):
     
     return data
 
-@to_chart('跑量平稳', '跑步距离波动 = 距离标准差 / 平均距离', '{c} %',
+@to_chart('每次跑量平稳', '跑步距离波动 = 距离标准差 / 平均距离', '{c} %',
     value_func_params= ('distance', lambda x : round(x * 100, 2)))
 def distance_std(df:pd.DataFrame):
     data = regular_pace_run(df)

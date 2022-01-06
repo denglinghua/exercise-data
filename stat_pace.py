@@ -97,12 +97,12 @@ def __month_pace_std(df:pd.DataFrame):
         
     return data
 
-@to_chart('配速平稳', '配速波动 = 月均配速标准差 / 平均月配速', '{c} %',
+@to_chart('平稳跑者——配速', '配速波动 = 月均配速标准差 / 平均月配速', '{c} %',
     value_func_params= ('pace_secs', lambda x : round(x * 100, 2)))
 def month_pace_std(df:pd.DataFrame):
     return __month_pace_std(df)
 
-@to_chart('月平均配速平稳曲线', '', charts.to_ms_formatter, 'line',
+@to_chart('平稳跑者——配速', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':180, 'inverse':False})
 def month_pace_even_detail(df:pd.DataFrame):
     data = __month_pace_sum(df)
@@ -169,7 +169,7 @@ def __pace_progress(df:pd.DataFrame):
 def pace_progress(df:pd.DataFrame):
     return __pace_progress(df)
 
-@to_chart('月平均配速提升曲线', '', charts.to_ms_formatter, 'line',
+@to_chart('越跑越快的', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':180, 'inverse':True})
 def month_pace_progress_detail(df:pd.DataFrame):
     data = regular_pace_run(df)

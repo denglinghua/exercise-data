@@ -16,7 +16,7 @@ def every_week(df:pd.DataFrame):
         
     return data
 
-@to_chart('勤奋跑者 - 频率高', '有跑过步的天数', '{c} 天',
+@to_chart('勤奋跑者——频率高', '有跑过步的天数', '{c} 天',
     value_func_params= ('days', lambda x : int(x)))
 def days(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time']]
@@ -28,7 +28,7 @@ def days(df:pd.DataFrame):
 
     return data
 
-@to_chart('勤奋跑者 - 时间长', '3年累计跑步时长', charts.to_hms_formatter,
+@to_chart('勤奋跑者——时间长', '3年累计跑步时长', charts.to_hms_formatter,
     value_func_params= ('time', lambda x : x.total_seconds()))
 def time(df:pd.DataFrame):
     data = df[['joy_run_id', 'time']]
@@ -58,7 +58,7 @@ def morning_run(df:pd.DataFrame):
 
     return data
 
-@to_chart('夜跑达人', '21:00之后开始跑，字越大，次数越多', '', 'word_cloud',
+@to_chart('暗夜行者', '21:00之后开始跑，字越大，次数越多', '', 'word_cloud',
     value_func_params= ('time', None))
 def night_run(df:pd.DataFrame):
     data = df[['joy_run_id', 'end_time', 'time']]
