@@ -130,6 +130,7 @@ dmypy.json
 
 .DS_Store
 *.pkl
+*.log
 
 # output
 chart_html/
