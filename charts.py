@@ -11,7 +11,7 @@ def draw_rank_bar_chart(chart_data : ChartData):
     ytitle = ''
     height = len(chart_data.yvalues) * 20
     height = height if height > 480 else 480
-    c = (Bar(init_opts=opts.InitOpts(bg_color='white', width='640px', height='%spx' % height))
+    c = (Bar(init_opts=opts.InitOpts(bg_color='white'))
         .add_xaxis(chart_data.xvalues)
         .add_yaxis(ytitle, chart_data.yvalues)
         .reversal_axis()
@@ -21,7 +21,7 @@ def draw_rank_bar_chart(chart_data : ChartData):
                         yaxis_opts=opts.AxisOpts())
     )
 
-    grid = Grid(init_opts=opts.InitOpts(bg_color='white'))
+    grid = Grid(init_opts=opts.InitOpts(bg_color='white', width='800px', height='%spx' % height))
     grid.add(c, grid_opts=opts.GridOpts(pos_left="15%"))
     
     return grid
@@ -44,7 +44,7 @@ def draw_line_chart(chart_data : ChartData):
     h = chart_data.height if hasattr(chart_data, 'height') else '500px'
     min_ = chart_data.y_min if hasattr(chart_data, 'y_min') else 0
     inverse = chart_data.inverse if hasattr(chart_data, 'inverse') else False
-    c = Line(init_opts=opts.InitOpts(bg_color='white', width='1080px', height=h))
+    c = Line(init_opts=opts.InitOpts(bg_color='white'))
     c.set_global_opts(
         title_opts=opts.TitleOpts(title=chart_data.title, subtitle=chart_data.sub_title, pos_left='center'),
         tooltip_opts=opts.TooltipOpts(is_show=False), #trigger="axis", 
@@ -63,7 +63,7 @@ def draw_line_chart(chart_data : ChartData):
         c.add_yaxis(y[0], y[1], label_opts=opts.LabelOpts(is_show=False), is_symbol_show=False, is_smooth=True,
             linestyle_opts=opts.LineStyleOpts(width=2))
 
-    grid=Grid(init_opts=opts.InitOpts(bg_color='white'))
+    grid=Grid(init_opts=opts.InitOpts(bg_color='white', height=h))
     grid.add(c,grid_opts=opts.GridOpts(pos_right="14%"))
     
     return grid
