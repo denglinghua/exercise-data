@@ -39,12 +39,12 @@ def __to_pace_time(str):
 
 def __col_converts():
     ct = {
-    'joy_run_id': lambda a : int(a),
+    'id': lambda a : int(a),
     'end_time': __to_date_time,
     'time': __to_time_delta,
     'pace': __to_pace_time,
     'cadence': __to_int,
-    'stride_len': __to_float
+    'stride': __to_float
     }
 
     return ct
@@ -71,8 +71,8 @@ def load_data(data_dir, debug = False):
     if data_dir.endswith('.pkl'):
         return pd.read_pickle(data_dir)
 
-    cols = ['end_time', 'status', 'joy_run_id', 'name', 'gender', 'distance', 'time', 'run_type',
-                'pace', 'cadence', 'stride_len']
+    cols = ['end_time', 'status', 'id', 'name', 'gender', 'distance', 'time', 'run_type',
+                'pace', 'cadence', 'stride']
     df = pd.DataFrame(columns=cols)
 
     data_files = glob.glob(os.path.join(data_dir, '*.xlsx'))
@@ -100,14 +100,14 @@ def load_data(data_dir, debug = False):
 __id_name = {}
 
 def init_user_id_name_map(df:pd.DataFrame):
-    data = df.groupby(['joy_run_id', 'name']).count()
+    data = df.groupby(['id', 'name']).count()
     data = data.reset_index()
-    data = data[['joy_run_id', 'name']]
+    data = data[['id', 'name']]
 
     global __id_name 
 
     for index, row in data.iterrows():
-        __id_name[row['joy_run_id']] = row['name']
+        __id_name[row['id']] = row['name']
 
 def user_id_to_name(id):
     global __id_name

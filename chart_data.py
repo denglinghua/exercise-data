@@ -47,7 +47,7 @@ def name_value_pair_data(df, params):
     xvalues = []
     yvalues = []
     for index, row in df.iterrows():
-        xvalues.append(user_id_to_name(row['joy_run_id']))
+        xvalues.append(user_id_to_name(row['id']))
         
         yvalue = value_func(row[value_column]) if value_func else __item_value(row[value_column])
         yvalues.append(yvalue)
@@ -76,7 +76,7 @@ def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar
 def month_distance_detail(df, params):
     xvalues = []
     yvalues = []
-    for g, data in df.groupby('joy_run_id'):
+    for g, data in df.groupby('id'):
         xs = [m.strftime('%y-%m') for m in data['month'].to_list()]
         
         if (len(xs) > len(xvalues)):
@@ -90,7 +90,7 @@ def month_pace_detail(df, params):
     xvalues = []
     yvalues = []
     missed_ys = []
-    for g, data in df.groupby('joy_run_id'):
+    for g, data in df.groupby('id'):
         xs = [m.strftime('%y-%m') for m in data['month'].to_list()]
         
         if (len(xs) > len(xvalues)):
