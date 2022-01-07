@@ -118,12 +118,10 @@ def _agg_pace_by_year(df:pd.DataFrame, start_year, end_year):
     years = list(range(start_year, end_year + 1))
     paces = []
     data = df[['year', 'time', 'distance']]
-    data['time'] = data['time'].dt.total_seconds()
     data = data.groupby('year').agg(['sum'])
-    data.reset_index()
     if len(years) == len(data.index):
         for y in years:
-            paces.append(int(data.loc[y, 'time'] / data.loc[y, 'distance']))
+            paces.append(int(data.loc[y, 'time'][0].total_seconds() / data.loc[y, 'distance'][0]))
     else:
         # once one year data missed, the row will be dropped
         paces = map(lambda x : 0, years)
