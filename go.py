@@ -1,10 +1,18 @@
 import sys
 
+import pandas as pd
+import pyecharts
+
 import datasource
 import stat_distance as st_d
 import stat_pace as  st_p
 import stat_time as st_t
 import charts
+
+print('\nstart...')
+print('python version :' + sys.version)
+print('pandas version :' + pd.__version__)
+print('pyecharts version :' + pyecharts.__version__)
 
 debug = False
 
