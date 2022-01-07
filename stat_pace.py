@@ -1,6 +1,7 @@
 # encoding:utf-8
 
 from datetime import timedelta
+import time
 
 import pandas as pd
 
@@ -20,10 +21,6 @@ def __avg_pace(row):
     avg_pace = int(total_time_secs / total_distance)
 
     return avg_pace
-
-def _agg_group_pace(df:pd.DataFrame):
-    pace = int(df['time'].sum().total_seconds() / df['distance'].sum())
-    return pd.Series([pace], index=['avg_pace'])
 
 @to_chart('跑得快的', '平均配速 = 总时间 / 总距离，不包含越野', charts.to_ms_formatter,
     value_func_params= ('avg_pace', None))
@@ -120,12 +117,16 @@ def month_pace_even_detail(df:pd.DataFrame):
 def _agg_pace_by_year(df:pd.DataFrame, start_year, end_year):
     years = list(range(start_year, end_year + 1))
     paces = []
-    for y in years:
-        data = df.query('year == @y')
-        if data.empty:
-            paces.append(0)
-        else:
-            paces.append(data.iloc[0, 2])
+    data = df[['year', 'time', 'distance']]
+    data['time'] = data['time'].dt.total_seconds()
+    data = data.groupby('year').agg(['sum'])
+    data.reset_index()
+    if len(years) == len(data.index):
+        for y in years:
+            paces.append(int(data.loc[y, 'time'] / data.loc[y, 'distance']))
+    else:
+        # once one year data missed, the row will be dropped
+        paces = map(lambda x : 0, years)
     
     values = paces
     cols = years
@@ -165,8 +166,6 @@ def __pace_progress(df:pd.DataFrame):
     end = data['year'].max()
     #start = data.loc[0,'year'] # first line
     #end = data.loc[len(data.index), 'year'] # last line
-    data = data.groupby(['id', 'year']).apply(_agg_group_pace)
-    data = data.reset_index()
     data = data.groupby('id').apply(_agg_pace_by_year, start, end)
     data = data.reset_index()
     data['pace_diff'] = data.apply(_pace_diff, axis = 1, args = (start, end))
