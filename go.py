@@ -17,13 +17,11 @@ print('debug :' + str(debug))
 
 df = datasource.load_data(data_dir, debug)
 #df.to_pickle('data.pkl')
+#sys.exit(0)
 print(df.info())
 print(df.describe())
 
 datasource.init_user_id_name_map(df)
-
-#st.test(df)
-#sys.exit(0)
 
 st_d.marathon(df)
 st_d.half_marathon(df)
