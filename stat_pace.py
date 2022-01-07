@@ -77,19 +77,21 @@ def __month_pace_sum(df:pd.DataFrame):
     data = data.reset_index() 
     data['avg_pace'] = data.apply(__avg_pace, axis=1)
 
-    filter_df = data[['id', 'month']]
+    return data
+
+def __filter_month_pace_sum(sum_data:pd.DataFrame):
+    filter_df = sum_data[['id', 'month']]
     filter_df = filter_df.groupby('id').agg({'month':'nunique'})
     filter_df = filter_df.reset_index()
     filter_df = filter_df.query('month >= 24') #24 months is data sample threshold
     id_list = filter_df['id'].to_list()
 
-    data = data.query('id == @id_list')
+    data = sum_data.query('id == @id_list')
 
     return data
 
-def __month_pace_std(df:pd.DataFrame):
-    data = __month_pace_sum(df)
-    # std ddof=0
+def __month_pace_std(sum_df:pd.DataFrame):
+    data = __filter_month_pace_sum(sum_df)
     data = data.groupby('id').agg({'avg_pace':['std', 'mean']})
     data = data.reset_index()
     data.columns = ['id', 'pace_std', 'pace_mean']
@@ -101,14 +103,15 @@ def __month_pace_std(df:pd.DataFrame):
 
 @to_chart('平稳跑者——配速', '配速波动 = 月均配速标准差 / 平均月配速', '{c} %',
     value_func_params= ('avg_pace', lambda x : round(x * 100, 2)))
-def month_pace_std(df:pd.DataFrame):
-    return __month_pace_std(df)
+def month_pace_std(df:pd.DataFrame):  
+    data = __month_pace_sum(df)
+    return __month_pace_std(data)
 
 @to_chart('平稳跑者——配速', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':240, 'inverse':False})
 def month_pace_even_detail(df:pd.DataFrame):
     data = __month_pace_sum(df)
-    top_id_list = __month_pace_std(df)['id'].to_list()
+    top_id_list = __month_pace_std(data)['id'].to_list()
     data = data.query('id == @top_id_list')
     data = sort_data_by_id_list(data, top_id_list)
     
@@ -180,12 +183,7 @@ def pace_progress(df:pd.DataFrame):
 @to_chart('越跑越快的', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':240, 'inverse':True})
 def month_pace_progress_detail(df:pd.DataFrame):
-    data = regular_pace_run(df)
-    data = data[['id', 'month', 'time', 'distance']]
-    data = data.groupby(['id', 'month']).agg({'time':'sum','distance':'sum'})
-    #data = data.groupby(['id', 'month']).apply(_agg_group_pace)
-    data = data.reset_index() 
-    data['avg_pace'] = data.apply(__avg_pace, axis=1)
+    data = __month_pace_sum(df)
 
     top_id_list = __pace_progress(df)['id'].to_list()
     data = data.query('id == @top_id_list')
