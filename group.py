@@ -49,6 +49,7 @@ class GroupSet(object):
         self.title = title
         self.xtitle = None
         self.ytitle = None
+        self.chart_type = 'bar'
         self.group_by_column = group_by_column
         self.group_by = group_by.set_group_set(self)
         self.groups = group_by.groups
@@ -65,6 +66,10 @@ class GroupSet(object):
     
     def set_ytitle(self, title):
         self.ytitle = title
+        return self
+    
+    def set_chart_type(self, chart_type):
+        self.chart_type = chart_type
         return self
 
     def get_axis_values(self, drop_zero = True):
