@@ -67,11 +67,11 @@ class GroupSet(object):
         self.ytitle = title
         return self
 
-    def get_axis_values(self):
+    def get_axis_values(self, drop_zero = True):
         xlist = []
         ylist = []
         for group in self.groups:
-            if (group.agg_value > 0):
+            if not drop_zero or group.agg_value > 0:
                 xlist.append(group.label)
                 ylist.append(group.agg_value)
         
