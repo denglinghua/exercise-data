@@ -25,7 +25,7 @@ def do_group(data_rows, group_sets):
     
     for group_set in group_sets:
         for group in group_set.groups:
-            group.value = group_set.agg_func(group_set, group)
+            group.agg_value = group_set.agg_func(group_set, group)
 
 def print_group_sets(group_sets):
     for group_set in group_sets:
@@ -36,13 +36,13 @@ class Group(object):
     def __init__(self, label):
         self.label = label
         self.data_rows = []
-        self.value = 0
+        self.agg_value = 0
     
     def __repr__(self):
         return str(self)
 
     def __str__(self):
-        return '{%s : %s}' % (self.label, self.value)
+        return '{%s : %s}' % (self.label, self.agg_value)
 
 class GroupSet(object):
     def __init__(self, title, group_by_column, group_by, agg_func, filter_func = None):
@@ -71,16 +71,16 @@ class GroupSet(object):
         xlist = []
         ylist = []
         for group in self.groups:
-            if (group.value > 0):
+            if (group.agg_value > 0):
                 xlist.append(group.label)
-                ylist.append(group.value)
+                ylist.append(group.agg_value)
         
         return [xlist, ylist]
     
     # for data correctness check
     def check_data(self, context):      
         if self.check_data_func:
-            total = sum(map(lambda g : g.value, self.groups))
+            total = sum(map(lambda g : g.agg_value, self.groups))
             if (self.check_data_func(context, total)):
                 print('O check OK %s' % self.title)
             else:

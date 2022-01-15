@@ -23,10 +23,10 @@ draw_test_chart("Percent charts", group_sets)
 check_context = {}
 check_context["data_rows_count"] = len(rows)
 sum_group_set = group_sets[0]
-check_context["activity_times"] = sum(map(lambda r : r.value, sum_group_set.groups))
-check_context["run_times"] = sum_group_set.groups[0].value
-check_context["swim_times"] = sum_group_set.groups[1].value
-check_context["cycle_times"] = sum_group_set.groups[2].value
+check_context["activity_times"] = sum(map(lambda r : r.agg_value, sum_group_set.groups))
+check_context["run_times"] = sum_group_set.groups[0].agg_value
+check_context["swim_times"] = sum_group_set.groups[1].agg_value
+check_context["cycle_times"] = sum_group_set.groups[2].agg_value
 
 for group_set in group_sets:
     group_set.check_data(check_context)
