@@ -48,11 +48,11 @@ def draw_calendar_chart(group_set):
                 max_=600,
                 min_=0,
                 pieces = [
-                    {"min": 240, "color":'#99F85A'}, 
-                    {"min": 181, "max": 240, "color":'#3AC10C'},
-                    {"min": 121, "max": 180, "color":'#30A109'},
-                    {"min": 61, "max": 120, "color": '#207005'},
-                    {"min": 1, "max": 60, "color": '#154C03'},
+                    {"min": 240, "color":'#900C3F'}, 
+                    {"min": 181, "max": 240, "color":'#C70039'},
+                    {"min": 121, "max": 180, "color":'#FF5733'},
+                    {"min": 61, "max": 120, "color": '#FFC300'},
+                    {"min": 1, "max": 60, "color": '#DAF7A6'},
                     {"value" : 0, "label":'REST', "color":'#7B7D7A'}
                 ],
                 orient="horizontal",
