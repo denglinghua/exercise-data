@@ -3,8 +3,9 @@
 import pandas as pd
 
 from chart_data import to_chart, calendar_data
+from datasource import user_id_to_name
 
-@to_chart('跑步日历', '', '{c} 次', chart_type='calendar', values_func=calendar_data,
+@to_chart('的跑步日历', '', '{c}', chart_type='calendar', values_func=calendar_data,
     value_func_params= ('end_date', 'distance', None))
 def calendar_distance(df:pd.DataFrame, id):
     data = df.query('id==@id')
@@ -14,5 +15,11 @@ def calendar_distance(df:pd.DataFrame, id):
     data = data.reset_index()
     data = data.sort_values('end_date')
 
-    return data
+    props = {
+        'runner' : user_id_to_name(id),
+        'begin' : df['year'].min(),
+        'end' : df['year'].max()
+    }
+
+    return (data, props)
 

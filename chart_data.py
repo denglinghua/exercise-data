@@ -62,7 +62,13 @@ def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar
         @wraps(func)
         def wrapped_function(*args, **kwargs):   
             tic = time.perf_counter()
-            df = func(*args, **kwargs)
+            data = func(*args, **kwargs)
+            df = None
+            if isinstance(data, tuple):
+                df = data[0]
+                chart_props.update(data[1])
+            else:
+                df = data
             toc = time.perf_counter()
             func_name = func.__name__
             __print_df(df, func_name)
@@ -127,7 +133,7 @@ def calendar_data(df, params):
     xvalues = []
     yvalues = []
     for index, row in df.iterrows():
-        xvalues.append(row[date_column].strftime( '%Y-%m-%d'))
+        xvalues.append(row[date_column].strftime('%Y-%m-%d'))
         
         yvalue = value_func(row[value_column]) if value_func else __item_value(row[value_column])
         yvalues.append(yvalue)

@@ -73,9 +73,11 @@ def draw_calendar_chart(chart_data : ChartData):
     for items in zip(chart_data.xvalues, chart_data.yvalues):
         data.append([items[0], items[1]])
     
+    chart_data.title = chart_data.runner + chart_data.title
+    
     cals = []
-    begin = 2019
-    end = 2021
+    begin = chart_data.begin
+    end = chart_data.end
     for year in range(begin, end + 1):
         title = ''
         show_v = False
