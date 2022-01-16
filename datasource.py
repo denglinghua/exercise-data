@@ -30,8 +30,9 @@ def __to_int(str):
         return 0
 
 def __to_time_min(str):
-    str = str.replace('.', ':')
     items = str.split(':')
+    if len(items) < 3 :
+        items.insert(0, 0)
     h = int(items[0])
     m = int(items[1])
     s = float(items[2])
