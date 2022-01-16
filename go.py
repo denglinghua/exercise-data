@@ -7,6 +7,7 @@ import datasource
 import stat_distance as st_d
 import stat_pace as  st_p
 import stat_time as st_t
+import stat_individual as st_i
 import charts
 
 print('\nstart...')
@@ -15,10 +16,14 @@ print('pandas version :' + pd.__version__)
 print('pyecharts version :' + pyecharts.__version__)
 
 debug = False
+id = 0
 
 data_dir = sys.argv[1]
-if len(sys.argv) > 2 :
-    debug = True if sys.argv[2] == 'debug' else False
+if (len(sys.argv) > 2):
+    id = int(sys.argv[2])
+
+if len(sys.argv) > 3 :
+    debug = True if sys.argv[3] == 'debug' else False
 
 print('data dir :' + data_dir)
 print('debug :' + str(debug))
@@ -50,6 +55,9 @@ st_t.days(df)
 st_t.every_week(df)
 st_t.morning_run(df)
 st_t.night_run(df)
+
+if (id > 0):
+    st_i.calendar_distance(df, id)
 
 charts.draw_charts()
 

@@ -119,3 +119,17 @@ def month_pace_detail(df, params):
         yvalues.append((name, values))
     
     return (xvalues, yvalues)
+
+def calendar_data(df, params):
+    date_column = params[0]
+    value_column = params[1]
+    value_func = params[2]
+    xvalues = []
+    yvalues = []
+    for index, row in df.iterrows():
+        xvalues.append(row[date_column].strftime( '%Y-%m-%d'))
+        
+        yvalue = value_func(row[value_column]) if value_func else __item_value(row[value_column])
+        yvalues.append(yvalue)
+    
+    return (xvalues, yvalues)

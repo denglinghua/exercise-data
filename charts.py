@@ -1,5 +1,5 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, WordCloud, Line, Grid, Page
+from pyecharts.charts import Bar, WordCloud, Line, Calendar, Grid, Page
 from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
 from pyecharts.types import Tooltip
@@ -68,10 +68,57 @@ def draw_line_chart(chart_data : ChartData):
     
     return grid
 
+def draw_calendar_chart(chart_data : ChartData):
+    data = []
+    for items in zip(chart_data.xvalues, chart_data.yvalues):
+        data.append([items[0], items[1]])
+    
+    cals = []
+    begin = 2019
+    end = 2021
+    for year in range(begin, end + 1):
+        title = ''
+        show_v = False
+        if (year == begin):
+            title = chart_data.title
+        if (year == end):
+            show_v = True
+        h = '250px' if show_v else '200px'
+
+        c = (Calendar(init_opts=opts.InitOpts(height=h))
+            .add("", data, calendar_opts=opts.CalendarOpts(
+                range_=str(year),
+                daylabel_opts=opts.CalendarDayLabelOpts(name_map='cn'),
+                monthlabel_opts=opts.CalendarMonthLabelOpts(name_map='cn')))
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title, pos_left='center'),
+                visualmap_opts=opts.VisualMapOpts(
+                    is_show= show_v,
+                    max_=200,
+                    min_=0,
+                    pieces = [
+                        {"min": 40, "label" : '>40 KM', "color":'#E73C07'},
+                        {"min": 20, "max": 40, "label" : '20-40 KM', "color":'#FFC300'},
+                        {"min": 10, "max": 20, "label" : '10-20 KM', "color": '#66EE10'},
+                        {"min": 0, "max": 10, "label" : '<10 KM', "color": '#1FE5F7'},
+                    ],
+                    orient="horizontal",
+                    is_piecewise=True,
+                    pos_top="230px",
+                    pos_left="100px",
+                )
+            )
+        )
+
+        cals.append(c)
+
+    return cals
+
 chart_drawers = {
     'rank_bar' : draw_rank_bar_chart,
     'word_cloud' : draw_word_cloud_chart,
-    'line' : draw_line_chart
+    'line' : draw_line_chart,
+    'calendar' : draw_calendar_chart,
 }
 
 def draw_charts():
@@ -82,7 +129,11 @@ def draw_charts():
         print(chart_data.xvalues)
         print(chart_data.yvalues)
         draw_func = chart_drawers[chart_data.chart_type]
-        page.add(draw_func(chart_data))
+        chart = draw_func(chart_data)
+        if (isinstance(chart ,list)):
+            page.add(*chart)
+        else:
+            page.add(chart)
     page.render('chart_html/all.html')
 
 to_hms_formatter = utils.JsCode("""function (params) {
