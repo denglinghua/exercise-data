@@ -44,7 +44,10 @@ __lang_dict = {
     'activity_calories':('Activity Calories', '三项热量消耗'),
     'kcal':('C', '千卡'),
     'total_activity_time':('Total Activity Time', '三项耗时'),
-    'activity_time':('Activity Time', '运动多久')
+    'activity_time':('Activity Time', '运动多久'),
+    'activity_time_calendar':('Activity Time Calendar', '运动时间日历'),
+    'calendar_name':('en', 'cn'),
+    'rest':('REST', '休息')
 }
 
 class Lang(object):

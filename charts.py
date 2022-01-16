@@ -41,19 +41,20 @@ def draw_calendar_chart(group_set):
         ytitle = group_set.ytitle
     
     c = (Calendar()
-        .add("", data, calendar_opts=opts.CalendarOpts(range_="2021"))
+        .add("", data, calendar_opts=opts.CalendarOpts(range_="2021",
+            daylabel_opts=opts.CalendarDayLabelOpts(name_map=lang.calendar_name),
+            monthlabel_opts=opts.CalendarMonthLabelOpts(name_map=lang.calendar_name)))
         .set_global_opts(
             title_opts=opts.TitleOpts(title=group_set.title),
             visualmap_opts=opts.VisualMapOpts(
                 max_=600,
                 min_=0,
                 pieces = [
-                    {"min": 240, "color":'#900C3F'}, 
-                    {"min": 181, "max": 240, "color":'#C70039'},
-                    {"min": 121, "max": 180, "color":'#FF5733'},
-                    {"min": 61, "max": 120, "color": '#FFC300'},
-                    {"min": 1, "max": 60, "color": '#DAF7A6'},
-                    {"value" : 0, "label":'REST', "color":'#7B7D7A'}
+                    {"min": 180, "label" : '>3 %s' % lang.hour_short, "color":'#E73C07'},
+                    {"min": 120, "max": 180, "label" : '2+ %s' % lang.hour_short,"color":'#FFC300'},
+                    {"min": 60, "max": 120, "label" : '1+ %s' % lang.hour_short, "color": '#66EE10'},
+                    {"min": 0, "max": 60, "label" : '<1 %s' % lang.hour_short, "color": '#1FE5F7'},
+                    {"value" : 0, "label":lang.rest, "color":'#BCC3C4'}
                 ],
                 orient="horizontal",
                 is_piecewise=True,

@@ -17,7 +17,7 @@ class ActivityTimeGroupByCalendar(GroupBy):
 
 @check_data(lambda ctx, total: total == ctx['data_rows_count'])
 def __activity_time_calendar_group_set():
-    title = lang.activities
+    title = lang.activity_time_calendar
     column = lang.data__date
 
     agg_func = get_agg_func("sum")
