@@ -15,7 +15,7 @@ class ActivityTimeGroupByCalendar(GroupBy):
     def map_group(self, val) -> int:
         return (datetime.date(val.tm_year, val.tm_mon, val.tm_mday) - self.start_date).days
 
-@check_data(lambda ctx, total: total == ctx['data_rows_count'])
+@check_data('data_rows_count')
 def __activity_time_calendar_group_set():
     title = lang.activity_time_calendar
     column = lang.data__date

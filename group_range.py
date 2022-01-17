@@ -20,7 +20,7 @@ def __range_group_set(title, column, group_by, filter_func=None):
     group_set.set_ytitle(lang.activity_times)
     return group_set
 
-@check_data(lambda ctx, total: total == ctx['run_times'])
+@check_data('run_times')
 def __run_pace_group_set():
     title = lang.average_run_pace
     col = lang.data__avg_pace
@@ -32,7 +32,7 @@ def __run_pace_group_set():
     return __range_group_set(title, col, group_by, 
         __filter_running_func).set_xtitle(lang.run_pace_unit)
 
-@check_data(lambda ctx, total: total == ctx['run_times'])
+@check_data('run_times')
 def __run_cadence_group_set():
     title = lang.average_run_cadence
     col = lang.data__avg_run_cadence
@@ -42,7 +42,7 @@ def __run_cadence_group_set():
     return __range_group_set(title, col, group_by, 
         __filter_running_func).set_xtitle(lang.steps_per_min)
 
-@check_data(lambda ctx, total: total == ctx['run_times'])
+@check_data('run_times')
 def __run_stride_group_set():
     title = lang.average_stride_length
     col = lang.data__avg_stride_length
@@ -53,7 +53,7 @@ def __run_stride_group_set():
     return __range_group_set(title, col, group_by, 
         __filter_running_func).set_xtitle(lang.m)
 
-@check_data(lambda ctx, total: total == ctx['data_rows_count'])
+@check_data('data_rows_count')
 def __activity_hour_group_set():
     title = lang.activity_hours
     col = lang.data__date
@@ -65,7 +65,7 @@ def __activity_hour_group_set():
     return __range_group_set(title, col, group_by, None)
 
 
-@check_data(lambda ctx, total: total == ctx['data_rows_count'])
+@check_data('data_rows_count')
 def __activity_weekday_group_set():
     title = lang.activity_weekdays
     col = lang.data__date
@@ -78,7 +78,7 @@ def __activity_weekday_group_set():
 
     return __range_group_set(title, col, group_by)
 
-@check_data(lambda ctx, total: total == ctx['data_rows_count'])
+@check_data('data_rows_count')
 def __activity_month_group_set():
     title = lang.activity_months
     col = lang.data__date
@@ -90,7 +90,7 @@ def __activity_month_group_set():
     return __range_group_set(title, col, ValueGroupBy(series).set_value_func(value_func))
 
 
-@check_data(lambda ctx, total: total == ctx['run_times'])
+@check_data('run_times')
 def __run_distance_group_set():
     title = lang.running_distance
     col = lang.data__distance
@@ -98,7 +98,7 @@ def __run_distance_group_set():
     return __range_group_set(title, col, RangeGroupBy(5, 100, 5), 
         __filter_running_func).set_xtitle(lang.km)
 
-@check_data(lambda ctx, total: total == ctx['swim_times'])
+@check_data('swim_times')
 def __swimming_distance_group_set():
     title = lang.swimming_distance
     col = lang.data__distance
@@ -106,7 +106,7 @@ def __swimming_distance_group_set():
     return __range_group_set(title, col, RangeGroupBy(500, 5000, 500), 
         __filter_swimming_func).set_xtitle(lang.m)
 
-@check_data(lambda ctx, total: total == ctx['cycle_times'])
+@check_data('cycle_times')
 def __cycling_distance_group_set():
     title = lang.cycling_distance
     col = lang.data__distance
@@ -114,7 +114,7 @@ def __cycling_distance_group_set():
     return __range_group_set(title, col, RangeGroupBy(20, 100, 20), 
         __filter_cycling_func).set_xtitle(lang.km)
 
-@check_data(lambda ctx, total: total == ctx['data_rows_count'])
+@check_data('data_rows_count')
 def __activity_time_group_set():
     title = lang.activity_time
     col = lang.data__time

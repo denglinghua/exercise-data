@@ -22,7 +22,7 @@ def __basic_group_set(title, column, agg_func, filter_func = None):
                          agg_func, filter_func)
     return group_set
 
-@check_data(lambda ctx, total: total == ctx['data_rows_count'])
+@check_data('data_rows_count')
 def __activity_type_count_group_set():
     title = lang.activities
     column = lang.data__activity_type
@@ -31,6 +31,7 @@ def __activity_type_count_group_set():
 
     return __basic_group_set(title, column, agg_func).set_ytitle(lang.activity_times)
 
+@check_data('data_rows_count')
 def __activity_type_distance_group_set():
     title = lang.total_distance
     column = lang.data__activity_type
@@ -44,6 +45,7 @@ def __activity_type_distance_group_set():
 
     return __basic_group_set(title, column, agg_func).set_ytitle(lang.km)
 
+@check_data('data_rows_count')
 def __activity_type_calory_group_set():
     title = lang.activity_calories
     column = lang.data__activity_type
@@ -56,6 +58,7 @@ def __activity_type_calory_group_set():
 
     return group_set
 
+@check_data('data_rows_count')
 def __activity_type_time_group_set():
     title = lang.total_activity_time
     column = lang.data__activity_type

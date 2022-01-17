@@ -38,6 +38,9 @@ class Group(object):
         self.data_rows = []
         self.agg_value = 0
     
+    def row_count(self):
+        return len(self.data_rows)
+    
     def __repr__(self):
         return str(self)
 
@@ -55,7 +58,7 @@ class GroupSet(object):
         self.groups = group_by.groups
         self.filter_func = filter_func
         self.agg_func = agg_func
-        self.check_data_func = None
+        self.check_data_item = None
     
     def __str__(self):
         return '{%s, %s, %s}' % (self.title, self.group_by_column, self.groups)
@@ -84,12 +87,13 @@ class GroupSet(object):
     
     # for data correctness check
     def check_data(self, context):      
-        if self.check_data_func:
-            total = sum(map(lambda g : g.agg_value, self.groups))
-            if (self.check_data_func(context, total)):
+        if self.check_data_item:
+            total = sum(map(lambda g : g.row_count(), self.groups))
+            exp_val = context[self.check_data_item]
+            if (exp_val == total):
                 print('O check OK %s' % self.title)
             else:
-                print('X check FAILED %s' % self.title)
+                print('X check FAILED %s (%s)' % (self.title, total - exp_val))
         else:
             print('- check no function %s' % self.title)
 
@@ -111,12 +115,12 @@ def get_agg_func(func_name):
         return __agg_avg_func
     return None
 
-def check_data(check_data_func):
+def check_data(check_data_item):
     def check_data_decorator(func):
         @wraps(func)
         def wrapped_function(*args, **kwargs):            
             group_set = func(*args, **kwargs)
-            group_set.check_data_func = check_data_func
+            group_set.check_data_item = check_data_item
             return group_set
         return wrapped_function
     return check_data_decorator
