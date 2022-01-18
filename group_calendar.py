@@ -4,19 +4,22 @@ from group import Group, GroupSet, get_agg_func, check_data
 from group_by import GroupBy
 from lang import lang
 
+def _gen_year_days(year):
+    begin = datetime.date(year, 1, 1)
+    end = datetime.date(year, 12, 31)
+    return [str(begin + datetime.timedelta(days=i)) for i in range((end - begin).days + 1)]
+
 class ActivityTimeGroupByCalendar(GroupBy):
     def __init__(self, year) -> None:
         super().__init__()
-        begin = datetime.date(year, 1, 1)
-        end = datetime.date(year, 12, 31)
-        self.start_date = begin
-        self.create_groups([str(begin + datetime.timedelta(days=i)) for i in range((end - begin).days + 1)])
+        self.start_date = datetime.date(year, 1, 1)
+        self.create_groups(_gen_year_days(year))
 
     def map_group(self, val) -> int:
         return (datetime.date(val.tm_year, val.tm_mon, val.tm_mday) - self.start_date).days
 
 @check_data('data_rows_count')
-def __activity_time_calendar_group_set():
+def _activity_time_calendar_group_set():
     title = lang.activity_time_calendar
     column = lang.data__date
 
@@ -30,5 +33,5 @@ def __activity_time_calendar_group_set():
 
 def get_calendar_group_sets():
     return [
-        __activity_time_calendar_group_set(),
+        _activity_time_calendar_group_set(),
     ]

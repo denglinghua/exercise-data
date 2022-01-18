@@ -1,7 +1,7 @@
 import time
 from functools import wraps
 
-def __do_group_row(data_row, group_set):
+def _do_group_row(data_row, group_set):
     if group_set.filter_func and not group_set.filter_func(data_row):
         return
     
@@ -21,7 +21,7 @@ def __do_group_row(data_row, group_set):
 def do_group(data_rows, group_sets):
     for data_row in data_rows:
         for group_set in group_sets:
-            __do_group_row(data_row, group_set)
+            _do_group_row(data_row, group_set)
     
     for group_set in group_sets:
         for group in group_set.groups:
@@ -97,22 +97,22 @@ class GroupSet(object):
         else:
             print('- check no function %s' % self.title)
 
-def __agg_count_func(group_set, group):
+def _agg_count_func(group_set, group):
     return len(group.data_rows)
 
-def __agg_sum_func(group_set, group):
+def _agg_sum_func(group_set, group):
     return sum(r[group_set.sum_column] for r in group.data_rows)
 
-def __agg_avg_func(group_set, group):
+def _agg_avg_func(group_set, group):
     return 0
 
 def get_agg_func(func_name):
     if func_name == "count":
-        return __agg_count_func
+        return _agg_count_func
     if func_name == "sum":
-        return __agg_sum_func
+        return _agg_sum_func
     if func_name == "avg":
-        return __agg_avg_func
+        return _agg_avg_func
     return None
 
 def check_data(check_data_item):

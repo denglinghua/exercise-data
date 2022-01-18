@@ -17,22 +17,22 @@ class ActivityGroupBy(GroupBy):
         print(self.group_set.title + ': unknown activity:' + val)
         return -1
 
-def __basic_group_set(title, column, agg_func, filter_func = None):
+def _basic_group_set(title, column, agg_func, filter_func = None):
     group_set = GroupSet(title, column, ActivityGroupBy(),
                          agg_func, filter_func)
     return group_set
 
 @check_data('data_rows_count')
-def __activity_type_count_group_set():
+def _activity_type_count_group_set():
     title = lang.activities
     column = lang.data__activity_type
 
     agg_func = get_agg_func("count")
 
-    return __basic_group_set(title, column, agg_func).set_ytitle(lang.activity_times)
+    return _basic_group_set(title, column, agg_func).set_ytitle(lang.activity_times)
 
 @check_data('data_rows_count')
-def __activity_type_distance_group_set():
+def _activity_type_distance_group_set():
     title = lang.total_distance
     column = lang.data__activity_type
 
@@ -43,37 +43,37 @@ def __activity_type_distance_group_set():
             val = val / 1000
         return int(val)
 
-    return __basic_group_set(title, column, agg_func).set_ytitle(lang.km)
+    return _basic_group_set(title, column, agg_func).set_ytitle(lang.km)
 
 @check_data('data_rows_count')
-def __activity_type_calory_group_set():
+def _activity_type_calory_group_set():
     title = lang.activity_calories
     column = lang.data__activity_type
 
     agg_func = get_agg_func('sum')
 
-    group_set = __basic_group_set(title, column, agg_func)
+    group_set = _basic_group_set(title, column, agg_func)
     group_set.sum_column = lang.data__calories
     group_set.set_ytitle(lang.kcal)
 
     return group_set
 
 @check_data('data_rows_count')
-def __activity_type_time_group_set():
+def _activity_type_time_group_set():
     title = lang.total_activity_time
     column = lang.data__activity_type
 
     agg_func = get_agg_func('sum')
 
-    group_set = __basic_group_set(title, column, agg_func)
+    group_set = _basic_group_set(title, column, agg_func)
     group_set.sum_column = lang.data__time
 
     return group_set
 
 def get_basic_group_sets():
     return [
-        __activity_type_count_group_set(),
-        __activity_type_distance_group_set(),
-        __activity_type_time_group_set(),
-        __activity_type_calory_group_set()
+        _activity_type_count_group_set(),
+        _activity_type_distance_group_set(),
+        _activity_type_time_group_set(),
+        _activity_type_calory_group_set()
     ]

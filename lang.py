@@ -1,5 +1,5 @@
 # encoding:utf-8
-__lang_dict = {
+_lang_dict = {
     # col is short for column
     'data__activity_type':('Activity Type', '活动类型'),
     'data__avg_pace':('Avg Pace', '平均配速'),
@@ -56,6 +56,6 @@ class Lang(object):
 lang = Lang()
 
 def set_lang(data_lang_index, display_lang_index):
-    for key in __lang_dict:
+    for key in _lang_dict:
         lang_index = data_lang_index if key.startswith('data__') else display_lang_index
-        setattr(lang, key, __lang_dict[key][lang_index])
+        setattr(lang, key, _lang_dict[key][lang_index])
