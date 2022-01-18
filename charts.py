@@ -90,7 +90,7 @@ def draw_calendar_chart(chart_data : ChartData):
         c = (Calendar(init_opts=opts.InitOpts(height=h))
             .add("", data, calendar_opts=opts.CalendarOpts(
                 range_=str(year),
-                daylabel_opts=opts.CalendarDayLabelOpts(name_map='cn'),
+                daylabel_opts=opts.CalendarDayLabelOpts(first_day=1, name_map='cn'),
                 monthlabel_opts=opts.CalendarMonthLabelOpts(name_map='cn')))
             .set_global_opts(
                 title_opts=opts.TitleOpts(title, pos_left='center'),
