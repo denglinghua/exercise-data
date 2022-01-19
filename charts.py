@@ -83,15 +83,15 @@ def draw_calendar_chart(chart_data : ChartData):
         show_v = False
         if (year == begin):
             title = chart_data.title
-        if (year == end):
             show_v = True
-        h = '250px' if show_v else '200px'
+        h = '250px' if show_v else '180px'
 
         c = (Calendar(init_opts=opts.InitOpts(height=h))
             .add("", data, calendar_opts=opts.CalendarOpts(
                 range_=str(year),
                 daylabel_opts=opts.CalendarDayLabelOpts(first_day=1, name_map='cn'),
-                monthlabel_opts=opts.CalendarMonthLabelOpts(name_map='cn')))
+                monthlabel_opts=opts.CalendarMonthLabelOpts(name_map='cn'),
+                pos_bottom="bottom"))
             .set_global_opts(
                 title_opts=opts.TitleOpts(title, pos_left='center'),
                 visualmap_opts=opts.VisualMapOpts(
@@ -106,8 +106,8 @@ def draw_calendar_chart(chart_data : ChartData):
                     ],
                     orient="horizontal",
                     is_piecewise=True,
-                    pos_top="230px",
-                    pos_left="100px",
+                    pos_top="50px",
+                    pos_left="center",
                 )
             )
         )
