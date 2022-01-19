@@ -58,7 +58,7 @@ def _agg_activity_type(group_set, group):
 
 @check_data('data_rows_count')
 def _activity_type_calendar_group_set():
-    title = lang.activity_time_calendar
+    title = lang.activity_type_calendar
     column = lang.data__date
 
     group_set = GroupSet(title, column, ActivityTimeGroupByCalendar(2021), _agg_activity_type)

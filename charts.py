@@ -32,6 +32,8 @@ def draw_calendar_chart(group_set):
     data = []
     for items in zip(axis_values[0], axis_values[1]):
         data.append([items[0], items[1]])
+    
+    _calendar_data_to_file(group_set.title, data)
 
     xtitle = ''
     ytitle = ''
@@ -99,3 +101,10 @@ _chart_types = {
     'bar' : draw_bar_chart,
     'calendar' : draw_calendar_chart,
 }
+
+def _calendar_data_to_file(file, data):
+    with open(file + '.log', 'w') as f:
+        f.write('[')
+        for item in data:
+            f.write('\t\t["%s", "%s"],\n' % (item[0], item[1]))
+        f.write(']')
