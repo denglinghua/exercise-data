@@ -12,89 +12,61 @@
     <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
     <script type="text/javascript" src="calendar.js"></script>
     <script type="text/javascript">
+        function createCalendar(top, range) {
+            return {
+                    left: 'center',
+                    top: top + 'px',
+                    cellSize: [30, 30],
+                    itemStyle: {
+                        color: '#F6F6F6',
+                        borderColor:'#D7D7D8',
+                        borderWidth:0.5,
+                        borderCap:'round',
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "#848B98",
+                            shadowColor : '#D7D7D8',
+                            shadowOffsetX : 1.5,
+                            shadowOffsetY : 1.5,
+                            shadowBlur: 2
+                        }
+                    },
+                    yearLabel: { show: true },
+                    dayLabel: {
+                        firstDay: 1,
+                        nameMap: 'cn'
+                    },
+                    monthLabel: {
+                        nameMap: 'cn',
+                    },
+                    range: range
+                }
+            }
+        
+        function createSerie(index) {
+            return {
+                    type: 'custom',
+                    coordinateSystem: 'calendar',
+                    renderItem: renderCell,
+                    calendarIndex: index,
+                    data: getData()
+            }
+        }
+
         var dom = document.getElementById("container");
         var myChart = echarts.init(dom);
-        var app = {};
         var option;
         option = {
             tooltip: {},
             calendar: [
-                {
-                    left: 'center',
-                    top: '60px',
-                    cellSize: [30, 30],
-                    itemStyle: {
-                        color: '#F6F6F6',
-                        borderColor:'#D7D7D8',
-                        borderWidth:0.5,
-                        borderCap:'round',
-                    },
-                    splitLine: {
-                        show: true,
-                        lineStyle: {
-                            color: "#848B98",
-                            shadowColor : '#D7D7D8',
-                            shadowOffsetX : 1.5,
-                            shadowOffsetY : 1.5,
-                            shadowBlur: 2
-                        }
-                    },
-                    yearLabel: { show: true },
-                    dayLabel: {
-                        firstDay: 1,
-                        nameMap: 'cn'
-                    },
-                    monthLabel: {
-                        nameMap: 'cn',
-                    },
-                    range: ['2021-01-01', '2021-06-30']
-                },
-                {
-                    left: 'center',
-                    top: '320px',
-                    cellSize: [30, 30],
-                    itemStyle: {
-                        color: '#F6F6F6',
-                        borderColor:'#D7D7D8',
-                        borderWidth:0.5,
-                        borderCap:'round',
-                    },
-                    splitLine: {
-                        show: true,
-                        lineStyle: {
-                            color: "#848B98",
-                            shadowColor : '#D7D7D8',
-                            shadowOffsetX : 1.5,
-                            shadowOffsetY : 1.5,
-                            shadowBlur: 2
-                        }
-                    },
-                    yearLabel: { show: true },
-                    dayLabel: {
-                        firstDay: 1,
-                        nameMap: 'cn'
-                    },
-                    monthLabel: {
-                        nameMap: 'cn',
-                    },
-                    range: ['2021-07-01', '2021-12-31']
-                }
+                createCalendar(60, ['2021-01-01', '2021-06-30']),
+                createCalendar(320, ['2021-07-01', '2021-12-31'])
             ],
             series: [
-                {
-                    type: 'custom',
-                    coordinateSystem: 'calendar',
-                    renderItem: renderCell,
-                    calendarIndex: 0,
-                    data: getData()
-                },
-                {
-                    type: 'custom',
-                    coordinateSystem: 'calendar',
-                    renderItem: renderCell,
-                    calendarIndex: 1,
-                    data: getData()
-                }
+                createSerie(0),
+                createSerie(1)
             ],
             title: [
                 {
