@@ -6,7 +6,7 @@ from pyecharts.types import Tooltip
 
 from chart_data import ChartData, chart_data_list
 
-def draw_rank_bar_chart(chart_data : ChartData):
+def _draw_rank_bar_chart(chart_data : ChartData):
     xtitle = ''
     ytitle = ''
     height = len(chart_data.yvalues) * 20
@@ -27,7 +27,7 @@ def draw_rank_bar_chart(chart_data : ChartData):
     return grid
     #return c
 
-def draw_word_cloud_chart(chart_data : ChartData):
+def _draw_word_cloud_chart(chart_data : ChartData):
     words = []
     for w, c in zip(chart_data.xvalues, chart_data.yvalues):
         words.append((w, c))
@@ -40,7 +40,7 @@ def draw_word_cloud_chart(chart_data : ChartData):
 
     return wc
 
-def draw_line_chart(chart_data : ChartData):
+def _draw_line_chart(chart_data : ChartData):
     h = chart_data.height if hasattr(chart_data, 'height') else '500px'
     min_ = chart_data.y_min if hasattr(chart_data, 'y_min') else 0
     inverse = chart_data.inverse if hasattr(chart_data, 'inverse') else False
@@ -68,7 +68,7 @@ def draw_line_chart(chart_data : ChartData):
     
     return grid
 
-def draw_calendar_chart(chart_data : ChartData):
+def _draw_calendar_chart(chart_data : ChartData):
     data = []
     for items in zip(chart_data.xvalues, chart_data.yvalues):
         data.append([items[0], items[1]])
@@ -117,10 +117,10 @@ def draw_calendar_chart(chart_data : ChartData):
     return cals
 
 chart_drawers = {
-    'rank_bar' : draw_rank_bar_chart,
-    'word_cloud' : draw_word_cloud_chart,
-    'line' : draw_line_chart,
-    'calendar' : draw_calendar_chart,
+    'rank_bar' : _draw_rank_bar_chart,
+    'word_cloud' : _draw_word_cloud_chart,
+    'line' : _draw_line_chart,
+    'calendar' : _draw_calendar_chart,
 }
 
 def draw_charts():

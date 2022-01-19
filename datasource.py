@@ -43,11 +43,11 @@ def _check_data():
             if key not in _file_data or not _file_data[key]:
                 print('#### %s data check failed !' % key)
 
-def __to_date_time(str):
+def _to_date_time(str):
     format = '%Y-%m-%d %H:%M:%S'    
     return datetime.strptime(str, format)
 
-def __to_time_delta(str):
+def _to_time_delta(str):
     time_items = str.split(':')
     s = int(time_items[-1])
     m = int(time_items[-2])
@@ -57,38 +57,38 @@ def __to_time_delta(str):
 
     return timedelta(hours=h, minutes=m, seconds=s)
 
-def __to_float(str):
+def _to_float(str):
     try:
         return float(str.replace(',', '')) # commas separate thousands
     except ValueError:
         return 0
 
-def __to_int(str):
+def _to_int(str):
     try:
         return int(str.replace(',', '')) # commas separate thousands
     except ValueError:
         return 0
 
-def __to_pace_time(str):
+def _to_pace_time(str):
     time_items = str.split("'")
     m = int(time_items[0])
     s = int(time_items[1][:-1])
     
     return timedelta(minutes=m, seconds=s)
 
-def __col_converts():
+def _col_converts():
     ct = {
     'id': lambda a : int(a),
-    'end_time': __to_date_time,
-    'time': __to_time_delta,
-    'pace': __to_pace_time,
-    'cadence': __to_int,
-    'stride': __to_float
+    'end_time': _to_date_time,
+    'time': _to_time_delta,
+    'pace': _to_pace_time,
+    'cadence': _to_int,
+    'stride': _to_float
     }
 
     return ct
 
-def __calendar_table(from_date, years):
+def _calendar_table(from_date, years):
     t = {}
     week_no = 1
     d = from_date
@@ -101,9 +101,9 @@ def __calendar_table(from_date, years):
     
     return t
 
-def __add_week_no_column(df:pd.DataFrame):
+def _add_week_no_column(df:pd.DataFrame):
     earliest_date = df.at[0,'end_time']
-    calendar = __calendar_table(earliest_date, 30)
+    calendar = _calendar_table(earliest_date, 30)
     df["week_no"] = df.apply(lambda row: calendar[row['end_time'].strftime('%Y-%m-%d')], axis=1)
 
 def load_data(data_dir):
@@ -121,7 +121,7 @@ def load_data(data_dir):
     # data rows in a single file ordered by date too
     # so if all files loaded into one dataframe, these data rows ordered by date (end_time column)
     for file in data_files:
-        one_file_df = pd.read_excel(file, header=7, names=cols, converters=__col_converts())
+        one_file_df = pd.read_excel(file, header=7, names=cols, converters=_col_converts())
         # print(one_file_df)
         _add_file_data(one_file_df, file)
         df = df.append(one_file_df, ignore_index=True)
@@ -131,22 +131,22 @@ def load_data(data_dir):
     df['year'] = df['end_time'].dt.year
     df['month'] = df['end_time'].dt.to_period('M')
 
-    __add_week_no_column(df)
+    _add_week_no_column(df)
 
     return df
 
-__id_name = {}
+_id_name = {}
 
 def init_user_id_name_map(df:pd.DataFrame):
     data = df.groupby(['id', 'name']).count()
     data = data.reset_index()
     data = data[['id', 'name']]
 
-    global __id_name 
+    global _id_name 
 
     for index, row in data.iterrows():
-        __id_name[row['id']] = row['name']
+        _id_name[row['id']] = row['name']
 
 def user_id_to_name(id):
-    global __id_name
-    return __id_name[id]
+    global _id_name
+    return _id_name[id]

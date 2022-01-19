@@ -7,7 +7,7 @@ from datasource import user_id_to_name
 
 chart_data_list = []
 
-def __print_df(df, message=''):
+def _print_df(df, message=''):
     print('\n')
     print(message)
     print(df)
@@ -32,7 +32,7 @@ def create_chart_data(df : pd.DataFrame, title, sub_title, formatter, chart_type
     chart_data = ChartData(title, sub_title, formatter, chart_type, chart_props, values[0], values[1])
     chart_data_list.append(chart_data)
 
-def __item_value(x):
+def _item_value(x):
     val = None
     if type(x) in (int, float):
         val = x
@@ -49,7 +49,7 @@ def name_value_pair_data(df, params):
     for index, row in df.iterrows():
         xvalues.append(user_id_to_name(row['id']))
         
-        yvalue = value_func(row[value_column]) if value_func else __item_value(row[value_column])
+        yvalue = value_func(row[value_column]) if value_func else _item_value(row[value_column])
         yvalues.append(yvalue)
     
     return (xvalues, yvalues)
@@ -71,7 +71,7 @@ def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar
                 df = data
             toc = time.perf_counter()
             func_name = func.__name__
-            __print_df(df, func_name)
+            _print_df(df, func_name)
             print(f"\nexec {func_name} time : {toc - tic:0.4f} seconds")
             create_chart_data(df, title, sub_title, formatter, chart_type, 
                 values_func, value_func_params, chart_props)
@@ -135,7 +135,7 @@ def calendar_data(df, params):
     for index, row in df.iterrows():
         xvalues.append(row[date_column].strftime('%Y-%m-%d'))
         
-        yvalue = value_func(row[value_column]) if value_func else __item_value(row[value_column])
+        yvalue = value_func(row[value_column]) if value_func else _item_value(row[value_column])
         yvalues.append(yvalue)
     
     return (xvalues, yvalues)

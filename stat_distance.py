@@ -37,16 +37,16 @@ def distance(df:pd.DataFrame):
     
     return data
 
-def __month_distance_sum(df:pd.DataFrame):
+def _month_distance_sum(df:pd.DataFrame):
     data = df[['id', 'month', 'distance']]
     data = data.groupby(['id', 'month'])['distance'].sum()
     data = data.reset_index()
 
     return data
     
-def __month_distance_std(df:pd.DataFrame):
+def _month_distance_std(df:pd.DataFrame):
     data = regular_pace_run(df)
-    data = __month_distance_sum(data)
+    data = _month_distance_sum(data)
     data = data.groupby('id').agg({'month':'count','distance':['std', 'mean']})
     data = data.reset_index()
     data.columns = ['id', 'month', 'distance_std', 'distance_mean']
@@ -60,15 +60,15 @@ def __month_distance_std(df:pd.DataFrame):
 @to_chart('平稳跑者——跑量', '跑量波动 = 月跑量标准差 / 月平均跑量', '{c} %',
     value_func_params= ('distance', lambda x : round(x * 100, 2)))
 def month_distance_std(df:pd.DataFrame):
-    return __month_distance_std(df)
+    return _month_distance_std(df)
 
 @to_chart('平稳跑者——跑量', '', '{value}', 'line',
     values_func = month_distance_detail,chart_props={'height':'400px'})
 def month_distance_detail(df:pd.DataFrame):
-    data = __month_distance_std(df)
+    data = _month_distance_std(df)
     top_id_list = data['id'].to_list()
     data = regular_pace_run(df)
-    data = __month_distance_sum(data)
+    data = _month_distance_sum(data)
     data = data.query('id == @top_id_list')
     data = sort_data_by_id_list(data, top_id_list)
     

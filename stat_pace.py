@@ -15,7 +15,7 @@ def regular_pace_run(df:pd.DataFrame):
 
     return data
 
-def __avg_pace(row):
+def _avg_pace(row):
     total_time_secs = row['time'].total_seconds()
     total_distance = row['distance']
     avg_pace = int(total_time_secs / total_distance)
@@ -35,7 +35,7 @@ def pace(df:pd.DataFrame):
     if data.empty:
         return data
 
-    data['avg_pace'] = data.apply(__avg_pace, axis=1)
+    data['avg_pace'] = data.apply(_avg_pace, axis=1)
     data = data.nsmallest(10, 'avg_pace', 'all')
     data = data.sort_values('avg_pace', ascending=False)
 
@@ -67,16 +67,16 @@ def stride(df:pd.DataFrame):
 
     return data
 
-def __month_pace_sum(df:pd.DataFrame):
+def _month_pace_sum(df:pd.DataFrame):
     data = regular_pace_run(df)
     data = data[['id', 'month', 'time', 'distance']]
     data = data.groupby(['id', 'month']).agg({'time':'sum','distance':'sum'})
     data = data.reset_index() 
-    data['avg_pace'] = data.apply(__avg_pace, axis=1)
+    data['avg_pace'] = data.apply(_avg_pace, axis=1)
 
     return data
 
-def __filter_month_pace_sum(sum_data:pd.DataFrame):
+def _filter_month_pace_sum(sum_data:pd.DataFrame):
     filter_df = sum_data[['id', 'month']]
     filter_df = filter_df.groupby('id').agg({'month':'nunique'})
     filter_df = filter_df.reset_index()
@@ -87,8 +87,8 @@ def __filter_month_pace_sum(sum_data:pd.DataFrame):
 
     return data
 
-def __month_pace_std(sum_df:pd.DataFrame):
-    data = __filter_month_pace_sum(sum_df)
+def _month_pace_std(sum_df:pd.DataFrame):
+    data = _filter_month_pace_sum(sum_df)
     data = data.groupby('id').agg({'avg_pace':['std', 'mean']})
     data = data.reset_index()
     data.columns = ['id', 'pace_std', 'pace_mean']
@@ -101,14 +101,14 @@ def __month_pace_std(sum_df:pd.DataFrame):
 @to_chart('平稳跑者——配速', '配速波动 = 月均配速标准差 / 平均月配速', '{c} %',
     value_func_params= ('avg_pace', lambda x : round(x * 100, 2)))
 def month_pace_std(df:pd.DataFrame):  
-    data = __month_pace_sum(df)
-    return __month_pace_std(data)
+    data = _month_pace_sum(df)
+    return _month_pace_std(data)
 
 @to_chart('平稳跑者——配速', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'400px', 'y_min':240, 'inverse':False})
 def month_pace_even_detail(df:pd.DataFrame):
-    data = __month_pace_sum(df)
-    top_id_list = __month_pace_std(data)['id'].to_list()
+    data = _month_pace_sum(df)
+    top_id_list = _month_pace_std(data)['id'].to_list()
     data = data.query('id == @top_id_list')
     data = sort_data_by_id_list(data, top_id_list)
     
@@ -148,7 +148,7 @@ def _pace_diff(row, start_year, end_year):
     
     return total_diff
 
-def __distance_id_list(df:pd.DataFrame):
+def _distance_id_list(df:pd.DataFrame):
     data = df[['id', 'distance']]
     data = data.groupby('id').agg({'distance':'sum'})
     data = data.reset_index()
@@ -156,9 +156,9 @@ def __distance_id_list(df:pd.DataFrame):
     
     return data['id'].to_list()
 
-def __pace_progress(df:pd.DataFrame):
+def _pace_progress(df:pd.DataFrame):
     data = regular_pace_run(df)
-    dis_id_list = __distance_id_list(data)
+    dis_id_list = _distance_id_list(data)
     data = data[['id', 'year', 'time', 'distance']].query('id==@dis_id_list')
     start = data['year'].min()
     end = data['year'].max()
@@ -175,14 +175,14 @@ def __pace_progress(df:pd.DataFrame):
 @to_chart('越跑越快的', '每年平均配速都有进步，年平均配速增长累计', '{c} 秒',
     value_func_params= ('pace_diff', lambda x : int(x)))
 def pace_progress(df:pd.DataFrame):
-    return __pace_progress(df)
+    return _pace_progress(df)
 
 @to_chart('越跑越快的', '', charts.to_ms_formatter, 'line',
     values_func = month_pace_detail, chart_props={'height':'600px', 'y_min':240, 'inverse':True})
 def month_pace_progress_detail(df:pd.DataFrame):
-    data = __month_pace_sum(df)
+    data = _month_pace_sum(df)
 
-    top_id_list = __pace_progress(df)['id'].to_list()
+    top_id_list = _pace_progress(df)['id'].to_list()
     data = data.query('id == @top_id_list')
     data = sort_data_by_id_list(data, top_id_list)
     
