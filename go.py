@@ -15,48 +15,51 @@ print('python version :' + sys.version)
 print('pandas version :' + pd.__version__)
 print('pyecharts version :' + pyecharts.__version__)
 
-debug = False
+# usage : python go.py data_path [op=report] [id=0]
+op = 'report'
 id = 0
+data_path = sys.argv[1]
 
-data_dir = sys.argv[1]
 if (len(sys.argv) > 2):
-    id = int(sys.argv[2])
+    op = sys.argv[2]
 
-if len(sys.argv) > 3 :
-    debug = True if sys.argv[3] == 'debug' else False
+if op == 'calendar' :
+    id = int(sys.argv[3])
 
-print('data dir :' + data_dir)
-print('debug :' + str(debug))
+print('data path :' + data_path)
+print('op :' + op)
 
-df = datasource.load_data(data_dir, debug)
-#df.to_pickle('data.pkl')
-#sys.exit(0)
+df = datasource.load_data(data_path)
+if op == 'pkl':
+    df.to_pickle('data.pkl')
+
 print(df.info())
 print(df.describe())
 
 datasource.init_user_id_name_map(df)
 
-st_d.marathon(df)
-st_d.half_marathon(df)
-st_d.distance(df)
-st_d.month_distance_std(df)
-st_d.month_distance_detail(df)
+if op == 'report':
+    st_d.marathon(df)
+    st_d.half_marathon(df)
+    st_d.distance(df)
+    st_d.month_distance_std(df)
+    st_d.month_distance_detail(df)
 
-st_p.pace(df)
-st_p.month_pace_std(df)
-st_p.month_pace_even_detail(df)
-st_p.pace_progress(df)
-st_p.month_pace_progress_detail(df)
-st_p.cadence(df)
-st_p.stride(df)
+    st_p.pace(df)
+    st_p.month_pace_std(df)
+    st_p.month_pace_even_detail(df)
+    st_p.pace_progress(df)
+    st_p.month_pace_progress_detail(df)
+    st_p.cadence(df)
+    st_p.stride(df)
 
-st_t.time(df)
-st_t.days(df)
-st_t.every_week(df)
-st_t.morning_run(df)
-st_t.night_run(df)
+    st_t.time(df)
+    st_t.days(df)
+    st_t.every_week(df)
+    st_t.morning_run(df)
+    st_t.night_run(df)
 
-if (id > 0):
+if (op == 'calendar'):
     st_i.calendar_distance(df, id)
 
 charts.draw_charts()

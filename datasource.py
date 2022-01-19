@@ -106,7 +106,7 @@ def __add_week_no_column(df:pd.DataFrame):
     calendar = __calendar_table(earliest_date, 30)
     df["week_no"] = df.apply(lambda row: calendar[row['end_time'].strftime('%Y-%m-%d')], axis=1)
 
-def load_data(data_dir, debug = False):
+def load_data(data_dir):
     if data_dir.endswith('.pkl'):
         return pd.read_pickle(data_dir)
 
@@ -117,9 +117,6 @@ def load_data(data_dir, debug = False):
     data_files = glob.glob(os.path.join(data_dir, '*.xlsx'))
     data_files.sort()
 
-    if debug :
-        data_files = data_files[0:1]
-    
     # file named by date, so files ordered by date
     # data rows in a single file ordered by date too
     # so if all files loaded into one dataframe, these data rows ordered by date (end_time column)
