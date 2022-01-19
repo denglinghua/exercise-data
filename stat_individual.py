@@ -9,6 +9,8 @@ from datasource import user_id_to_name
     value_func_params= ('end_date', 'distance', None))
 def calendar_distance(df:pd.DataFrame, id):
     data = df.query('id==@id')
+    begin = data['year'].min()
+    end = data['year'].max()
     data['end_date'] = data['end_time'].map(lambda x : x.date())
     data = data[['end_date', 'distance']]
     data = data.groupby("end_date").sum('distance')
@@ -17,8 +19,8 @@ def calendar_distance(df:pd.DataFrame, id):
 
     props = {
         'runner' : user_id_to_name(id),
-        'begin' : df['year'].min(),
-        'end' : df['year'].max()
+        'begin' : begin,
+        'end' : end
     }
 
     return (data, props)
