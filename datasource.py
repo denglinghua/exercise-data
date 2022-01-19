@@ -9,6 +9,7 @@ _file_data = {'min_year' : 9999, 'max_year':0, 'seq':1}
 def _add_file_data(df:pd.DataFrame, file_path):
     global _file_data
     
+    # ...\2016_0101-0131.xlsx
     end_mon_day = file_path[-9:-5]
     start_mon_day = file_path[-14:-10]
     year = int(file_path[-19:-15])
@@ -26,13 +27,12 @@ def _add_file_data(df:pd.DataFrame, file_path):
     
     result = check_date(min_data_date, year, start_mon_day) and check_date(max_data_date,year, end_mon_day)
 
-    key = '%s%s' % (year, start_mon_day[0:2])
+    key_ym = '%s%s' % (year, start_mon_day[0:2])
+    _file_data[key_ym] = result
 
-    _file_data[key] = result
+    desc = '' if result else '(%s - %s)' % (min_data_date, max_data_date)
 
-    desc = '' if result else '(%s-%s)' % (min_data_date, max_data_date)
-
-    print('load data : [%s:%s:%s]%s' % (_file_data['seq'], key, result, desc))
+    print('load data : [%s:%s:%s]%s' % (_file_data['seq'], key_ym, result, desc))
     _file_data['seq'] += 1
 
 def _check_data():
@@ -41,7 +41,7 @@ def _check_data():
         for m in range(1, 13):
             key = '%s%s' % (year, "{:02d}".format(m))
             if key not in _file_data or not _file_data[key]:
-                print('%s data check failed !' % key)
+                print('#### %s data check failed !' % key)
 
 def __to_date_time(str):
     format = '%Y-%m-%d %H:%M:%S'    
