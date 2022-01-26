@@ -333,3 +333,4 @@ ASALocalRun/
 run.exe
 run.exe.config
 misc/run_data/
+.DS_Store
