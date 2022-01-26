@@ -23,7 +23,7 @@ data_path = sys.argv[1]
 if (len(sys.argv) > 2):
     op = sys.argv[2]
 
-if op == 'calendar' :
+if op in ['calendar', 'kline'] :
     id = int(sys.argv[3])
 
 print('data path :' + data_path)
@@ -59,8 +59,11 @@ if op == 'report':
     st_t.morning_run(df)
     st_t.night_run(df)
 
-if (op == 'calendar'):
+if op == 'calendar':
     st_i.calendar_distance(df, id)
+
+if op == 'kline':
+    st_i.kline_pace(df,id)
 
 charts.draw_charts()
 

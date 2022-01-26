@@ -1,5 +1,5 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, WordCloud, Line, Calendar, Grid, Page
+from pyecharts.charts import Bar, WordCloud, Line, Calendar, Grid, Page, Candlestick
 from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
 from pyecharts.types import Tooltip
@@ -116,11 +116,32 @@ def _draw_calendar_chart(chart_data : ChartData):
 
     return cals
 
+def _draw_kline_chart(chart_data : ChartData):
+    title = chart_data.runner + chart_data.title
+    c = (
+        Candlestick(init_opts=opts.InitOpts(width="1200px", height="600px"))
+            .add_xaxis(xaxis_data=chart_data.xvalues)
+            .add_yaxis(series_name="", y_axis=chart_data.yvalues)
+            .set_series_opts()
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title, pos_left='center'),
+                yaxis_opts=opts.AxisOpts(
+                    splitline_opts=opts.SplitLineOpts(is_show=True, linestyle_opts=opts.LineStyleOpts(width=1)),
+                    type_="value", 
+                    is_inverse = True,
+                    axislabel_opts=opts.LabelOpts(formatter=to_ms_formatter)
+                )
+            )
+    )
+
+    return c
+
 chart_drawers = {
     'rank_bar' : _draw_rank_bar_chart,
     'word_cloud' : _draw_word_cloud_chart,
     'line' : _draw_line_chart,
     'calendar' : _draw_calendar_chart,
+    'kline' : _draw_kline_chart,
 }
 
 def draw_charts():

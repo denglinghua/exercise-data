@@ -139,3 +139,14 @@ def calendar_data(df, params):
         yvalues.append(yvalue)
     
     return (xvalues, yvalues)
+
+def kline_data(df, params):
+    xvalues = []
+    yvalues = []
+    for index, row in df.iterrows():
+        xvalues.append(row[0].strftime('%Y-%m'))
+        
+        yvalue = [row[1], row[2], row[3], row[4]]
+        yvalues.append(yvalue)
+    
+    return (xvalues, yvalues)
