@@ -132,3 +132,4 @@ dmypy.json
 chart_html/
 .vscode/
 *.csv
+.DS_Store
