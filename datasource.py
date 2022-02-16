@@ -40,8 +40,14 @@ def _check_data():
     for year in range(_file_data['min_year'], _file_data['max_year'] + 1):
         for m in range(1, 13):
             key = '%s%s' % (year, "{:02d}".format(m))
-            if key not in _file_data or not _file_data[key]:
-                print('#### %s data check failed !' % key)
+            failed_reason = None
+            if key not in _file_data:
+                failed_reason = 'file missed'
+            else:
+                if not _file_data[key]:
+                    failed_reason = 'data not complete'
+            if failed_reason:    
+                print('#### %s data check failed - %s.' % (key, failed_reason))
 
 def _to_date_time(str):
     format = '%Y-%m-%d %H:%M:%S'    
