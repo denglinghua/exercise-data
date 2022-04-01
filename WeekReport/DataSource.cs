@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -222,7 +223,7 @@ namespace RunData
                     Logger.Info("    {0}", r.Member);
                 }
             }
-        }        
+        }
 
         private void LoadRunRecord(string fileName)
         {
@@ -244,13 +245,9 @@ namespace RunData
 
                 this.runRecords = new Dictionary<long, PeriodRunRecord>();
 
-                for (int rowIndex = 10; rowIndex <= sheet.LastRowNum; rowIndex++)
+                //用户昵称  用户ID  所属跑团名称  性别  总跑量（公里）  总用时  跑步次数
+                foreach (string[] values in new RowsReader(sheet, 10, 7))
                 {
-                    IRow row = sheet.GetRow(rowIndex);
-
-                    //用户昵称  用户ID  所属跑团名称  性别  总跑量（公里）  总用时  跑步次数
-                    string[] values = ReadRowToArray(row, 7);
-
                     long joyRunId = long.Parse(values[1]);
                     this.runRecords.Add(joyRunId,
                         new PeriodRunRecord(joyRunId, values[0], values[3], values[2], float.Parse(values[4]), DateUtil.ParseTimeSpanToSeconds(values[5]), short.Parse(values[6])));
@@ -279,13 +276,9 @@ namespace RunData
                 book = WorkbookFactory.Create(FS);
                 sheet = book.GetSheetAt(0);
 
-                for (int rowIndex = 8; rowIndex <= sheet.LastRowNum; rowIndex++)
+                //跑步结束时间 记录状态 悦跑号 用户昵称 性别 跑步距离（公里） 跑步耗时 跑步类型 平均配速（分钟/公里）
+                foreach (string[] values in new RowsReader(sheet, 8, 9))
                 {
-                    IRow row = sheet.GetRow(rowIndex);
-
-                    //跑步结束时间 记录状态 悦跑号 用户昵称 性别 跑步距离（公里） 跑步耗时 跑步类型 平均配速（分钟/公里）
-                    string[] values = ReadRowToArray(row, 9);
-
                     long joyRunId = long.Parse(values[2]);
                     RunRecordDetail detail;
                     if (!this.runRecordDetail.TryGetValue(joyRunId, out detail))
@@ -328,15 +321,10 @@ namespace RunData
                 String teamName = teamCell.StringCellValue;
 
                 int c = 0;
-                for (int rowIndex = 6; rowIndex <= sheet.LastRowNum; rowIndex++)
+                //悦跑ID 昵称 性别 总跑量（公里） 最后跑步时间
+                foreach (string[] values in new RowsReader(sheet, 6, 3))
                 {
-                    IRow row = sheet.GetRow(rowIndex);
-
-                    //悦跑ID 昵称 性别 总跑量（公里） 最后跑步时间
-                    string[] values = ReadRowToArray(row, 3);
-
                     this.NoRunData.AddCurrentRecord(new Member(long.Parse(values[0]), values[1], values[2], teamName), "没跑步");
-
                     c++;
                 }
 
@@ -370,13 +358,9 @@ namespace RunData
                 book = WorkbookFactory.Create(FS);
                 sheet = book.GetSheetAt(0);
 
-                for (int rowIndex = 3; rowIndex <= sheet.LastRowNum; rowIndex++)
+                //报名时间 昵称 悦跑圈ID号  请假原因
+                foreach (string[] values in new RowsReader(sheet, 3, 4))
                 {
-                    IRow row = sheet.GetRow(rowIndex);
-
-                    //报名时间 昵称 悦跑圈ID号  请假原因
-                    string[] values = ReadRowToArray(row, 4);
-
                     this.LeaveMemberIdList.Add(long.Parse(values[2]));
                 }
 
@@ -402,6 +386,42 @@ namespace RunData
             return row.GetCell(cr.Col);
         }
 
+        public void Save()
+        {
+            this.memberData.Save(MEMBER_DATA_FILE);
+            this.NoRunData.Save(NO_RUN_DATA_FILE);
+            this.NonBreakRunData.Save(NON_BREAK_RUN_DATA_FILE);
+        }
+    }
+
+    public class RowsReader : IEnumerable<string[]>
+    {
+        private readonly ISheet sheet;
+        private readonly int startRowIndex;
+        private readonly int columnCount;
+
+        public RowsReader(ISheet sheet, int startRowIndex, int columnCount)
+        {
+            this.sheet = sheet;
+            this.startRowIndex = startRowIndex;
+            this.columnCount = columnCount;
+        }
+
+        public IEnumerator<string[]> GetEnumerator()
+        {
+            for (int rowIndex = this.startRowIndex; rowIndex <= this.sheet.LastRowNum; rowIndex++)
+            {
+                IRow row = sheet.GetRow(rowIndex);
+                // empty row
+                // That is the main reason why the enumerator is introduced
+                ICell cell = row.GetCell(0);
+                bool isEmptyRow = (cell == null);
+                if (isEmptyRow) break;
+
+                yield return ReadRowToArray(row, this.columnCount);
+            }
+        }
+
         // 都以string读入是防止源头excel不按格式写数据，不管3721都先转string
         private static string[] ReadRowToArray(IRow row, int columnCount)
         {
@@ -425,11 +445,9 @@ namespace RunData
             return values;
         }
 
-        public void Save()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            this.memberData.Save(MEMBER_DATA_FILE);
-            this.NoRunData.Save(NO_RUN_DATA_FILE);
-            this.NonBreakRunData.Save(NON_BREAK_RUN_DATA_FILE);
+            return GetEnumerator();
         }
     }
 }
