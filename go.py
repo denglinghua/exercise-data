@@ -31,7 +31,8 @@ print('op :' + op)
 
 df = datasource.load_data(data_path)
 if op == 'pkl':
-    df.to_pickle('data.pkl')
+    data_range = sys.argv[3] if (len(sys.argv) > 3) else ''
+    datasource.pkl_data(df, data_range)
 
 print(df.info())
 print(df.describe())

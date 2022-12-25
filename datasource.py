@@ -141,6 +141,17 @@ def load_data(data_dir):
 
     return df
 
+def pkl_data(df:pd.DataFrame, data_range):
+    data = df
+    if data_range:
+        print('data range: ' + data_range)
+        items = data_range.split("-")
+        start_year = int(items[0])
+        end_year = int(items[1])
+        data = df[df.year.between(start_year, end_year)]
+    
+    data.to_pickle('data_' + data_range + '.pkl')
+
 _id_name = {}
 
 def init_user_id_name_map(df:pd.DataFrame):
