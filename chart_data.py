@@ -3,7 +3,7 @@ from functools import wraps
 
 import pandas as pd
 
-from datasource import user_id_to_name
+from datasource import user_id_to_name, data_range
 
 chart_data_list = []
 
@@ -54,6 +54,13 @@ def name_value_pair_data(df, params):
     
     return (xvalues, yvalues)
 
+def _add_data_range(title:str):
+    dr = data_range()
+    if dr:
+        return title + ' (%s)' % dr
+    else:
+        return title
+
 def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar',
     values_func:callable = name_value_pair_data, value_func_params : tuple = (),
     chart_props : dict = {}
@@ -73,7 +80,7 @@ def to_chart(title:str, sub_title:str, formatter:str, chart_type:str = 'rank_bar
             func_name = func.__name__
             _print_df(df, func_name)
             print(f"\nexec {func_name} time : {toc - tic:0.4f} seconds")
-            create_chart_data(df, title, sub_title, formatter, chart_type, 
+            create_chart_data(df, title, _add_data_range(sub_title), formatter, chart_type, 
                 values_func, value_func_params, chart_props)
             return df
         return wrapped_function

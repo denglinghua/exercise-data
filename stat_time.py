@@ -28,7 +28,7 @@ def days(df:pd.DataFrame):
 
     return data
 
-@to_chart('勤奋跑者——时间长', '3年累计跑步时长', charts.to_hms_formatter,
+@to_chart('勤奋跑者——时间长', '累计跑步时长', charts.to_hms_formatter,
     value_func_params= ('time', lambda x : x.total_seconds()))
 def time(df:pd.DataFrame):
     data = df[['id', 'time']]

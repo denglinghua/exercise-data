@@ -7,7 +7,7 @@ import charts
 from stat_utils import top_n, sort_data_by_id_list
 from stat_pace import regular_pace_run
 
-@to_chart('42KM达人', '>42公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
+@to_chart('42KM达人', '>42公里的记录数量', '{c} 次',
     value_func_params= ('distance', None))
 def marathon(df:pd.DataFrame):
     data = df[['id', 'distance']].query('distance > 42')
@@ -17,7 +17,7 @@ def marathon(df:pd.DataFrame):
 
     return data
 
-@to_chart('抬腿就是半马', '>21公里的记录数量，统计范围2019-01-01～2021-12-31', '{c} 次',
+@to_chart('抬腿就是半马', '>21公里的记录数量', '{c} 次',
     value_func_params= ('distance', None))
 def half_marathon(df:pd.DataFrame):
     data = df[['id', 'distance']].query('distance > 21')
@@ -27,7 +27,7 @@ def half_marathon(df:pd.DataFrame):
         
     return data
 
-@to_chart('跑得远的', '3年累计跑量', '{c} 公里',
+@to_chart('跑得远的', '累计跑量', '{c} 公里',
     value_func_params= ('distance', lambda x : int(x)))
 def distance(df:pd.DataFrame):
     data = df[['id', 'distance']]

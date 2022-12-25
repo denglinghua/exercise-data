@@ -5,6 +5,7 @@ import os
 import pandas as pd
 
 _file_data = {'min_year' : 9999, 'max_year':0, 'seq':1}
+_data_range = ''
 
 def _add_file_data(df:pd.DataFrame, file_path):
     global _file_data
@@ -141,7 +142,7 @@ def load_data(data_dir):
 
     return df
 
-def pkl_data(df:pd.DataFrame, data_range):
+def pkl_data(df:pd.DataFrame, data_range:str):
     data = df
     if data_range:
         print('data range: ' + data_range)
@@ -151,6 +152,15 @@ def pkl_data(df:pd.DataFrame, data_range):
         data = df[df.year.between(start_year, end_year)]
     
     data.to_pickle('data_' + data_range + '.pkl')
+
+def init_data_range(df:pd.DataFrame):
+    begin = df['year'].min()
+    end = df['year'].max()
+    global _data_range
+    _data_range = '%s-%s' % (begin, end)
+
+def data_range():
+    return _data_range
 
 _id_name = {}
 

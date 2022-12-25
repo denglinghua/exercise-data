@@ -37,6 +37,7 @@ if op == 'pkl':
 print(df.info())
 print(df.describe())
 
+datasource.init_data_range(df)
 datasource.init_user_id_name_map(df)
 
 if op == 'report':
