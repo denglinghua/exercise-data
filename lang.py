@@ -10,7 +10,7 @@ _lang_dict = {
     'data__calories':('Calories', '热量消耗'),
     'data__time':('Time', '时间'),
     'data__keyword_running':('Running', '跑步'),
-    'data__keyword_swimming':('Swimming','游泳'),
+    'data__keyword_swimming':('Swim','游泳'),
     'data__keyword_cycling':('Cycling','骑'),
     'running':('Running', '跑步'),
     'swimming':('Swimming','游泳'),
