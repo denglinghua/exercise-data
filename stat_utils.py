@@ -11,7 +11,8 @@ def top_n(df, column, n, ascending=True):
 
 def sort_data_by_id_list(data, id_list):
     data.id = data.id.astype("category")
-    data.id.cat.set_categories(id_list[::-1], inplace=True)
+    # data.id.cat.set_categories(id_list[::-1], inplace=True)
+    data['id'] = data['id'].cat.set_categories(id_list[::-1])
     data.sort_values(['id'])
     
     return data

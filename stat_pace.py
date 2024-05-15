@@ -50,6 +50,7 @@ def cadence(df:pd.DataFrame):
     data = data.groupby('id').agg({'cadence':'mean','distance':'sum'})
     data = data.reset_index()
     data = data.query('distance > 1000')
+    data['cadence'] = pd.to_numeric(data['cadence'], errors='coerce')
     data = top_n(data, 'cadence', 10)
 
     return data
@@ -63,6 +64,7 @@ def stride(df:pd.DataFrame):
     data = data.groupby('id').agg({'stride':'mean','distance':'sum'})
     data = data.reset_index()  
     data = data.query('distance > 1000')
+    data['stride'] = pd.to_numeric(data['stride'], errors='coerce')
     data = top_n(data, 'stride', 10)
 
     return data

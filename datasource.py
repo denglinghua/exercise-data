@@ -131,7 +131,7 @@ def load_data(data_dir):
         one_file_df = pd.read_excel(file, header=7, names=cols, converters=_col_converts())
         # print(one_file_df)
         _add_file_data(one_file_df, file)
-        df = df.append(one_file_df, ignore_index=True)
+        df = pd.concat([df, one_file_df], ignore_index=True)
     
     _check_data()
 
