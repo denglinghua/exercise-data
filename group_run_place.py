@@ -40,7 +40,7 @@ class RunPlaceGroupBy(GroupBy):
 
 @check_data('run_times')
 def _run_place_group_set():
-    title = 'Where I Run'
+    title = lang.run_place
     column = 'Title'
 
     agg_func = get_agg_func("count")

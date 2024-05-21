@@ -1,5 +1,5 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Calendar, Page, WordCloud
+from pyecharts.charts import Bar, Calendar, Page, WordCloud, Line
 from pyecharts.faker import Faker
 from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
@@ -23,6 +23,27 @@ def draw_bar_chart(group_set):
          .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, subtitle="", pos_left='center'),
                         xaxis_opts=opts.AxisOpts(name=xtitle),
                         yaxis_opts=opts.AxisOpts(is_show=False))
+         )
+    
+    return c
+
+def draw_line_chart(group_set):
+    _init_formatter()
+
+    axis_values = group_set.get_axis_values(True, True)
+    xtitle = ''
+    ytitle = ''
+    if (group_set.xtitle):
+        xtitle = group_set.xtitle
+    if (group_set.ytitle):
+        ytitle = group_set.ytitle
+    c = (Line(init_opts=opts.InitOpts(bg_color='white'))
+         .add_xaxis(axis_values[0])
+         .add_yaxis("", axis_values[1], itemstyle_opts=opts.ItemStyleOpts(color='purple'))
+         .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+         .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, subtitle="", pos_left='center'),
+                        xaxis_opts=opts.AxisOpts(name=xtitle),
+                        yaxis_opts=opts.AxisOpts(is_show=True))
          )
     
     return c
@@ -113,6 +134,7 @@ def _get_formatter(title, ytitle):
 _chart_types = {
     'bar' : draw_bar_chart,
     'wordcloud' : _draw_word_cloud_chart,
+    'line' : draw_line_chart,
     'calendar' : draw_calendar_chart,
 }
 

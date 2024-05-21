@@ -1,5 +1,6 @@
+from datetime import time
 from group import Group, GroupSet, get_agg_func, check_data
-from group_by import RangeGroupBy, ValueGroupBy
+from group_by import RangeGroupBy, ValueGroupBy, GroupBy
 from lang import lang
 
 def _filter_activity_type(data_row, keyword):
@@ -121,6 +122,35 @@ def _activity_time_group_set():
 
     return _range_group_set(title, col, RangeGroupBy(30, 180, 30)).set_xtitle(lang.min_full)
 
+class MonthDistanceGroupBy(GroupBy):
+    def __init__(self) -> None:
+        super().__init__()
+        self.create_groups([])
+
+    def map_group_key(self, val):
+        month = self.get_month(val)
+        group = self.groups.get(month)
+        if group is None:
+            group = Group(month)
+            self.groups[month] = group
+        return month
+    
+    def get_month(self, val):
+        return "{:04d}-{:02d}".format(val.tm_year, val.tm_mon)
+
+@check_data('run_times')
+def _month_run_distance_group_set():
+    title = 'Monthly Distance'
+    column = lang.data__date
+
+    agg_func = get_agg_func("sum")
+
+    group_set = GroupSet(title, column, MonthDistanceGroupBy(), agg_func, _filter_running_func)
+    group_set.sum_column = lang.data__distance
+    group_set.chart_type = 'line'
+
+    return group_set
+
 def get_range_group_sets():
     return [
         _activity_time_group_set(),
@@ -132,5 +162,6 @@ def get_range_group_sets():
         _run_cadence_group_set(),
         _run_stride_group_set(),
         _swimming_distance_group_set(),
-        _cycling_distance_group_set()
+        _cycling_distance_group_set(),
+        _month_run_distance_group_set(),
     ]

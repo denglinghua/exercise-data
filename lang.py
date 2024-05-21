@@ -48,7 +48,8 @@ _lang_dict = {
     'activity_time_calendar':('Activity Time Calendar', '运动时间日历'),
     'calendar_name':('en', 'cn'),
     'rest':('REST', '休息'),
-    'activity_type_calendar':('Activity Type Calendar', '三项日历')
+    'activity_type_calendar':('Activity Type Calendar', '三项日历'),
+    'run_place':('Running Footprints', '跑过的地方'),
 }
 
 class Lang(object):

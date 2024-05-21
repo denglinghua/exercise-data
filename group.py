@@ -75,16 +75,21 @@ class GroupSet(object):
         self.chart_type = chart_type
         return self
 
-    def get_axis_values(self, drop_zero = True):
+    def get_axis_values(self, drop_zero = True, sort = False):
         xlist = []
         ylist = []
-        for group in self.groups.values():
+
+        keys = self.groups.keys()
+        if sort:
+            keys = sorted(keys)
+
+        for key in keys:
+            group = self.groups[key]
             if not drop_zero or group.agg_value > 0:
                 xlist.append(group.label)
                 ylist.append(group.agg_value)
-        
         return [xlist, ylist]
-    
+
     # for data correctness check
     def check_data(self, context):      
         if self.check_data_item:
