@@ -1,7 +1,7 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Calendar, Page
+from pyecharts.charts import Bar, Calendar, Page, WordCloud
 from pyecharts.faker import Faker
-from pyecharts.globals import ThemeType
+from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
 from group import GroupSet
 from lang import lang
@@ -26,6 +26,19 @@ def draw_bar_chart(group_set):
          )
     
     return c
+
+def _draw_word_cloud_chart(group_set):
+    words = []
+    axis_values = group_set.get_axis_values()
+    for items in zip(axis_values[0], axis_values[1]):
+        words.append(items)
+
+    wc = (WordCloud(init_opts=opts.InitOpts(bg_color='white'))
+        .add("", words, shape=SymbolType.DIAMOND)
+        .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, subtitle='', pos_left='center'))
+    )
+
+    return wc
 
 def draw_calendar_chart(group_set):
     axis_values = group_set.get_axis_values(drop_zero = False)
@@ -99,6 +112,7 @@ def _get_formatter(title, ytitle):
 
 _chart_types = {
     'bar' : draw_bar_chart,
+    'wordcloud' : _draw_word_cloud_chart,
     'calendar' : draw_calendar_chart,
 }
 
