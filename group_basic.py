@@ -6,8 +6,8 @@ class ActivityGroupBy(GroupBy):
     def __init__(self) -> None:
         super().__init__()
         self.create_groups([lang.running, lang.swimming, lang.cycling])
-
-    def map_group(self, val) -> int:
+    
+    def map_group_key(self, val):
         keywords = [lang.data__keyword_running, lang.data__keyword_swimming, lang.data__keyword_cycling]
         i = 0
         for key in keywords:

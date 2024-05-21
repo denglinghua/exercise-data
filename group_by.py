@@ -9,7 +9,7 @@ class GroupBy(object):
         self.value_func = None
     
     def create_groups(self, series):
-        self.groups = list(map(lambda s: Group(s), series))
+        self.groups = dict(enumerate(list(map(lambda s: Group(s), series))))
 
     def set_group_set(self, group_set):
         self.group_set = group_set
@@ -19,8 +19,8 @@ class GroupBy(object):
         self.value_func = value_func
         return self
 
-    def map_group(val) -> int:
-        return -1
+    def map_group_key(val):
+        return None
 
 
 class RangeGroupBy(GroupBy):
@@ -31,8 +31,8 @@ class RangeGroupBy(GroupBy):
         self.step = step
         self.create_groups(self.create_series(format, list))
 
-    def map_group(self, val) -> int:
-        group_count = len(self.group_set.groups)
+    def map_group_key(self, val):
+        group_count = len(self.group_set.groups.values())
         if val < self.start:
             return 0
         if val >= self.end:
@@ -63,9 +63,9 @@ class ValueGroupBy(GroupBy):
         super().__init__()
         self.create_groups(self.create_series(values, format))
 
-    def map_group(self, val) -> int:
+    def map_group_key(self, val):
         return val
-
+    
     def create_series(self, values, format) -> list:
         series = []
         series.extend(map(lambda v : format % v, values))

@@ -10,12 +10,12 @@ def _do_group_row(data_row, group_set):
     if value_func:
         group_value = value_func(group_value)
     
-    group_index = group_set.group_by.map_group(group_value)
-    if group_index >= 0 and group_index < len(group_set.groups):
-        group = group_set.groups[group_index]
+    group_key = group_set.group_by.map_group_key(group_value)
+    group = group_set.groups.get(group_key)
+    if group:
         group.data_rows.append(data_row)
     else:
-        print('%s, %s group index out of range' % (group_set.title, group_index))
+        print('[%s:%s] can not map to a group' % (group_set.title, group_value))
 
 
 def do_group(data_rows, group_sets):
@@ -24,7 +24,7 @@ def do_group(data_rows, group_sets):
             _do_group_row(data_row, group_set)
     
     for group_set in group_sets:
-        for group in group_set.groups:
+        for group in group_set.groups.values():
             group.agg_value = group_set.agg_func(group_set, group)
 
 def print_group_sets(group_sets):
@@ -61,7 +61,7 @@ class GroupSet(object):
         self.check_data_item = None
     
     def __str__(self):
-        return '{%s, %s, %s}' % (self.title, self.group_by_column, self.groups)
+        return '{%s, %s, %s}' % (self.title, self.group_by_column, self.groups.values())
     
     def set_xtitle(self, title):
         self.xtitle = title
@@ -78,7 +78,7 @@ class GroupSet(object):
     def get_axis_values(self, drop_zero = True):
         xlist = []
         ylist = []
-        for group in self.groups:
+        for group in self.groups.values():
             if not drop_zero or group.agg_value > 0:
                 xlist.append(group.label)
                 ylist.append(group.agg_value)
@@ -88,7 +88,7 @@ class GroupSet(object):
     # for data correctness check
     def check_data(self, context):      
         if self.check_data_item:
-            total = sum(map(lambda g : g.row_count(), self.groups))
+            total = sum(map(lambda g : g.row_count(), self.groups.values()))
             exp_val = context[self.check_data_item]
             if (exp_val == total):
                 print('O check OK %s' % self.title)
