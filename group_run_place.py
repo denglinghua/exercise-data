@@ -7,14 +7,9 @@ from lang import lang
 class RunPlaceGroupBy(GroupBy):
     def __init__(self) -> None:
         super().__init__()
-        self.create_groups([])
 
     def map_group_key(self, val):
         p = self.extract_run_place(val)
-        group = self.groups.get(p)
-        if group is None:
-            group = Group(p)
-            self.groups[p] = group
         return p
     
     def merge_place(self, place):

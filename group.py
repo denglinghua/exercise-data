@@ -12,6 +12,9 @@ def _do_group_row(data_row, group_set):
     
     group_key = group_set.group_by.map_group_key(group_value)
     group = group_set.groups.get(group_key)
+    if group is None and not group_set.fixed:
+        group = Group(group_key)
+        group_set.groups[group_key] = group
     if group:
         group.data_rows.append(data_row)
     else:
@@ -55,7 +58,8 @@ class GroupSet(object):
         self.chart_type = 'bar'
         self.group_by_column = group_by_column
         self.group_by = group_by.set_group_set(self)
-        self.groups = group_by.groups
+        self.groups = group_by.groups or {}
+        self.fixed = len(self.groups.values()) > 0
         self.filter_func = filter_func
         self.agg_func = agg_func
         self.check_data_item = None

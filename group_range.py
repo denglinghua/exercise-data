@@ -125,14 +125,9 @@ def _activity_time_group_set():
 class MonthDistanceGroupBy(GroupBy):
     def __init__(self) -> None:
         super().__init__()
-        self.create_groups([])
 
     def map_group_key(self, val):
         month = self.get_month(val)
-        group = self.groups.get(month)
-        if group is None:
-            group = Group(month)
-            self.groups[month] = group
         return month
     
     def get_month(self, val):
