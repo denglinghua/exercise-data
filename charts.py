@@ -1,10 +1,13 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Calendar, Page, WordCloud, Line, Scatter, HeatMap
-from pyecharts.globals import ThemeType, SymbolType
+from pyecharts.charts import Bar, Calendar, Page, WordCloud, Line, Scatter, HeatMap, Pie
+from pyecharts.globals import SymbolType
+from pyecharts.faker import Faker
 from pyecharts.commons import utils
 from lang import lang
 
-def draw_bar_chart(group_set):
+bg_color = '#eeeeee'
+
+def create_bar_chart(group_set):
     _init_formatter()
 
     axis_values = group_set.get_axis_values()
@@ -14,7 +17,7 @@ def draw_bar_chart(group_set):
         xtitle = group_set.xtitle
     if (group_set.ytitle):
         ytitle = group_set.ytitle
-    c = (Bar(init_opts=opts.InitOpts(bg_color='white'))
+    c = (Bar(init_opts=opts.InitOpts(bg_color=bg_color))
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1], itemstyle_opts=opts.ItemStyleOpts(color='purple'))
          .set_series_opts(label_opts=opts.LabelOpts(formatter=_get_formatter(group_set.title, ytitle)))
@@ -25,7 +28,21 @@ def draw_bar_chart(group_set):
     
     return c
 
-def draw_line_chart(group_set):
+def create_pie_chart(group_set):
+    _init_formatter(True)
+    axis_values = group_set.get_axis_values()
+    c = (
+        Pie(init_opts=opts.InitOpts(bg_color=bg_color))
+        .add("", [list(z) for z in zip(axis_values[0], axis_values[1])])
+        .set_colors(["red", "blue", "yellow"])
+        .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, pos_left='center'),
+                         legend_opts=opts.LegendOpts(is_show=False),)
+        .set_series_opts(label_opts=opts.LabelOpts(formatter=_get_formatter(lang.total_activity_time, lang.hour_short)))
+    )
+
+    return c
+
+def create_line_chart(group_set):
     _init_formatter()
 
     axis_values = group_set.get_axis_values(True, True)
@@ -35,7 +52,7 @@ def draw_line_chart(group_set):
         xtitle = group_set.xtitle
     if (group_set.ytitle):
         ytitle = group_set.ytitle
-    c = (Line(init_opts=opts.InitOpts(bg_color='#eeeeee'))
+    c = (Line(init_opts=opts.InitOpts(bg_color=bg_color))
          .add_xaxis(axis_values[0])
          .add_yaxis("", axis_values[1], is_symbol_show=False, itemstyle_opts=opts.ItemStyleOpts(color='purple'),
                     markline_opts=opts.MarkLineOpts(data=[opts.MarkLineItem(type_="average")]))
@@ -47,20 +64,63 @@ def draw_line_chart(group_set):
     
     return c
 
-def _draw_word_cloud_chart(group_set):
+def create_stacked_line_chart(group_set):
+    _init_formatter()
+    
+    axis_values = group_set.get_axis_values(False, True)
+    activities = [lang.running, lang.swimming, lang.cycling]
+    
+    ys = []
+    for i in range(len(activities)):
+        ys.append([])
+    
+    for items in axis_values[1]:
+        i = 0
+        for a in activities:
+            ys[i].append(items[i])
+            i += 1
+    
+    c = Line(init_opts=opts.InitOpts(bg_color=bg_color)).add_xaxis(xaxis_data=axis_values[0])
+    
+    i = 0     
+    for a in activities:
+        c.add_yaxis(series_name=a, 
+                    stack="Total",
+                    y_axis=ys[i], 
+                    areastyle_opts=opts.AreaStyleOpts(opacity=0.5),
+                    is_symbol_show=False,
+                    label_opts=opts.LabelOpts(is_show=False, position="top"),)
+        i += 1
+    
+    c.set_global_opts(
+        title_opts=opts.TitleOpts(title=group_set.title, subtitle="", pos_left='center'),
+        tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+        legend_opts=opts.LegendOpts(orient="horizontal", pos_top="95%", pos_left="center"),
+        yaxis_opts=opts.AxisOpts(
+            type_="value",
+            name="times",
+            axistick_opts=opts.AxisTickOpts(is_show=True),
+            splitline_opts=opts.SplitLineOpts(is_show=True),
+        ),
+        xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
+    )
+    
+    return c
+
+def create_word_cloud_chart(group_set):
     words = []
     axis_values = group_set.get_axis_values()
     for items in zip(axis_values[0], axis_values[1]):
         words.append(items)
 
-    wc = (WordCloud(init_opts=opts.InitOpts(bg_color='#eeeeee'))
+    wc = (WordCloud(init_opts=opts.InitOpts(bg_color=bg_color))
         .add("", words, shape=SymbolType.DIAMOND)
         .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, subtitle='', pos_left='center'))
     )
 
     return wc
 
-def _draw_scatter_chart(rows):
+def create_scatter_chart(rows):
     x_data = []
     y_data = []
     for row in rows:
@@ -72,7 +132,7 @@ def _draw_scatter_chart(rows):
                 x_data.append(row[lang.data__distance])
                 y_data.append(p)
 
-    st = (Scatter(init_opts=opts.InitOpts(bg_color='#eeeeee'))
+    st = (Scatter(init_opts=opts.InitOpts(bg_color=bg_color))
      .add_xaxis(xaxis_data=x_data)
      .add_yaxis(series_name="",
         y_axis=y_data,
@@ -98,33 +158,35 @@ def _draw_scatter_chart(rows):
     
     return st
 
-def _draw_heatmap_chart(group_set):
+def generate_color_palette():
+    colors = ['#1d4877', '#1b8a5a', '#fbb021', '#f68838', '#ee3e32']
+    return colors
+
+def create_heatmap_chart(group_set):
     value = []
-    axis_values = group_set.get_axis_values(False)
+    axis_values = group_set.get_axis_values()
     for items in zip(axis_values[0], axis_values[1]):
         wh = items[0].split('-')
         value.append([int(wh[1]), int(wh[0]), items[1]])
     
-    print(value)
-    
     weekDays = lang.days_of_week
-    ws = map(lambda w: weekDays[w], range(0, 7))
-    hr = range(0, 24)
+    hours = [c.upper() for c in Faker.clock]
     c = (
-        HeatMap()
-        .add_xaxis(hr)
+        HeatMap(init_opts=opts.InitOpts(bg_color=bg_color))
+        .add_xaxis(hours)
         .add_yaxis(
-            "", ws, value, label_opts=opts.LabelOpts(position="middle")
+            "", lang.days_of_week, value, label_opts=opts.LabelOpts(position="inside")
         )
         .set_global_opts(
-            title_opts=opts.TitleOpts(group_set.title),
-            visualmap_opts=opts.VisualMapOpts(),
+            title_opts=opts.TitleOpts(title = group_set.title, pos_left='center'),
+            visualmap_opts=opts.VisualMapOpts(is_calculable=True, orient="horizontal", pos_left="center",
+                range_color=generate_color_palette()),
         )
         )
 
     return c
 
-def draw_calendar_chart(group_set):
+def create_calendar_chart(group_set):
     axis_values = group_set.get_axis_values(drop_zero = False)
     data = []
     for items in zip(axis_values[0], axis_values[1]):
@@ -172,8 +234,7 @@ def draw_groups_chart(title, group_sets, rows):
         draw_chart_func = _chart_types[group_set.chart_type]
         page.add(draw_chart_func(group_set))
     
-    page.add(_draw_scatter_chart(rows))
-    # page.add(_draw_heatmap_chart(rows))
+    page.add(create_scatter_chart(rows))
 
     page.render('chart_html/all.html')
 
@@ -183,6 +244,7 @@ _mins_to_hm_formatter = """function (params) {
         r = '';
         if (h > 0) r += (h + ' %s ');
         if (m > 0) r += (m + ' %s ');
+        if (%s) r = params.name + ': ' + r;
         return r;
     }
 """
@@ -198,8 +260,9 @@ to_ms_formatter = utils.JsCode("""function (params) {
 
 _formatters = {}
 
-def _init_formatter():
-    _formatters[lang.total_activity_time] = _mins_to_hm_formatter % (lang.hour_short, lang.min_short)
+def _init_formatter(showName = False):
+    name = 'true' if showName else 'false'
+    _formatters[lang.total_activity_time] = _mins_to_hm_formatter % (lang.hour_short, lang.min_short, name)
 
 def _get_formatter(title, ytitle):
     if title in _formatters:
@@ -208,11 +271,13 @@ def _get_formatter(title, ytitle):
         return '{c} %s' % ytitle
 
 _chart_types = {
-    'bar' : draw_bar_chart,
-    'wordcloud' : _draw_word_cloud_chart,
-    'line' : draw_line_chart,
-    'calendar' : draw_calendar_chart,
-    'heatmap' : _draw_heatmap_chart,
+    'bar' : create_bar_chart,
+    'wordcloud' : create_word_cloud_chart,
+    'line' : create_line_chart,
+    'calendar' : create_calendar_chart,
+    'heatmap' : create_heatmap_chart,
+    'pie' : create_pie_chart,
+    'stacked_line' : create_stacked_line_chart,
 }
 
 def _calendar_data_to_file(file, data):

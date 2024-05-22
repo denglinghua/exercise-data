@@ -60,12 +60,13 @@ def _activity_type_calory_group_set():
 
 @check_data('data_rows_count')
 def _activity_type_time_group_set():
-    title = lang.total_activity_time
+    title = 'Exercise Time Breakdown'
     column = lang.data__activity_type
 
     agg_func = get_agg_func('sum')
 
     group_set = _basic_group_set(title, column, agg_func)
+    group_set.chart_type = 'pie'
     group_set.sum_column = lang.data__time
 
     return group_set

@@ -150,9 +150,31 @@ class WeekhourGroupBy(GroupBy):
         key = "{:d}-{:d}".format(w, h)
         return key
     
+@check_data('data_rows_count')
+def _activity_month_freq_group_set():
+    title = 'Monthly Activity Sum'
+    column = lang.data__date
+
+    group_set = GroupSet(title, column, MonthDistanceGroupBy(), __agg_month_activity)
+    group_set.chart_type = 'stacked_line'
+
+    return group_set
+
+def __agg_month_activity(group_set, group):
+    result = [0, 0, 0]
+    for row in group.data_rows:
+        if _filter_running_func(row):
+            result[0] += 1
+        elif _filter_swimming_func(row):
+            result[1] += 1
+        elif _filter_cycling_func(row):
+            result[2] += 1
+    
+    return result
+
 @check_data('run_times')
 def _month_run_distance_group_set():
-    title = 'Monthly Distance Sum'
+    title = 'Monthly Running Distance Sum'
     column = lang.data__date
 
     agg_func = get_agg_func("sum")
@@ -165,7 +187,7 @@ def _month_run_distance_group_set():
 
 @check_data('data_rows_count')
 def _week_hour_group_set():
-    title = 'Exercise Frequency by Hour of Day'
+    title = 'Exercise Routine'
     column = lang.data__date
 
     agg_func = get_agg_func("count")
@@ -189,4 +211,5 @@ def get_range_group_sets():
         _cycling_distance_group_set(),
         _month_run_distance_group_set(),
         _week_hour_group_set(),
+        _activity_month_freq_group_set(),
     ]
