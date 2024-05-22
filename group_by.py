@@ -8,9 +8,12 @@ class GroupBy(object):
         self.groups = None
         self.value_func = None
     
-    def create_groups(self, series):
-        self.groups = dict(enumerate(list(map(lambda s: Group(s), series))))
-
+    def create_groups(self, series, seq_key=True):
+        if seq_key:
+            self.groups = dict(enumerate(list(map(lambda s: Group(s), series))))
+        else:
+            self.groups = {s: Group(s) for s in series}
+        
     def set_group_set(self, group_set):
         self.group_set = group_set
         return self

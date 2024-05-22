@@ -1,9 +1,7 @@
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Calendar, Page, WordCloud, Line, Scatter
-from pyecharts.faker import Faker
+from pyecharts.charts import Bar, Calendar, Page, WordCloud, Line, Scatter, HeatMap
 from pyecharts.globals import ThemeType, SymbolType
 from pyecharts.commons import utils
-from group import GroupSet
 from lang import lang
 
 def draw_bar_chart(group_set):
@@ -79,6 +77,7 @@ def _draw_scatter_chart(rows):
      .add_yaxis(series_name="",
         y_axis=y_data,
         symbol_size=5,
+        # itemstyle_opts=opts.ItemStyleOpts(color='blue'),
         label_opts=opts.LabelOpts(is_show=False),)
     .set_series_opts()
     .set_global_opts(
@@ -98,6 +97,32 @@ def _draw_scatter_chart(rows):
         tooltip_opts=opts.TooltipOpts(is_show=False)))
     
     return st
+
+def _draw_heatmap_chart(group_set):
+    value = []
+    axis_values = group_set.get_axis_values(False)
+    for items in zip(axis_values[0], axis_values[1]):
+        wh = items[0].split('-')
+        value.append([int(wh[1]), int(wh[0]), items[1]])
+    
+    print(value)
+    
+    weekDays = lang.days_of_week
+    ws = map(lambda w: weekDays[w], range(0, 7))
+    hr = range(0, 24)
+    c = (
+        HeatMap()
+        .add_xaxis(hr)
+        .add_yaxis(
+            "", ws, value, label_opts=opts.LabelOpts(position="middle")
+        )
+        .set_global_opts(
+            title_opts=opts.TitleOpts(group_set.title),
+            visualmap_opts=opts.VisualMapOpts(),
+        )
+        )
+
+    return c
 
 def draw_calendar_chart(group_set):
     axis_values = group_set.get_axis_values(drop_zero = False)
@@ -148,6 +173,7 @@ def draw_groups_chart(title, group_sets, rows):
         page.add(draw_chart_func(group_set))
     
     page.add(_draw_scatter_chart(rows))
+    # page.add(_draw_heatmap_chart(rows))
 
     page.render('chart_html/all.html')
 
@@ -186,6 +212,7 @@ _chart_types = {
     'wordcloud' : _draw_word_cloud_chart,
     'line' : draw_line_chart,
     'calendar' : draw_calendar_chart,
+    'heatmap' : _draw_heatmap_chart,
 }
 
 def _calendar_data_to_file(file, data):

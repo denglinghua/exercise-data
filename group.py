@@ -18,7 +18,7 @@ def _do_group_row(data_row, group_set):
     if group:
         group.data_rows.append(data_row)
     else:
-        print('[%s:%s] can not map to a group' % (group_set.title, group_value))
+        print('[%s:%s:%s] can not map to a group' % (group_set.title, group_value, group_key))
 
 
 def do_group(data_rows, group_sets):

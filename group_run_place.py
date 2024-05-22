@@ -51,7 +51,7 @@ def _filter_running_func(data_row):
 def _filter_activity_type(data_row, keyword):
     return data_row[lang.data__activity_type].find(keyword) >= 0
 
-def get_calendar_group_sets():
+def get_run_place_group_sets():
     return [
         _run_place_group_set(),
     ]

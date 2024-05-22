@@ -133,6 +133,23 @@ class MonthDistanceGroupBy(GroupBy):
     def get_month(self, val):
         return "{:04d}-{:02d}".format(val.tm_year, val.tm_mon)
 
+class WeekhourGroupBy(GroupBy):
+    def __init__(self) -> None:
+        super().__init__()
+        ws = range(0, 7)
+        hr = range(0, 24)
+        values = []
+        for w in ws:
+            for h in hr:
+                values.append("{:d}-{:d}".format(w, h))
+        self.create_groups(values, False)
+
+    def map_group_key(self, val):
+        w = val.tm_wday
+        h = val.tm_hour
+        key = "{:d}-{:d}".format(w, h)
+        return key
+    
 @check_data('run_times')
 def _month_run_distance_group_set():
     title = 'Monthly Distance Sum'
@@ -143,6 +160,18 @@ def _month_run_distance_group_set():
     group_set = GroupSet(title, column, MonthDistanceGroupBy(), agg_func, _filter_running_func)
     group_set.sum_column = lang.data__distance
     group_set.chart_type = 'line'
+
+    return group_set
+
+@check_data('data_rows_count')
+def _week_hour_group_set():
+    title = 'Exercise Frequency by Hour of Day'
+    column = lang.data__date
+
+    agg_func = get_agg_func("count")
+
+    group_set = GroupSet(title, column, WeekhourGroupBy(), agg_func)
+    group_set.chart_type = 'heatmap'
 
     return group_set
 
@@ -159,4 +188,5 @@ def get_range_group_sets():
         _swimming_distance_group_set(),
         _cycling_distance_group_set(),
         _month_run_distance_group_set(),
+        _week_hour_group_set(),
     ]
