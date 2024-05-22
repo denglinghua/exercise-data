@@ -152,7 +152,7 @@ class WeekhourGroupBy(GroupBy):
     
 @check_data('data_rows_count')
 def _activity_month_freq_group_set():
-    title = 'Monthly Activity Sum'
+    title = 'Monthly Breakdown of Exercise Sessions'
     column = lang.data__date
 
     group_set = GroupSet(title, column, MonthDistanceGroupBy(), __agg_month_activity)
