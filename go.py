@@ -22,7 +22,8 @@ prehandle_data(rows)
 group_sets = get_basic_group_sets() + get_range_group_sets() + get_calendar_group_sets()
 do_group(rows, group_sets)
 print_group_sets(group_sets)    
-draw_groups_chart("Triathlon execise data review", group_sets)
+draw_groups_chart("Triathlon execise data review", group_sets, rows)
+
 draw_test_chart("Percent charts", group_sets)
 
 # check group data is correct?
