@@ -99,7 +99,7 @@ def create_stacked_line_chart(group_set):
         legend_opts=opts.LegendOpts(orient="horizontal", pos_top="95%", pos_left="center"),
         yaxis_opts=opts.AxisOpts(
             type_="value",
-            name="times",
+            name="Activities",
             axistick_opts=opts.AxisTickOpts(is_show=True),
             splitline_opts=opts.SplitLineOpts(is_show=True),
         ),
@@ -148,7 +148,7 @@ def create_scatter_chart(rows):
             type_="value", splitline_opts=opts.SplitLineOpts(is_show=True)
         ),
         yaxis_opts=opts.AxisOpts(
-            name=lang.run_pace_unit,
+            name='Avg Pace(min/km)',
             type_="value",
             min_=240,
             axistick_opts=opts.AxisTickOpts(is_show=True),
@@ -236,7 +236,8 @@ def draw_groups_chart(title, group_sets, rows):
         page.add(draw_chart_func(group_set))
     
     page.add(create_scatter_chart(rows))
-    html_path = os.path.join(os.getcwd(), 'chart_html/chart_html')
+    
+    html_path = os.path.join(os.getcwd(), 'chart_html/all.html')
     page.render(html_path)
 
 _mins_to_hm_formatter = """function (params) {

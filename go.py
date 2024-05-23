@@ -9,6 +9,9 @@ from core.group import do_group, print_group_sets
 from analysis.group_basic import get_basic_group_sets
 from analysis.group_range import get_range_group_sets
 from analysis.run_place import get_run_place_group_sets
+from analysis.month_activity_freq import get_month_activity_freq_group_sets
+from analysis.week_hour_activity import get_week_hour_activity_group_sets
+from analysis.month_run_distance import get_month_run_distance_group_sets
 from chart.charts import draw_groups_chart
 from chart.test_charts import draw_groups_chart as draw_test_chart
 
@@ -22,6 +25,8 @@ for file in files:
 print("Read %d files, %d rows" % (len(files), len(rows)))
 prehandle_data(rows)
 group_sets = get_basic_group_sets() + get_range_group_sets() + get_run_place_group_sets()
+group_sets += get_month_activity_freq_group_sets() + get_week_hour_activity_group_sets()
+group_sets += get_month_run_distance_group_sets()
 do_group(rows, group_sets)
 print_group_sets(group_sets)    
 draw_groups_chart("Triathlon execise data review", group_sets, rows)
