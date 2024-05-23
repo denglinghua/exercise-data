@@ -44,7 +44,7 @@ def _run_place_group_set():
     
     return group_set
 
-def get_run_place_group_sets():
+def group_sets():
     return [
         _run_place_group_set(),
     ]

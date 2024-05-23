@@ -19,7 +19,7 @@ class WeekhourGroupBy(GroupBy):
         key = "{:d}-{:d}".format(w, h)
         return key
 
-@check_data('data_rows_count')
+@check_data('activity_times')
 def _week_hour_activity_group_set():
     title = 'Exercise Routine'
     column = lang.data__date
@@ -31,7 +31,7 @@ def _week_hour_activity_group_set():
 
     return group_set
 
-def get_week_hour_activity_group_sets():
+def group_sets():
     return [
         _week_hour_activity_group_set(),
     ]

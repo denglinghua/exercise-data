@@ -2,7 +2,7 @@ from core.group import GroupSet, check_data
 from analysis.common import is_running, is_swimming, is_cycling, MonthGroupBy
 from lang import lang
 
-@check_data('data_rows_count')
+@check_data('activity_times')
 def _month_activity_freq_group_set():
     title = 'Monthly Breakdown of Exercise Sessions'
     column = lang.data__date
@@ -24,7 +24,7 @@ def __agg_month_activity(group_set, group):
     
     return result
 
-def get_month_activity_freq_group_sets():
+def group_sets():
     return [
         _month_activity_freq_group_set(),
     ]

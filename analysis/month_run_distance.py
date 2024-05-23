@@ -15,7 +15,7 @@ def _month_run_distance_group_set():
 
     return group_set
 
-def get_month_run_distance_group_sets():
+def group_sets():
     return [
         _month_run_distance_group_set(),
     ]
