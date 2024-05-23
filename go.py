@@ -1,14 +1,16 @@
 import sys
 import glob
-import csv_reader
+
 from lang import set_lang
-from group import do_group, print_group_sets
-from group_basic import get_basic_group_sets
-from group_range import get_range_group_sets
-from group_run_place import get_run_place_group_sets
-from charts import draw_groups_chart
-from test_charts import draw_groups_chart as draw_test_chart
-from datasource import prehandle_data
+import data.csv_reader as csv_reader
+from data.datasource import prehandle_data
+from core.group import do_group, print_group_sets
+
+from analysis.group_basic import get_basic_group_sets
+from analysis.group_range import get_range_group_sets
+from analysis.run_place import get_run_place_group_sets
+from chart.charts import draw_groups_chart
+from chart.test_charts import draw_groups_chart as draw_test_chart
 
 data_dir = sys.argv[1]
 set_lang(int(sys.argv[2]), int(sys.argv[3]))

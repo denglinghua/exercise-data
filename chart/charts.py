@@ -1,3 +1,4 @@
+import os
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Calendar, Page, WordCloud, Line, Scatter, HeatMap, Pie
 from pyecharts.globals import SymbolType
@@ -235,8 +236,8 @@ def draw_groups_chart(title, group_sets, rows):
         page.add(draw_chart_func(group_set))
     
     page.add(create_scatter_chart(rows))
-
-    page.render('chart_html/all.html')
+    html_path = os.path.join(os.getcwd(), 'chart_html/chart_html')
+    page.render(html_path)
 
 _mins_to_hm_formatter = """function (params) {
         mins = params.value;

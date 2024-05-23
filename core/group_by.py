@@ -1,5 +1,5 @@
 import math
-from group import Group
+from core.group import Group
 
 
 class GroupBy(object):

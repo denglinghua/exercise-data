@@ -1,5 +1,5 @@
-from group import Group, GroupSet, get_agg_func, check_data
-from group_by import GroupBy
+from core.group import GroupSet, get_agg_func, check_data
+from core.group_by import GroupBy
 from lang import lang
 
 class ActivityGroupBy(GroupBy):
