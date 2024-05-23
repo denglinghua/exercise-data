@@ -142,7 +142,7 @@ class WeekhourGroupBy(GroupBy):
         for w in ws:
             for h in hr:
                 values.append("{:d}-{:d}".format(w, h))
-        self.create_groups(values, False)
+        self.create_groups(values, group_key_stragety='dict')
 
     def map_group_key(self, val):
         w = val.tm_wday

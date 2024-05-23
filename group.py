@@ -39,7 +39,7 @@ class Group(object):
     def __init__(self, label):
         self.label = label
         self.data_rows = []
-        self.agg_value = 0
+        self.agg_value = None
     
     def row_count(self):
         return len(self.data_rows)
@@ -79,12 +79,12 @@ class GroupSet(object):
         self.chart_type = chart_type
         return self
 
-    def get_axis_values(self, drop_zero = True, sort = False):
+    def get_axis_values(self, drop_zero = True, x_sort = False):
         xlist = []
         ylist = []
 
         keys = self.groups.keys()
-        if sort:
+        if x_sort:
             keys = sorted(keys)
 
         for key in keys:
@@ -113,6 +113,7 @@ def _agg_sum_func(group_set, group):
     return sum(r[group_set.sum_column] for r in group.data_rows)
 
 def _agg_avg_func(group_set, group):
+    # TODO
     return 0
 
 def get_agg_func(func_name):

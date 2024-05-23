@@ -8,11 +8,13 @@ class GroupBy(object):
         self.groups = None
         self.value_func = None
     
-    def create_groups(self, series, seq_key=True):
-        if seq_key:
+    def create_groups(self, series, group_key_stragety='list'):
+        if group_key_stragety == 'list':
             self.groups = dict(enumerate(list(map(lambda s: Group(s), series))))
-        else:
+        elif group_key_stragety == 'dict':
             self.groups = {s: Group(s) for s in series}
+        else:
+            raise ValueError('Invalid group key stragety : %s' % group_key_stragety)
         
     def set_group_set(self, group_set):
         self.group_set = group_set
