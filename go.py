@@ -8,7 +8,7 @@ import stat_distance as st_d
 import stat_pace as  st_p
 import stat_time as st_t
 import stat_individual as st_i
-import charts
+from individual import charts, week_hour, month_distance, pace_distance, month_pace
 
 print('\nstart...')
 print('python version :' + sys.version)
@@ -40,6 +40,28 @@ print(df.describe())
 datasource.init_data_range(df)
 datasource.init_user_id_name_map(df)
 
+data_gens = [week_hour.gen_data, pace_distance.gen_data, month_distance.gen_data, month_pace.gen_data]
+index = 0
+all_data = {}
+for g, one_runner_data in df.groupby('id'):
+    #86288420
+    #3009452
+    #29468949
+    #2756238
+    #28579073
+    #12106842
+    if g == 2756238:
+        for gen in data_gens:
+            data = gen(one_runner_data)
+            all_data[data['name']] = data['data']
+        break
+    index += 1
+
+#print(all_data)
+
+charts.draw_groups_chart('individual', all_data)
+
+'''
 if op == 'report':
     st_d.marathon(df)
     st_d.half_marathon(df)
@@ -68,5 +90,5 @@ if op == 'kline':
     st_i.kline_pace(df,id)
 
 charts.draw_charts()
-
+'''
 
