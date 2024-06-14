@@ -4,7 +4,7 @@ from lang import lang
 
 @check_data('activity_times')
 def _month_activity_freq_group_set():
-    title = 'Monthly Breakdown of Exercise Sessions'
+    title = 'Breakdown of Exercise Sessions'
     column = lang.data__date
 
     group_set = GroupSet(title, column, MonthGroupBy(), __agg_month_activity)

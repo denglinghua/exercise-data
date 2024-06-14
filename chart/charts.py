@@ -38,7 +38,7 @@ def create_pie_chart(group_set):
         .set_colors(["red", "blue", "yellow"])
         .set_global_opts(title_opts=opts.TitleOpts(title=group_set.title, pos_left='center'),
                          legend_opts=opts.LegendOpts(is_show=False),)
-        .set_series_opts(label_opts=opts.LabelOpts(formatter=_get_formatter(lang.total_activity_time, lang.hour_short)))
+        .set_series_opts(label_opts=opts.LabelOpts(position='inside', formatter=_get_formatter(lang.total_activity_time, lang.hour_short)))
     )
 
     return c

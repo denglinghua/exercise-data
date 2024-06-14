@@ -4,7 +4,7 @@ from lang import lang
 
 @check_data('run_times')
 def _month_run_distance_group_set():
-    title = 'Monthly Running Distance Sum'
+    title = 'Monthly Running Distance'
     column = lang.data__date
 
     agg_func = get_agg_func("sum")
