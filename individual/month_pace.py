@@ -6,6 +6,6 @@ def gen_data(df):
     y = []
     for month, row in data.iterrows():
         x.append(month.strftime('%Y-%m'))
-        y.append(row['pace'].total_seconds())
+        y.append(int(row['pace'].total_seconds()))
     
-    return {'name':'month_pace', 'data' : { 'x':x, 'y':y } }
+    return {'name':'month_pace', 'title' :'配速趋势', 'data' : { 'x':x, 'y':y } }

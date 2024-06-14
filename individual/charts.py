@@ -6,7 +6,7 @@ from pyecharts.commons import utils
 
 bg_color = '#eeeeee'
 
-def create_month_distance_line(name, data):
+def create_month_distance_line(name, title, data):
     _init_formatter()
 
     xtitle = ''
@@ -15,14 +15,14 @@ def create_month_distance_line(name, data):
          .add_yaxis("", data['y'], is_symbol_show=False, itemstyle_opts=opts.ItemStyleOpts(color='green'),
                     markline_opts=opts.MarkLineOpts(data=[opts.MarkLineItem(type_="average")]))
          .set_series_opts(label_opts=opts.LabelOpts(is_show=False), linestyle_opts=opts.LineStyleOpts(width=2))
-         .set_global_opts(title_opts=opts.TitleOpts(title='月跑量趋势', subtitle="", pos_left='center'),
+         .set_global_opts(title_opts=opts.TitleOpts(title=title, subtitle="", pos_left='center'),
                         xaxis_opts=opts.AxisOpts(name=xtitle),
                         yaxis_opts=opts.AxisOpts(is_show=True, name='公里'))
          )
     
     return c
 
-def create_month_pace_line(name, data):
+def create_month_pace_line(name, title, data):
     _init_formatter()
 
     xtitle = ''
@@ -31,7 +31,7 @@ def create_month_pace_line(name, data):
          .add_yaxis("", data['y'], is_symbol_show=False, itemstyle_opts=opts.ItemStyleOpts(color='orange'),
                     markline_opts=opts.MarkLineOpts(data=[opts.MarkLineItem(type_="average")]))
          .set_series_opts(label_opts=opts.LabelOpts(is_show=False), linestyle_opts=opts.LineStyleOpts(width=2))
-         .set_global_opts(title_opts=opts.TitleOpts(title='配速趋势', subtitle="", pos_left='center'),
+         .set_global_opts(title_opts=opts.TitleOpts(title=title, subtitle="", pos_left='center'),
                         xaxis_opts=opts.AxisOpts(name=xtitle),
                         yaxis_opts=opts.AxisOpts(is_show=True, name='', is_inverse = True, min_ = 240,
                                                  axislabel_opts=opts.LabelOpts(formatter=to_ms_formatter)))
@@ -39,7 +39,7 @@ def create_month_pace_line(name, data):
     
     return c
 
-def create_pace_distance_scatter(name, data):
+def create_pace_distance_scatter(name, title, data):
     x_data = []
     y_data = []
     for row in data:
@@ -57,7 +57,7 @@ def create_pace_distance_scatter(name, data):
         label_opts=opts.LabelOpts(is_show=False),)
     .set_series_opts()
     .set_global_opts(
-        title_opts=opts.TitleOpts(title='距离/配速分布', subtitle="", pos_left='center'),
+        title_opts=opts.TitleOpts(title=title, subtitle="", pos_left='center'),
         xaxis_opts=opts.AxisOpts(
             name='距离',
             type_="value", splitline_opts=opts.SplitLineOpts(is_show=True)
@@ -78,7 +78,7 @@ def generate_color_palette():
     colors = ['#1d4877', '#1b8a5a', '#fbb021', '#f68838', '#ee3e32']
     return colors
 
-def create_week_hour_heatmap(name, data):
+def create_week_hour_heatmap(name, title, data):
     value = data
     
     weekDays = ["一", "二", "三", "四", "五", "六", "日"]
@@ -90,7 +90,7 @@ def create_week_hour_heatmap(name, data):
             "", weekDays, value, label_opts=opts.LabelOpts(position="inside")
         )
         .set_global_opts(
-            title_opts=opts.TitleOpts(title = '跑步时辰', pos_left='center'),
+            title_opts=opts.TitleOpts(title = title, pos_left='center'),
             visualmap_opts=opts.VisualMapOpts(is_calculable=True, orient="horizontal", pos_left="center",
                 range_color=generate_color_palette()),
         )
@@ -102,8 +102,9 @@ def draw_groups_chart(title, all_data):
     page = Page()
     page.page_title = title
     for name, data in all_data.items():
+        print(name, data)
         draw_chart_func = _chart_types[name]
-        page.add(draw_chart_func(name, data))
+        page.add(draw_chart_func(name, data['title'], data['data']))
     
     html_path = os.path.join(os.getcwd(), 'chart_html/individual.html')
     page.render(html_path)

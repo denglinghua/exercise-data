@@ -2,8 +2,8 @@ def gen_data(df):
     data = df
     result = []
     for index, row in data.iterrows():
-        distance = row['distance']
-        pace = row['pace'].total_seconds()
+        distance = round(row['distance'], 2)
+        pace = int(row['pace'].total_seconds())
         result.append([distance, pace])
     
-    return {'name':'pace_distance', 'data' : result }
+    return {'name':'pace_distance', 'title' :'距离/配速分布', 'data' : result }

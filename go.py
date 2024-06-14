@@ -1,13 +1,10 @@
 import sys
-
+import os
 import pandas as pd
 import pyecharts
+import json
 
 import datasource
-import stat_distance as st_d
-import stat_pace as  st_p
-import stat_time as st_t
-import stat_individual as st_i
 from individual import charts, week_hour, month_distance, pace_distance, month_pace
 
 print('\nstart...')
@@ -40,6 +37,11 @@ print(df.describe())
 datasource.init_data_range(df)
 datasource.init_user_id_name_map(df)
 
+def save_data(id, all_data):
+    file_name = os.path.join(os.getcwd(), 'data', str(id))
+    with open(file_name, 'w') as f:
+        json.dump(all_data, f)
+
 data_gens = [week_hour.gen_data, pace_distance.gen_data, month_distance.gen_data, month_pace.gen_data]
 index = 0
 all_data = {}
@@ -51,15 +53,17 @@ for g, one_runner_data in df.groupby('id'):
     #28579073
     #12106842
     if g == 2756238:
+        all_data = { 'runner' : datasource.user_id_to_name(g), 'dataset' : {} }
         for gen in data_gens:
             data = gen(one_runner_data)
-            all_data[data['name']] = data['data']
-        break
+            all_data['dataset'][data['name']] = { 'title' : data['title'], 'data' : data['data'] }
+        save_data(g, all_data)
+        
     index += 1
 
 #print(all_data)
 
-charts.draw_groups_chart('individual', all_data)
+charts.draw_groups_chart('individual', all_data['dataset'])
 
 '''
 if op == 'report':
