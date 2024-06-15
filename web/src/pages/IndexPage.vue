@@ -43,17 +43,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getCurrentInstance } from 'vue'
+import { useRouter } from 'vue-router'
 import WeekHourHeatMap from 'src/components/WeekHourHeatMap.vue'
 import PaceDistanceScatter from 'src/components/PaceDistanceScatter.vue'
 import MonthDistanceLine from 'src/components/MonthDistanceLine.vue'
 import MonthPaceLine from 'src/components/MonthPaceLine.vue'
 
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
+const $router = useRouter()
 
 const panel = ref('id')
-const id = ref('86288420')
+const id = ref(process.env.DEV ? '86288420' : '')
 const noData = ref(false)
 const runner = ref(null)
 const loading = ref(false)
@@ -63,7 +65,11 @@ const paceDistanceData = ref(null)
 const monthDistanceData = ref(null)
 const monthPaceData = ref(null)
 
-const loadData = () => {
+function getQueryId() {
+  return $router.currentRoute.value.params.id
+}
+
+function loadData() {
   if (!id.value) {
     return
   }
@@ -85,6 +91,14 @@ const loadData = () => {
     loading.value = false
   })
 }
+
+onMounted(() => {
+  const queryId = getQueryId()
+  if (queryId) {
+    id.value = queryId
+    loadData()
+  }
+})
 </script>
 <style>
 input::-webkit-outer-spin-button,
