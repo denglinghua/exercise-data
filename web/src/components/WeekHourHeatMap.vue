@@ -2,7 +2,7 @@
   <ChartBase :init="init" :data="data" />
 </template>
 <script setup>
-import { ref, watch, defineProps, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import ChartBase from 'src/components/ChartBase.vue'
 
 const props = defineProps({
@@ -30,10 +30,6 @@ function init(chart) {
     tooltip: {
       position: 'top',
     },
-    grid: {
-      height: '50%',
-      top: '10%'
-    },
     xAxis: {
       type: 'category',
       data: hours,
@@ -54,7 +50,8 @@ function init(chart) {
       calculable: true,
       orient: 'horizontal',
       left: 'center',
-      bottom: '15%'
+      bottom: '15%',
+      show: false
     },
     series: [
       {

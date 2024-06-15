@@ -1,6 +1,6 @@
 def gen_data(df):
-    # data = df[df['pace'].dt.total_seconds() < 600]
-    data = df
+    data = df[df['pace'].dt.total_seconds() < 600]
+    # data = df
     result = []
     for index, row in data.iterrows():
         distance = round(row['distance'], 2)

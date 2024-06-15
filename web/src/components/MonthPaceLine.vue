@@ -2,7 +2,7 @@
   <ChartBase :init="init" :data="data" />
 </template>
 <script setup>
-import { ref, watch, defineProps, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import ChartBase from 'src/components/ChartBase.vue'
 
 const props = defineProps({
@@ -50,11 +50,24 @@ function init(chart) {
             }
           },
           lineStyle: {
-            color: 'grey'
+            color: 'grey',
           },
+          symbol: ['none', 'none'],
         },
         lineStyle: {
-          color: 'Green'
+          color: {
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            type: 'linear',
+            colorStops: [{
+              offset: 0, color: '#1a5e1f'
+            }, {
+              offset: 1, color: '#81c883'
+            }],
+            global: false
+          }
         },
         showSymbol: false
       }
