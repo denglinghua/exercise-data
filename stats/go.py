@@ -30,6 +30,7 @@ df = datasource.load_data(data_path)
 if op == 'pkl':
     data_range = sys.argv[3] if (len(sys.argv) > 3) else ''
     datasource.pkl_data(df, data_range)
+    sys.exit()
 
 print(df.info())
 print(df.describe())
