@@ -30,7 +30,7 @@ function init(chart) {
       dimension: 1,
       show: false,
       inRange: {
-        color: ['#f2c31a', '#24b7f2']
+        color: ['#f50056', '#448aff']
       }
     },
     xAxis: {},

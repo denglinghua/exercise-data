@@ -24,7 +24,7 @@ function init(chart) {
   const data = props.data.data
   const option = {
     title: {
-      text: props.data.title,
+      text: '在什么时间跑步',
       left: 'center',
     },
     tooltip: {
@@ -51,7 +51,10 @@ function init(chart) {
       orient: 'horizontal',
       left: 'center',
       bottom: '15%',
-      show: false
+      show: false,
+      inRange: {
+        color: ['#1d4877', '#1b8a5a', '#fbb021', '#f68838', '#ee3e32']
+      }
     },
     series: [
       {
@@ -65,6 +68,10 @@ function init(chart) {
             shadowBlur: 10,
             shadowColor: 'rgba(0, 0, 0, 0.5)'
           }
+        },
+        itemStyle: {
+          borderWidth: 2,
+          borderColor: 'white'
         }
       }
     ]
