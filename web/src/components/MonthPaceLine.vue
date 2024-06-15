@@ -17,6 +17,9 @@ function init(chart) {
       text: props.data.title,
       left: 'center',
     },
+    tooltip: {
+      trigger: 'axis',
+    },
     xAxis: {
       type: 'category',
       data: props.data.data.x,
