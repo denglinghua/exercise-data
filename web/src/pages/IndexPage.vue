@@ -6,7 +6,7 @@
           <q-tab-panel name="id">
             <div class="row justify-center">
               <q-input v-model="id" label="悦跑圈ID" type="number" error-message="这个ID没有数据" :error="noData"
-                style="width:200px">
+                @keyup.enter="loadData" style="width:200px">
                 <template v-slot:append>
                   <q-icon name="arrow_forward" color="primary" @click="loadData" />
                 </template>
@@ -38,11 +38,12 @@
         </q-tab-panels>
       </div>
     </div>
+    <q-inner-loading :showing="loading" />
   </q-page>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { getCurrentInstance } from 'vue'
 import WeekHourHeatMap from 'src/components/WeekHourHeatMap.vue'
 import PaceDistanceScatter from 'src/components/PaceDistanceScatter.vue'
@@ -55,6 +56,7 @@ const panel = ref('id')
 const id = ref('86288420')
 const noData = ref(false)
 const runner = ref(null)
+const loading = ref(false)
 
 const weekHourData = ref(null)
 const paceDistanceData = ref(null)
@@ -62,6 +64,11 @@ const monthDistanceData = ref(null)
 const monthPaceData = ref(null)
 
 const loadData = () => {
+  if (!id.value) {
+    return
+  }
+
+  loading.value = true
   $api.get(`/data/${id.value}`).then((res) => {
     console.log(res.data)
     runner.value = res.data.runner
@@ -71,9 +78,11 @@ const loadData = () => {
     monthPaceData.value = res.data.dataset.month_pace
     noData.value = false
     panel.value = 'chart'
-  }).catch((err) => {
+  }).catch(() => {
     runner.value = '没有这个ID的数据'
     noData.value = true
+  }).finally(() => {
+    loading.value = false
   })
 }
 </script>
