@@ -4,6 +4,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import ChartBase from 'src/components/ChartBase.vue'
+import common from 'src/js/common'
 
 const props = defineProps({
   data: {
@@ -19,6 +20,7 @@ function init(chart) {
     },
     tooltip: {
       trigger: 'axis',
+      valueFormatter: common.createPaceFormatter()
     },
     xAxis: {
       type: 'category',
@@ -29,12 +31,7 @@ function init(chart) {
       inverse: true,
       min: 'dataMin',
       axisLabel: {
-        formatter: function (d) {
-          let mins = Math.floor(d / 60)
-          let secs = d % 60
-          secs = ('0' + secs).slice(-2)
-          return mins + ':' + secs
-        }
+        formatter: common.createPaceFormatter()
       }
     },
     series: [
@@ -44,13 +41,7 @@ function init(chart) {
         markLine: {
           data: [{ type: 'average', name: 'Avg' }],
           label: {
-            formatter: function (params) {
-              let d = params.data.value
-              let mins = Math.floor(d / 60)
-              let secs = d % 60
-              secs = ('0' + secs).slice(-2)
-              return mins + ':' + secs
-            }
+            formatter: common.createPaceFormatter()
           },
           lineStyle: {
             color: 'grey',
