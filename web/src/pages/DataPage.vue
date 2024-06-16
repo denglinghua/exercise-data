@@ -4,7 +4,7 @@
       <div style="width: 1000px; max-width: 100%;">
         <div class="row q-mb-md justify-between items-center">
           <q-btn icon="arrow_back" flat color="primary" @click="backHome" />
-          <q-chip icon="screen_rotation" size="sm" class="q-mr-sm" v-if="portrait">横屏展示效果更好</q-chip>
+          <q-chip icon="screen_rotation" size="sm" class="q-mr-sm" color="white" text-color="grey-6" v-if="portrait">横屏展示效果更好</q-chip>
         </div>
         <div class="row justify-center text-h6 q-mb-md q-mt-sm text-primary">
           {{ runner }}

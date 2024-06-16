@@ -7,11 +7,7 @@
           <q-icon name="arrow_forward" size="md" color="primary" @click="goDataPage" />
         </template>
         <template v-slot:hint>
-          <q-icon class="q-mr-md" color="grey-6" size="1.2em" name="help_outline">
-            <q-tooltip>
-              悦跑圈APP“我”页面可以查看复制ID
-            </q-tooltip>
-          </q-icon>
+          <q-icon class="q-mr-md" color="grey-6" size="1.2em" name="help_outline" @click="showIdTip" />
         </template>
       </q-input>
     </div>
@@ -21,6 +17,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 
 const $router = useRouter()
 
@@ -30,6 +27,16 @@ const id = ref(defaultId)
 function goDataPage() {
   if (!id.value) return
   $router.push({ name: 'data', params: { id: id.value } })
+}
+
+const $q = useQuasar()
+function showIdTip() {
+  $q.notify({
+    message: '悦跑圈APP“我”页面可以查看复制ID',
+    color: 'green-6',
+    position: 'top',
+    timeout: 2000,
+  })
 }
 </script>
 
