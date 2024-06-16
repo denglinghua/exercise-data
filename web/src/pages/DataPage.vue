@@ -4,23 +4,15 @@
       <div style="width: 1000px; max-width: 100%;">
         <div class="row q-mb-md justify-between items-center">
           <q-btn icon="arrow_back" flat color="primary" @click="backHome" />
-          <q-chip icon="screen_rotation" size="sm" class="q-mr-sm" color="white" text-color="grey-6" v-if="portrait">横屏展示效果更好</q-chip>
+          <q-chip icon="screen_rotation" size="sm" class="q-mr-sm" color="white" text-color="grey-6"
+            v-if="portrait">横屏展示效果更好</q-chip>
         </div>
         <div class="row justify-center text-h6 q-mb-md q-mt-sm text-primary">
           {{ runner }}
         </div>
         <div class="column" v-if="dataLoaded">
-          <div class="row" style="height: 400px;">
-            <WeekHourHeatMap :data="weekHourData" />
-          </div>
-          <div class="row" style="height: 400px;">
-            <PaceDistanceScatter :data="paceDistanceData" />
-          </div>
-          <div class="row" style="height: 400px;">
-            <MonthDistanceLine :data="monthDistanceData" />
-          </div>
-          <div class="row" style="height: 400px;">
-            <MonthPaceLine :data="monthPaceData" />
+          <div class="row q-mb-md" style="height: 400px;" v-for="c in charts" :key="c.name">
+            <component :is="c.component" v-bind="{ data: c.data.value }"></component>
           </div>
         </div>
       </div>
@@ -51,12 +43,19 @@ const paceDistanceData = ref(null)
 const monthDistanceData = ref(null)
 const monthPaceData = ref(null)
 
+const charts = [
+  { name: 'workHour', data: weekHourData, component: WeekHourHeatMap },
+  { name: 'paceDistance', data: paceDistanceData, component: PaceDistanceScatter },
+  { name: 'monthDistance', data: monthDistanceData, component: MonthDistanceLine },
+  { name: 'monthPace', data: monthPaceData, component: MonthPaceLine },
+]
+
 function getQueryId() {
   return $router.currentRoute.value.params.id
 }
 
 function backHome() {
-  $router.push({name : 'home'})
+  $router.push({ name: 'home' })
 }
 
 function loadData(id) {

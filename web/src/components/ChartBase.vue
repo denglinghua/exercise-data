@@ -25,6 +25,7 @@ let chart = null
 function createChart() {
   chart = echarts.init(chartDiv.value)
   chart.setOption({
+    backgroundColor: 'white',
     grid: {
       left: '9%',
       right: '3%',

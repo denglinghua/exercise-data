@@ -7,7 +7,7 @@
           <q-icon name="arrow_forward" size="md" color="primary" @click="goDataPage" />
         </template>
         <template v-slot:hint>
-          <q-icon class="q-mr-md" color="grey-6" size="1.2em" name="help_outline" @click="showIdTip" />
+          <q-btn class="q-mr-md" flat dense color="grey-6" size="sm" icon="help_outline" @click="showIdTip" />
         </template>
       </q-input>
     </div>
