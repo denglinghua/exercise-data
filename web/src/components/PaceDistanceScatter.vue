@@ -33,6 +33,9 @@ function init(chart) {
         color: ['#f50056', '#448aff']
       }
     },
+    grid: {
+      right: '2%',
+    },
     xAxis: {},
     yAxis: {
       inverse: true,

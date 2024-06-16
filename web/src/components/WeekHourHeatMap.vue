@@ -56,6 +56,10 @@ function init(chart) {
         color: ['#1d4877', '#1b8a5a', '#fbb021', '#f68838', '#ee3e32']
       }
     },
+    grid: {
+      left: '5%',
+      right: '2%',
+    },
     series: [
       {
         type: 'heatmap',

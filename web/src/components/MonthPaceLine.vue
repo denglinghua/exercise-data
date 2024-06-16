@@ -34,6 +34,9 @@ function init(chart) {
         formatter: common.createPaceFormatter()
       }
     },
+    grid: {
+      right: '2%',
+    },
     series: [
       {
         data: props.data.data.y,
@@ -41,6 +44,7 @@ function init(chart) {
         markLine: {
           data: [{ type: 'average', name: 'Avg' }],
           label: {
+            position: 'insideEndTop',
             formatter: common.createPaceFormatter()
           },
           lineStyle: {

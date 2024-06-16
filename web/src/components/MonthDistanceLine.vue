@@ -61,6 +61,9 @@ function init(chart) {
     yAxis: {
       type: 'value'
     },
+    grid: {
+      right: '2%',
+    },
     series: [
       {
         data: data.y,
@@ -69,6 +72,9 @@ function init(chart) {
           data: [{ type: 'average', name: 'Avg' }],
           lineStyle: {
             color: 'grey'
+          },
+          label: {
+            position: 'insideEndTop',
           },
           symbol: ['none', 'none'],
         },
