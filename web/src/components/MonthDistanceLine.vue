@@ -62,6 +62,7 @@ function init(chart) {
       type: 'value'
     },
     grid: {
+      left: '8%',
       right: '2%',
     },
     series: [

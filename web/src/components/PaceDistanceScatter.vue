@@ -34,6 +34,7 @@ function init(chart) {
       }
     },
     grid: {
+      left: '8%',
       right: '2%',
     },
     xAxis: {},
