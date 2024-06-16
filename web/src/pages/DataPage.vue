@@ -30,6 +30,7 @@ import WeekHourHeatMap from 'src/components/WeekHourHeatMap.vue'
 import PaceDistanceScatter from 'src/components/PaceDistanceScatter.vue'
 import MonthDistanceLine from 'src/components/MonthDistanceLine.vue'
 import MonthPaceLine from 'src/components/MonthPaceLine.vue'
+import MonthSessions from 'src/components/MonthSessions.vue'
 
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
 const $router = useRouter()
@@ -42,10 +43,12 @@ const weekHourData = ref(null)
 const paceDistanceData = ref(null)
 const monthDistanceData = ref(null)
 const monthPaceData = ref(null)
+const monthSessionData = ref(null)
 
 const charts = [
   { name: 'workHour', data: weekHourData, component: WeekHourHeatMap },
   { name: 'paceDistance', data: paceDistanceData, component: PaceDistanceScatter },
+  { name: 'monthSessions', data: monthSessionData, component: MonthSessions},
   { name: 'monthDistance', data: monthDistanceData, component: MonthDistanceLine },
   { name: 'monthPace', data: monthPaceData, component: MonthPaceLine },
 ]
@@ -68,6 +71,7 @@ function loadData(id) {
     paceDistanceData.value = res.data.dataset.pace_distance
     monthDistanceData.value = res.data.dataset.month_distance
     monthPaceData.value = res.data.dataset.month_pace
+    monthSessionData.value = res.data.dataset.month_sessions
 
     dataLoaded.value = true
   }).catch(() => {

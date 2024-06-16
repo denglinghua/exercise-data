@@ -51,9 +51,9 @@ function init(chart) {
             y2: 1,
             type: 'linear',
             colorStops: [{
-              offset: 0, color: '#e65104'
+              offset: 0, color: '#1b237f'
             }, {
-              offset: 1, color: '#ffb74c'
+              offset: 1, color: '#5b6bc0'
             }],
             global: false
           }
