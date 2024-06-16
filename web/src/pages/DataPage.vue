@@ -2,8 +2,9 @@
   <q-page>
     <div class="q-pa-xs flex flex-center">
       <div style="width: 1000px; max-width: 100%;">
-        <div class="row q-mb-md">
+        <div class="row q-mb-md justify-between items-center">
           <q-btn icon="arrow_back" flat color="primary" @click="backHome" />
+          <q-chip icon="screen_rotation" size="sm" class="q-mr-sm" v-if="portrait">横屏展示效果更好</q-chip>
         </div>
         <div class="row justify-center text-h6 q-mb-md q-mt-sm text-primary">
           {{ runner }}
@@ -25,6 +26,7 @@
       </div>
     </div>
     <q-inner-loading :showing="loading" />
+    <q-resize-observer @resize="onResize" />
   </q-page>
 </template>
 
@@ -75,6 +77,11 @@ function loadData(id) {
   }).finally(() => {
     loading.value = false
   })
+}
+
+const portrait = ref(false)
+function onResize(size) {
+  portrait.value = window.matchMedia("(orientation: portrait)").matches;
 }
 
 onMounted(() => {
