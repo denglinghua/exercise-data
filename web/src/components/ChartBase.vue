@@ -24,6 +24,12 @@ let chart = null
 
 function createChart() {
   chart = echarts.init(chartDiv.value)
+  chart.setOption({
+    grid: {
+      left: '9%',
+      right: '3%',
+    },
+  })
 }
 
 function onResize(size) {

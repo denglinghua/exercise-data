@@ -34,10 +34,6 @@ function init(chart) {
         formatter: common.createPaceFormatter()
       }
     },
-    grid: {
-      left: '8%',
-      right: '2%',
-    },
     series: [
       {
         data: props.data.data.y,

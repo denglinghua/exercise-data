@@ -61,10 +61,6 @@ function init(chart) {
     yAxis: {
       type: 'value'
     },
-    grid: {
-      left: '8%',
-      right: '2%',
-    },
     series: [
       {
         data: data.y,
