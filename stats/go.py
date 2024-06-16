@@ -5,7 +5,7 @@ import pyecharts
 import json
 
 import datasource
-from individual import charts, week_hour, month_distance, pace_distance, month_pace
+from individual import charts, week_hour, month_distance, pace_distance, month_pace, month_sessions
 
 print('\nstart...')
 print('python version :' + sys.version)
@@ -43,16 +43,10 @@ def save_data(id, all_data):
     with open(file_name, 'w') as f:
         json.dump(all_data, f)
 
-data_gens = [week_hour.gen_data, pace_distance.gen_data, month_distance.gen_data, month_pace.gen_data]
+data_gens = [week_hour.gen_data, pace_distance.gen_data, month_distance.gen_data, month_pace.gen_data, month_sessions.gen_data]
 index = 0
 all_data = {}
 for g, one_runner_data in df.groupby('id'):
-    #86288420
-    #3009452
-    #29468949
-    #2756238
-    #28579073
-    #12106842
     all_data = { 'runner' : datasource.user_id_to_name(g), 'dataset' : {} }
     for gen in data_gens:
         data = gen(one_runner_data)
@@ -63,7 +57,7 @@ for g, one_runner_data in df.groupby('id'):
 
 #print(all_data)
 
-charts.draw_groups_chart('individual', all_data['dataset'])
+# charts.draw_groups_chart('individual', all_data['dataset'])
 
 '''
 if op == 'report':
