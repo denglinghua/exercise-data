@@ -23,7 +23,7 @@ module.exports = configure(function (/* ctx */) {
     boot: [
 
       'axios',
-      //'ga',
+      'ga',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

@@ -19,7 +19,8 @@
     "firebase": "^10.12.2",
     "quasar": "^2.8.0",
     "vue": "^3.4.18",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue-gtag": "^2.0.1"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.9.0",
