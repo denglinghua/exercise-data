@@ -39,7 +39,10 @@ datasource.init_data_range(df)
 datasource.init_user_id_name_map(df)
 
 def save_data(id, all_data):
-    file_name = os.path.join(os.getcwd(), 'data', str(id))
+    data_dir = os.path.join(os.getcwd(), 'data')
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    file_name = os.path.join(data_dir, str(id))
     with open(file_name, 'w') as f:
         json.dump(all_data, f)
 

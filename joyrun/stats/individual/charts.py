@@ -106,7 +106,10 @@ def draw_groups_chart(title, all_data):
         draw_chart_func = _chart_types[name]
         page.add(draw_chart_func(name, data['title'], data['data']))
     
-    html_path = os.path.join(os.getcwd(), 'chart_html/individual.html')
+    html_dir = os.path.join(os.getcwd(), 'chart_html')
+    if not os.path.exists(html_dir):
+        os.makedirs(html_dir)
+    html_path = os.path.join(html_dir, 'individual.html')
     page.render(html_path)
 
 _mins_to_hm_formatter = """function (params) {
