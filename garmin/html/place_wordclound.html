@@ -1,0 +1,135 @@
+﻿<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="echarts-wordcloud.js"></script>
+  </head>
+  <body>
+    <style>
+      html,
+      body,
+      #main {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+    <div id="main"></div>
+    <script>
+      const data = {
+        Charlottetown: 210,
+        Queens: 1,
+        "Saint John": 2,
+        Stratford: 3,
+        Summerside: 2,
+        二沙岛: 49,
+        "佛山-南海": 1,
+        "北京-玉渊潭": 3,
+        华农: 3,
+        南沙: 1,
+        大夫山: 1,
+        大学城: 32,
+        大沙地: 19,
+        大观湿地公园: 5,
+        天体: 15,
+        天河公园: 1,
+        天鹿山: 1,
+        奥体: 240,
+        岭头村水库: 1,
+        "广东-东莞": 2,
+        "广东-佛山": 3,
+        "广东-惠州": 3,
+        "广东-清远": 1,
+        "广东-英德": 1,
+        "广东-顺德": 1,
+        "广西-桂林": 1,
+        "广西-阳朔": 2,
+        旭景: 91,
+        暨大: 1,
+        江边: 74,
+        "河北-张家口": 5,
+        "海南-万宁": 1,
+        "海南-三亚": 1,
+        "海南-保亭": 1,
+        "海南-文昌": 1,
+        "海南-琼海": 1,
+        "海南-陵水": 1,
+        海珠湖: 1,
+        深圳: 6,
+        "湖北-京山": 9,
+        "湖北-武汉": 1,
+        珠江公园: 126,
+        珠江新城: 4,
+        生物岛: 115,
+        白水寨: 2,
+        花都: 1,
+        "贵州-贵阳": 1,
+        车陂涌: 11,
+        重庆: 2,
+        "长沙-橘子洲头": 2,
+        "陕西-西安": 1,
+        香港: 1,
+        黄埔: 2,
+      };
+
+      const dataArr = Object.entries(data).map(([name, value]) => ({
+        name,
+        value,
+      }));
+
+      dataArr.sort(function (a, b) {
+        return b.value - a.value;
+      });
+
+      console.log(dataArr);
+
+      var chart = echarts.init(document.getElementById("main"));
+
+      var maskImage = new Image();
+
+      var option = {
+        series: [
+          {
+            type: "wordCloud",
+            sizeRange: [16, 48],
+            rotationRange: [0, 45],
+            gridSize: 0,
+            maskImage: maskImage,
+            drawOutOfBound: false,
+            layoutAnimation: true,
+            keepAspect: true,
+            textStyle: {
+              fontWeight: "bold",
+              color: function () {
+                return (
+                  "rgb(" +
+                  [
+                    Math.round(Math.random() * 200) + 50,
+                    Math.round(Math.random() * 50),
+                    Math.round(Math.random() * 50) + 50,
+                  ].join(",") +
+                  ")"
+                );
+              },
+            },
+            emphasis: {
+              textStyle: {
+                color: "#528",
+              },
+            },
+            data: dataArr,
+          },
+        ],
+      };
+
+      maskImage.src = "./mask.png";
+
+      maskImage.onload = function () {
+        option.series[0].maskImage;
+        chart.setOption(option);
+      };
+
+      window.onresize = chart.resize;
+    </script>
+  </body>
+</html>
