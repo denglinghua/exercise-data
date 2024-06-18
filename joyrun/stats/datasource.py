@@ -165,9 +165,12 @@ def data_range():
 _id_name = {}
 
 def init_user_id_name_map(df:pd.DataFrame):
-    data = df.groupby(['id', 'name']).count()
+    data = df[['id', 'name', 'end_time']]
+    data = data.groupby(['id', 'name']).max()
     data = data.reset_index()
-    data = data[['id', 'name']]
+    data = data[['id', 'name', 'end_time']]
+    # some runner might change name, so use the last end_time to get the latest name
+    data = data.sort_values(by=['end_time'], ascending=[True])
 
     global _id_name 
 
