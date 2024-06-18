@@ -7,7 +7,6 @@
 <script setup>
 import { ref, watch, defineProps, onMounted } from 'vue'
 import * as echarts from 'echarts'
-import { set } from 'vue-gtag';
 
 const props = defineProps({
   // only used for watching, no parse here
