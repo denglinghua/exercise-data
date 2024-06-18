@@ -8,4 +8,4 @@ def gen_data(df):
         x.append(month.strftime('%Y-%m'))
         y.append(int(row['pace'].total_seconds()))
     
-    return {'name':'month_pace', 'title' :'平均配速趋势', 'data' : { 'x':x, 'y':y } }
+    return {'name':'month_pace', 'title' :'平均配速趋势', 'series' : { 'x':x, 'y':y } }

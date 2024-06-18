@@ -12,7 +12,7 @@
         </div>
         <div class="column" v-if="dataLoaded">
           <div class="row q-mb-md" style="height: 400px;" v-for="c in charts" :key="c.name">
-            <component :is="c.component" v-bind="{ data: c.data.value }"></component>
+            <ChartBase :data="c.data.value" :createOption="c.option" />
           </div>
         </div>
       </div>
@@ -26,11 +26,8 @@
 import { ref, onMounted } from 'vue'
 import { getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
-import WeekHourHeatMap from 'src/components/WeekHourHeatMap.vue'
-import PaceDistanceScatter from 'src/components/PaceDistanceScatter.vue'
-import MonthDistanceLine from 'src/components/MonthDistanceLine.vue'
-import MonthPaceLine from 'src/components/MonthPaceLine.vue'
-import MonthSessions from 'src/components/MonthSessions.vue'
+import ChartBase from 'src/components/ChartBase.vue';
+import chart from '../js/chart'
 
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
 const $router = useRouter()
@@ -46,11 +43,11 @@ const monthPaceData = ref(null)
 const monthSessionData = ref(null)
 
 const charts = [
-  { name: 'workHour', data: weekHourData, component: WeekHourHeatMap },
-  { name: 'paceDistance', data: paceDistanceData, component: PaceDistanceScatter },
-  { name: 'monthSessions', data: monthSessionData, component: MonthSessions},
-  { name: 'monthDistance', data: monthDistanceData, component: MonthDistanceLine },
-  { name: 'monthPace', data: monthPaceData, component: MonthPaceLine },
+  { name: 'workHour', data: weekHourData, option: chart.weekHourHeatmap },
+  { name: 'paceDistance', data: paceDistanceData, option: chart.paceDistanceScatter },
+  { name: 'monthSessions', data: monthSessionData, option: chart.monthSessionLine},
+  { name: 'monthDistance', data: monthDistanceData, option: chart.monthDistanceLine },
+  { name: 'monthPace', data: monthPaceData, option: chart.monthPaceLine },
 ]
 
 function getQueryId() {

@@ -7,4 +7,4 @@ def gen_data(df):
         pace = int(row['pace'].total_seconds())
         result.append([distance, pace])
     
-    return {'name':'pace_distance', 'title' :'距离/配速分布', 'data' : result }
+    return {'name':'pace_distance', 'title' :'距离/配速分布', 'series' : result }

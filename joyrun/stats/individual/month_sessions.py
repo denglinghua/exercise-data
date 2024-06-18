@@ -7,4 +7,4 @@ def gen_data(df):
         x.append(month.strftime('%Y-%m'))
         y.append(row['distance'].item())
     
-    return {'name':'month_sessions', 'title' :'月跑步次数趋势', 'data' : { 'x':x, 'y':y } }
+    return {'name':'month_sessions', 'title' :'月跑步次数趋势', 'series' : { 'x':x, 'y':y } }

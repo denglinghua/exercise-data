@@ -53,7 +53,7 @@ for g, one_runner_data in df.groupby('id'):
     all_data = { 'runner' : datasource.user_id_to_name(g), 'dataset' : {} }
     for gen in data_gens:
         data = gen(one_runner_data)
-        all_data['dataset'][data['name']] = { 'title' : data['title'], 'data' : data['data'] }
+        all_data['dataset'][data['name']] = { 'title' : data['title'], 'series' : data['series'] }
     save_data(g, all_data)
         
     index += 1

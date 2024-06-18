@@ -7,13 +7,14 @@
 <script setup>
 import { ref, watch, defineProps, onMounted } from 'vue'
 import * as echarts from 'echarts'
+import { set } from 'vue-gtag';
 
 const props = defineProps({
   // only used for watching, no parse here
   data: {
     type: Object,
   },
-  init: {
+  createOption: {
     type: Function,
     default: () => { }
   },
@@ -24,13 +25,10 @@ let chart = null
 
 function createChart() {
   chart = echarts.init(chartDiv.value)
-  chart.setOption({
-    backgroundColor: 'white',
-    grid: {
-      left: '9%',
-      right: '3%',
-    },
-  })
+}
+
+function setOption() {
+  chart.setOption(props.createOption(props.data))
 }
 
 function onResize(size) {
@@ -41,13 +39,13 @@ function onResize(size) {
 }
 
 watch(() => props.data, (newVal, oldVal) => {
-  props.init(chart)
+  setOption()
 })
 
 onMounted(() => {
   createChart()
   if (props.data) {
-    props.init(chart)
+    setOption()
   }
 })
 </script>

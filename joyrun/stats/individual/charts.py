@@ -104,7 +104,7 @@ def draw_groups_chart(title, all_data):
     for name, data in all_data.items():
         print(name, data)
         draw_chart_func = _chart_types[name]
-        page.add(draw_chart_func(name, data['title'], data['data']))
+        page.add(draw_chart_func(name, data['title'], data['series']))
     
     html_dir = os.path.join(os.getcwd(), 'chart_html')
     if not os.path.exists(html_dir):
