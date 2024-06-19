@@ -27,6 +27,7 @@ def _week_hour_activity_group_set():
     agg_func = get_agg_func("count")
 
     group_set = GroupSet(title, column, WeekhourGroupBy(), agg_func)
+    group_set.name = 'week_hour'
     group_set.chart_type = 'heatmap'
 
     return group_set

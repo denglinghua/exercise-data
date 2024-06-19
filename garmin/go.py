@@ -1,22 +1,18 @@
 import sys
 
 from lang import set_lang
-import data.csv_reader as csv_reader
-from data import data_source
+from data import data_source, data2json
 from core.group import do_group, print_group_sets
 
-from analysis import group_basic
-from analysis.group_range import get_range_group_sets
 from analysis import activitiy_type_time, run_place, month_activity_freq, week_hour_activity, month_run_distance
 from chart.charts import draw_groups_chart
-from chart.test_charts import draw_groups_chart as draw_test_chart
 
 data_dir = sys.argv[1]
 set_lang(int(sys.argv[2]), int(sys.argv[3]))
 
 rows = data_source.load_data(data_dir)
 
-group_sets = [] # group_basic.group_sets() + get_range_group_sets()
+group_sets = []
 group_sets += activitiy_type_time.group_sets()
 group_sets += run_place.group_sets()
 group_sets += month_activity_freq.group_sets()
@@ -27,7 +23,7 @@ do_group(rows, group_sets)
 print_group_sets(group_sets)    
 draw_groups_chart("Triathlon execise data review", group_sets, rows)
 
-draw_test_chart("Percent charts", group_sets)
+data2json.save_data(rows, group_sets)
 
 # check group data is correct?
 check_context = {}

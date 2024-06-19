@@ -103,6 +103,7 @@ def _run_place_group_set():
     agg_func = get_agg_func("count")
 
     group_set = GroupSet(title, column, RunPlaceGroupBy(), agg_func, is_running)
+    group_set.name = 'run_place'
     group_set.chart_type = 'wordcloud'
     
     return group_set

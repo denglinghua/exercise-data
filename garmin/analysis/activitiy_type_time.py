@@ -11,6 +11,7 @@ def _activity_type_time_group_set():
     agg_func = get_agg_func('sum')
 
     group_set = create_activity_type_group_set(title, column, agg_func)
+    group_set.name = 'activity_type_time'
     group_set.chart_type = 'pie'
     group_set.sum_column = lang.data__time
 

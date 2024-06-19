@@ -237,7 +237,7 @@ def draw_groups_chart(title, group_sets, rows):
     
     page.add(create_scatter_chart(rows))
     
-    html_dir = os.path.join(os.getcwd(), 'chart_html')
+    html_dir = os.path.join(os.getcwd(), 'output')
     if not os.path.exists(html_dir):
         os.makedirs(html_dir)
     html_path = os.path.join(html_dir, 'all.html')

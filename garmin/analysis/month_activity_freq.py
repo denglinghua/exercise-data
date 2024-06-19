@@ -8,6 +8,7 @@ def _month_activity_freq_group_set():
     column = lang.data__date
 
     group_set = GroupSet(title, column, MonthGroupBy(), __agg_month_activity)
+    group_set.name = 'month_activity_freq'
     group_set.chart_type = 'stacked_line'
 
     return group_set

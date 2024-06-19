@@ -51,6 +51,7 @@ class Group(object):
 
 class GroupSet(object):
     def __init__(self, title, group_by_column, group_by, agg_func, filter_func = None):
+        self.name = None
         self.title = title
         self.xtitle = None
         self.ytitle = None
@@ -88,7 +89,7 @@ class GroupSet(object):
 
         for key in keys:
             group = self.groups[key]
-            if not drop_zero or group.agg_value > 0:
+            if not isinstance(int, float) or not drop_zero or group.agg_value > 0:
                 xlist.append(group.label)
                 ylist.append(group.agg_value)
         return [xlist, ylist]

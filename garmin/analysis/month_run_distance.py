@@ -10,6 +10,7 @@ def _month_run_distance_group_set():
     agg_func = get_agg_func("sum")
 
     group_set = GroupSet(title, column, MonthGroupBy(), agg_func, is_running)
+    group_set.name = 'month_run_distance'
     group_set.sum_column = lang.data__distance
     group_set.chart_type = 'line'
 

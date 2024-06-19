@@ -40,4 +40,4 @@ def draw_groups_chart(title, group_sets):
     for group_set in group_sets:
         if group_set.title in groups_to_draw:
             page.add(draw_group_chart(group_set))
-    page.render('chart_html/bar_percent.html')
+    page.render('output/bar_percent.html')
