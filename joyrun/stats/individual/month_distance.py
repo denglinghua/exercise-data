@@ -1,4 +1,4 @@
-def gen_data(df):
+def gen_data(df, _):
     data = df[['month', 'distance']].copy()
     data = data.groupby('month').sum('distance')
     x = []

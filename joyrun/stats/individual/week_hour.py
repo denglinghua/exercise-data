@@ -1,4 +1,4 @@
-def gen_data(df):
+def gen_data(df, _):
     data = df[['end_time', 'time']].copy()
     data['start_date'] = df['end_time'] - df['time']
     data['week_day'] = data['start_date'].map(lambda x : x.weekday())
