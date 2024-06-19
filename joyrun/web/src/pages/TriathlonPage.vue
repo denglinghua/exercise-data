@@ -24,9 +24,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getCurrentInstance } from 'vue'
+import { useMeta } from 'quasar'
 import ChartBase from 'src/components/ChartBase.vue';
 import chart from '../js/chart'
 import triathlon from '../js/triathlon_chart'
+
+useMeta(() => {
+  return {
+    title: 'Triathlon Exercise Data',
+  };
+});
 
 const $api = getCurrentInstance().appContext.config.globalProperties.$api;
 

@@ -130,7 +130,6 @@ function runPlaceWordCloud(data) {
         layoutAnimation: true,
         textStyle: {
           fontFamily: "sans-serif",
-          fontWeight: "bold",
           color: function () {
             return (
               "rgb(" +

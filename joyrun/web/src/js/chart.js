@@ -9,6 +9,7 @@ function monthDistanceLine(data) {
     },
     tooltip: {
       trigger: "axis",
+      valueFormatter: (d) => d.toFixed(2),
     },
     xAxis: {
       type: "category",
