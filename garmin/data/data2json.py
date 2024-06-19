@@ -6,11 +6,13 @@ from lang import lang
 def save_data(rows, group_sets):
     obj = {}
     for group_set in group_sets:
-        axis_values = group_set.get_axis_values()
-        obj[group_set.name] = {
-            'title': group_set.title,
-            'series': { 'x' : axis_values[0], 'y' : axis_values[1] }
-        }
+        json = None
+        if group_set.json:
+            json = group_set.json(group_set)
+        else:
+            json = group_set_to_json(group_set)
+        
+        obj[group_set.name] = json
 
     pace_distance = []
     for row in rows:
@@ -27,6 +29,16 @@ def save_data(rows, group_sets):
     }
 
     save_file(obj)
+
+def xy_to_json(title, axis_values):
+    return {
+        'title': title, 
+        'series': { 'x' : axis_values[0], 'y' : axis_values[1] }
+    }
+
+def group_set_to_json(group_set):
+    axis_values = group_set.get_axis_values()
+    return xy_to_json(group_set.title, axis_values)
 
 def save_file(all_data):
     data_dir = os.path.join(os.getcwd(), 'output')

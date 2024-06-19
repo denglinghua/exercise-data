@@ -63,6 +63,7 @@ class GroupSet(object):
         self.filter_func = filter_func
         self.agg_func = agg_func
         self.check_data_item = None
+        self.json = None
     
     def __str__(self):
         return '{%s, %s, %s}' % (self.title, self.group_by_column, self.groups.values())
