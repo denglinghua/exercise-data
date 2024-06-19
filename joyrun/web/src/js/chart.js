@@ -225,15 +225,11 @@ function paceDistanceScatter(data) {
   return option;
 }
 
-function weekHourHeatmap(data) {
+function weekHourHeatmap(data, days = ['一', '二', '三', '四', '五', '六', '日']) {
   // prettier-ignore
   const hours = [
     '12A', '1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '10A', '11A',
     '12P', '1P', '2P', '3P', '4P', '5P', '6P', '7P', '8P', '9P', '10P', '11P'
-  ];
-  // prettier-ignore
-  const days = [
-    '一', '二', '三', '四', '五', '六', '日'
   ];
 
   const option = {

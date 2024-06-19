@@ -49,7 +49,7 @@ const runPlaceData = ref(null)
 
 const charts = [
   { name: 'activityTime', data: activityTimeData, option: triathlon.activityTimePie },
-  { name: 'workHour', data: weekHourData, option: chart.weekHourHeatmap },
+  { name: 'workHour', data: weekHourData, option: triathlon.weekHourHeatmap },
   { name: 'monthActivityFreq', data: monthActivityFreqData, option: triathlon.monthActivityFreqAreaLine },
   { name: 'paceDistance', data: paceDistanceData, option: chart.paceDistanceScatter },
   { name: 'monthDistance', data: monthDistanceData, option: chart.monthDistanceLine },

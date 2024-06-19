@@ -1,4 +1,5 @@
 import common from "./common.js";
+import chart from "./chart.js";
 import "echarts-wordcloud";
 
 function activityTimePie(data) {
@@ -149,8 +150,13 @@ function runPlaceWordCloud(data) {
   return option;
 }
 
+function weekHourHeatmap(data) {
+  return chart.weekHourHeatmap(data, ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
+}
+
 export default {
   activityTimePie,
   monthActivityFreqAreaLine,
   runPlaceWordCloud,
+  weekHourHeatmap,
 };
