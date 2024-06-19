@@ -1,19 +1,5 @@
 import common from "./common.js";
 
-function createBaseOption() {
-  return {
-    backgroundColor: "white",
-    grid: {
-      left: "9%",
-      right: "3%",
-    },
-  };
-}
-
-function mergeBaseOption(option) {
-  return { ...createBaseOption(), ...option };
-}
-
 function monthDistanceLine(data) {
   const xy = common.fillMissMonthData(data.series);
   const option = {
@@ -70,7 +56,7 @@ function monthDistanceLine(data) {
     ],
   };
 
-  return mergeBaseOption(option);
+  return option;
 }
 
 function monthPaceLine(data) {
@@ -135,7 +121,7 @@ function monthPaceLine(data) {
     ],
   };
 
-  return mergeBaseOption(option);
+  return option;
 }
 
 function monthSessionLine(data) {
@@ -194,7 +180,7 @@ function monthSessionLine(data) {
     ],
   };
 
-  return mergeBaseOption(option);
+  return option;
 }
 
 function paceDistanceScatter(data) {
@@ -235,7 +221,7 @@ function paceDistanceScatter(data) {
     ],
   };
 
-  return mergeBaseOption(option);
+  return option;
 }
 
 function weekHourHeatmap(data) {
@@ -251,7 +237,7 @@ function weekHourHeatmap(data) {
 
   const option = {
     title: {
-      text: "跑步时间分布",
+      text: data.title,
       left: "center",
     },
     tooltip: {
@@ -273,7 +259,7 @@ function weekHourHeatmap(data) {
     },
     visualMap: {
       min: 0,
-      max: 10,
+      max: 60,
       calculable: true,
       orient: "horizontal",
       left: "center",
@@ -304,7 +290,7 @@ function weekHourHeatmap(data) {
     ],
   };
 
-  return mergeBaseOption(option);
+  return option;
 }
 
 export default {

@@ -80,6 +80,10 @@ class GroupSet(object):
         self.chart_type = chart_type
         return self
 
+    @staticmethod
+    def check_num(var):
+        return isinstance(var, int) or isinstance(var, float)
+
     def get_axis_values(self, drop_zero = True, x_sort = False):
         xlist = []
         ylist = []
@@ -90,11 +94,20 @@ class GroupSet(object):
 
         for key in keys:
             group = self.groups[key]
-            if not isinstance(int, float) or not drop_zero or group.agg_value > 0:
+            if not self.check_num(group.agg_value) or not drop_zero or group.agg_value > 0:
                 xlist.append(group.label)
                 ylist.append(group.agg_value)
         return [xlist, ylist]
-
+    
+    def get_json(self):
+        series = []
+        for group in self.groups.values():
+            series.append([group.label, group.agg_value])
+        return {
+            'title': self.title,
+            'series': series
+        }
+        
     # for data correctness check
     def check_data(self, context):      
         if self.check_data_item:

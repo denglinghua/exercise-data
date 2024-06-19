@@ -8,4 +8,4 @@ def gen_data(df):
     for (week_day, hour), row in data.iterrows():
         result.append([hour, week_day, int(row['time'])])
     
-    return {'name':'week_hour', 'title' :'跑步时辰', 'series':result}
+    return {'name':'week_hour', 'title' :'跑步时间分布', 'series':result}
