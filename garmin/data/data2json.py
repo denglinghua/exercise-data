@@ -7,7 +7,10 @@ def save_data(rows, group_sets):
     obj = {}
     for group_set in group_sets:
         axis_values = group_set.get_axis_values()
-        obj[group_set.name] = {'series': { 'x' : axis_values[0], 'y' : axis_values[1] }}
+        obj[group_set.name] = {
+            'title': group_set.title,
+            'series': { 'x' : axis_values[0], 'y' : axis_values[1] }
+        }
 
     pace_distance = []
     for row in rows:
@@ -18,7 +21,10 @@ def save_data(rows, group_sets):
             if p < 600:
                 pace_distance.append([row[lang.data__distance], p])
     
-    obj['pace_distance'] = { 'series': pace_distance }
+    obj['pace_distance'] = {
+        'title': 'Distribution of Pace Over Distance',
+         'series': pace_distance 
+    }
 
     save_file(obj)
 

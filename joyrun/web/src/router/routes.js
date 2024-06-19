@@ -13,6 +13,11 @@ const routes = [
         path: "runner/:id?",
         component: () => import("pages/DataPage.vue"),
       },
+      {
+        name: "triathlon",
+        path: "triathlon",
+        component: () => import("pages/TriathlonPage.vue"),
+      },
     ],
   },
 
