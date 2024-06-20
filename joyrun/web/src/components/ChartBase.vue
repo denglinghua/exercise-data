@@ -6,7 +6,40 @@
 
 <script setup>
 import { ref, watch, defineProps, onMounted } from 'vue'
-import * as echarts from 'echarts'
+// import everything from echarts, which will cause bigger bundle size
+// import * as echarts from 'echarts'
+
+// the following is a better way to import echarts, which import only what needed
+// import echarts core module, which provides necessary interfaces for echarts usage.
+import * as echarts from 'echarts/core';
+import { BarChart, PieChart, LineChart, ScatterChart, HeatmapChart  } from 'echarts/charts';
+import {
+  VisualMapComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent,
+} from 'echarts/components';
+import { LabelLayout, UniversalTransition } from 'echarts/features';
+// import Canvas renderer, note that it is necessary to introduce CanvasRenderer or SVGRenderer
+import { CanvasRenderer } from 'echarts/renderers';
+
+// register components
+echarts.use([
+  VisualMapComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent,
+  BarChart, PieChart, LineChart, ScatterChart, HeatmapChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer
+]);
 
 const props = defineProps({
   // only used for watching, no parse here
