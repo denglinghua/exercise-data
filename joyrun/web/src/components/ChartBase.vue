@@ -22,6 +22,7 @@ import {
   TransformComponent,
   LegendComponent,
   MarkLineComponent,
+  ToolboxComponent,
 } from 'echarts/components';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 // import Canvas renderer, note that it is necessary to introduce CanvasRenderer or SVGRenderer
@@ -37,6 +38,7 @@ echarts.use([
   TransformComponent,
   LegendComponent,
   MarkLineComponent,
+  ToolboxComponent,
   BarChart, PieChart, LineChart, ScatterChart, HeatmapChart,
   LabelLayout,
   UniversalTransition,
@@ -65,6 +67,12 @@ function createChart() {
       left: "9%",
       right: "3%",
     },
+    toolbox: {
+      show: true,
+      feature: {
+        saveAsImage: {}
+      }
+    }
   })
 }
 
