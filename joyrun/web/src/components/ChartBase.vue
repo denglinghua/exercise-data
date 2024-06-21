@@ -21,6 +21,7 @@ import {
   DatasetComponent,
   TransformComponent,
   LegendComponent,
+  MarkLineComponent,
 } from 'echarts/components';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 // import Canvas renderer, note that it is necessary to introduce CanvasRenderer or SVGRenderer
@@ -35,6 +36,7 @@ echarts.use([
   DatasetComponent,
   TransformComponent,
   LegendComponent,
+  MarkLineComponent,
   BarChart, PieChart, LineChart, ScatterChart, HeatmapChart,
   LabelLayout,
   UniversalTransition,
