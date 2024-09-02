@@ -38,6 +38,8 @@ const loading = ref(false)
 
 const weekHourData = ref(null)
 const paceDistanceData = ref(null)
+const dateDistanceData = ref(null)
+const datePaceData = ref(null)
 const monthDistanceData = ref(null)
 const monthPaceData = ref(null)
 const monthSessionData = ref(null)
@@ -45,7 +47,9 @@ const monthSessionData = ref(null)
 const charts = [
   { name: 'workHour', data: weekHourData, option: chart.weekHourHeatmap },
   { name: 'paceDistance', data: paceDistanceData, option: chart.paceDistanceScatter },
-  { name: 'monthSessions', data: monthSessionData, option: chart.monthSessionLine},
+  { name: 'dateDistance', data: dateDistanceData, option: chart.dateDistanceScatter },
+  { name: 'datePace', data: datePaceData, option: chart.datePaceScatter },
+  { name: 'monthSessions', data: monthSessionData, option: chart.monthSessionLine },
   { name: 'monthDistance', data: monthDistanceData, option: chart.monthDistanceLine },
   { name: 'monthPace', data: monthPaceData, option: chart.monthPaceLine },
 ]
@@ -66,6 +70,8 @@ function loadData(id) {
 
     weekHourData.value = res.data.dataset.week_hour
     paceDistanceData.value = res.data.dataset.pace_distance
+    dateDistanceData.value = res.data.dataset.date_distance
+    datePaceData.value = res.data.dataset.date_pace
     monthDistanceData.value = res.data.dataset.month_distance
     monthPaceData.value = res.data.dataset.month_pace
     monthSessionData.value = res.data.dataset.month_sessions

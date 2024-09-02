@@ -225,7 +225,90 @@ function paceDistanceScatter(data) {
   return option;
 }
 
-function weekHourHeatmap(data, days = ['一', '二', '三', '四', '五', '六', '日']) {
+function dateDistanceScatter(data) {
+  const distances = data.series.map((d) => d[1]);
+  const minDistance = Math.min(...distances);
+  const maxDistance = Math.max(...distances);
+  const option = {
+    title: {
+      text: data.title,
+      left: "center",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    visualMap: {
+      min: minDistance,
+      max: maxDistance,
+      dimension: 1,
+      show: false,
+      inRange: {
+        color: ["#1d4877", "#1b8a5a", "#fbb021", "#f68838", "#ee3e32"],
+      },
+    },
+    xAxis: {
+      data: data.series.map((d) => d[0]),
+    },
+    yAxis: {},
+    series: [
+      {
+        symbolSize: 5,
+        data: distances,
+        type: "scatter",
+      },
+    ],
+  };
+
+  return option;
+}
+
+function datePaceScatter(data) {
+  const paces = data.series.map((d) => d[1]);
+  const minPace = Math.min(...paces);
+  const maxPace = Math.max(...paces);
+  const option = {
+    title: {
+      text: data.title,
+      left: "center",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    visualMap: {
+      min: minPace,
+      max: maxPace,
+      dimension: 1,
+      show: false,
+      inRange: {
+        color: ["#f50056", "#448aff"],
+      },
+    },
+    xAxis: {
+      data: data.series.map((d) => d[0]),
+    },
+    yAxis: {
+      inverse: true,
+      min: "dataMin",
+      axisLabel: {
+        formatter: common.createPaceFormatter(),
+      },
+    },
+    series: [
+      {
+        symbolSize: 5,
+        data: paces,
+        type: "scatter",
+      },
+    ],
+  };
+
+  return option;
+}
+
+function weekHourHeatmap(
+  data,
+  days = ["一", "二", "三", "四", "五", "六", "日"]
+) {
   // prettier-ignore
   const hours = [
     '12A', '1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '10A', '11A',
@@ -296,4 +379,6 @@ export default {
   monthSessionLine,
   paceDistanceScatter,
   weekHourHeatmap,
+  dateDistanceScatter,
+  datePaceScatter,
 };
