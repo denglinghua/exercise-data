@@ -7,13 +7,18 @@ import pandas as pd
 _file_data = {'min_year' : 9999, 'max_year':0, 'seq':1}
 _data_range = ''
 
+def _extract_date(file_path):
+    # ...\2016_0101-0131.xlsx
+    end_day = file_path[-7:-5]
+    start_day = file_path[-12:-10]
+    month = file_path[-14:-12]
+    year = int(file_path[-19:-15])
+    return year, month, start_day, end_day
+
 def _add_file_data(df:pd.DataFrame, file_path):
     global _file_data
     
-    # ...\2016_0101-0131.xlsx
-    end_mon_day = file_path[-9:-5]
-    start_mon_day = file_path[-14:-10]
-    year = int(file_path[-19:-15])
+    year, month, start_day, end_day = _extract_date(file_path)
     
     if year < _file_data['min_year']:
         _file_data['min_year'] = year
@@ -23,12 +28,12 @@ def _add_file_data(df:pd.DataFrame, file_path):
     max_data_date = df['end_time'].max()
     min_data_date = df['end_time'].min()
 
-    def check_date(date, year, month_day):
-        return date.strftime('%Y%m%d') == '%s%s' % (year, month_day)
+    def check_date(date, year, month, day):
+        return date.strftime('%Y%m%d') == '%s%s%s' % (year, month, day)
     
-    result = check_date(min_data_date, year, start_mon_day) and check_date(max_data_date,year, end_mon_day)
+    result = check_date(min_data_date, year, month, start_day) and check_date(max_data_date,year, month, end_day)
 
-    key_ym = '%s%s' % (year, start_mon_day[0:2])
+    key_ym = '%s%s' % (year, month)
     _file_data[key_ym] = result
 
     desc = '' if result else '(%s - %s)' % (min_data_date, max_data_date)
@@ -116,10 +121,18 @@ def _add_week_no_column(df:pd.DataFrame):
 def load_data(data_dir):
     if data_dir.endswith('.pkl'):
         return pd.read_pickle(data_dir)
-
+    
     cols = ['end_time', 'status', 'id', 'name', 'gender', 'distance', 'time', 'run_type',
                 'pace', 'cadence', 'stride']
-    df = pd.DataFrame(columns=cols)
+    # if pkl file exists, load it
+    df = None
+    max_data_date = None
+    if os.path.exists('data_.pkl'):
+        df = pd.read_pickle('data_.pkl')
+        max_data_date = df['end_time'].max()
+        print('exist data max date: %s' % max_data_date)
+    else:
+        df = pd.DataFrame(columns=cols)
 
     data_files = glob.glob(os.path.join(data_dir, '*.xlsx'))
     data_files.sort()
@@ -128,6 +141,11 @@ def load_data(data_dir):
     # data rows in a single file ordered by date too
     # so if all files loaded into one dataframe, these data rows ordered by date (end_time column)
     for file in data_files:
+        if max_data_date:
+            year, month, start_day, _ = _extract_date(file)
+            if max_data_date > datetime(year, int(month), int(start_day)):
+                print('skip file: %s' % file)
+                continue
         one_file_df = pd.read_excel(file, header=7, names=cols, converters=_col_converts())
         # print(one_file_df)
         _add_file_data(one_file_df, file)
