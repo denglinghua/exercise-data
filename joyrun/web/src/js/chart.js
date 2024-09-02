@@ -273,6 +273,7 @@ function datePaceScatter(data) {
     },
     tooltip: {
       trigger: "axis",
+      valueFormatter: common.createPaceFormatter(),
     },
     visualMap: {
       min: minPace,
