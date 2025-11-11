@@ -47,6 +47,9 @@ def _handle_data_row(row, data_type_map):
         try:
             value_func = data_type_map[key][0]
             row[key] = value_func(row[key])
+            # some records have 0 time, use Elapsed Time instead
+            if key == 'Time':
+                row[key] = value_func(row['Elapsed Time'])
         except ValueError:
             #print(row)
             alt_value_func = data_type_map[key][1]
